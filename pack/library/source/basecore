@@ -1,0 +1,27 @@
+#!/bin/bash
+
+
+
+
+## pacstrap installation
+function craine_install_corest() {
+    test -e $distro_package && pacstrap -U /mnt - < $distro_package 
+}
+
+
+function craine_sysbase_setup_hostname() {
+
+    if [[ $hostaname ]];then
+        echo "$hostaname" > /mnt/etc/hostname 
+    else
+        echo "$ID" > /mnt/etc/hostname 
+    fi
+}
+
+
+function craine_sysbase_setup_timedate() {
+    arch-chroot /mnt ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+    arch-chroot /mnt hwclock --systohc
+    arch-chroot /mnt timedatectl set-ntp true
+    arch-chroot /mnt timedatectl set-timezone $timezone 
+}

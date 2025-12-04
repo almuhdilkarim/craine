@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+function craine_service_based() {
+
+    arch-chroot /mnt systemctl enable sshd
+    arch-chroot /mnt systemctl enable sshd
+
+}

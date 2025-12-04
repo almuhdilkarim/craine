@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+function craine_hackers() {
+	crainer_straper_environ
+}

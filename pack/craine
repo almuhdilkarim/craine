@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+
+if [[ -d "/var/lib/craine" ]];then
+    appdirs=/var/lib/craine
+else
+    appdirs=$(pwd)/library
+fi
+
+
+## BOOTLOADERER
+source "$appdirs/striper"
+
+
+## ENVIRONTMENT
+distro_releases=$2
+distro_protocol=$4
+
+
+if [[ $1 == "--dekstop" ]]; then
+    craine_dekstop
+elif [[ $1 == "--dialog" ]]; then
+    craine_termine
+else
+    craine_hackers
+fi

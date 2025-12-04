@@ -1,0 +1,104 @@
+#!/bin/bash
+
+set -e
+
+
+function craine_dialog_username() {
+
+    username=$(yad --stdout --title "$ID Installer" --inputbox "Enter your username:" 0 0)
+
+    # Check the exit status to see if the user pressed OK or Cancel
+    if [ $? -eq 0 ]; then
+        echo "Username entered: $username"
+    else
+        echo "User cancelled the input."
+    fi
+}
+
+
+function craine_dialoger_mainav() {
+    selection=$(yad --stdout --ok-label "Select" --cancel-label "Cancel Installation" --menu "Choose an option:" 0 0 0 \
+        1 "Configure Disk Partition" \
+        2 "Packages" \
+        3 "Reboot" )
+
+    if [ $? -eq 0 ]; then
+        echo "Selected option: $selection"
+    else
+        echo "User cancelled the menu."
+    fi
+}
+
+
+function craine_desktop_panel_cred() {
+
+    GDK_BACKEND=x11 yad --plug=980 --tabnum=3 --title="Credit" --form \
+        --field="Application":RO "Raptor" \
+        --field="Group":RO "Operating System Development Kit" \
+        --field="Copyright":RO "Copyright (c) 4nthrax <null@yuros.org>"  &> res3 & \
+}
+
+
+function craine_desktop_panel_list() {
+    GDK_BACKEND=x11 yad --plug=980 --tabnum=2 --title="Operating System Profile" --text="first tab with text" &> res2 & \
+}
+
+
+function craine_dekstop_panel_cred() {
+     GDK_BACKEND=x11 yad --about \
+            --image=./img/Tux.png \
+            --website-label="Develop By Null" \
+            --website="application.example.com" \
+            --authors="Null" \
+            --license="GPL3" \
+            --comments="Yuros Operating System Development Kit" \
+            --copyright="Copyright (c) 2023 null <null@yuros.org>" \
+            --pversion="1.0.1" \
+            --pname="Raptor Craine" \
+            --buttons-layout=end
+
+    if [ $? -eq 1 ]; then
+        craine_dekstop
+    elif [ $? -eq 252 ]; then
+        craine_dekstop
+    fi
+
+}
+
+
+function craine_desktop_panel_main() {
+    local kernels="Linux,Linux Lts,Linux Zen,Liquerix,Linux Rt,Linux Clear,Linux Libre,Linux PF,Linux PRJC,Linux Nitros,Linux TKG,Linux Vfio,Linux Xanmod,Linux CachyOS"
+    local desktop="None,Plasma,Budgie,Cianamon,Cosmic,Cutefish,Deepin,Enlighment,Gnome,Gnome Flashback,Lxde,Lxqt,Mate,Pantheon,Posh,Sugar,UKUI,CDE,EDE,Liri,Lumina,Mauishell,Maxx,Moksa,Cosmisc,Xfce 4"
+    GDK_BACKEND=x11 yad --plug=980 --tabnum=1 --title="Build New Operating System" --form \
+            --date-format="%-d %B %Y" --separator="," --item-separator="," \
+            --field="Name" "Falcone" \
+            --field="Logo":SFL "none" \
+            --field="Hostname" "falcone" \
+            --field="Release":RO "rolling" \
+            --field="Description":TXT "Operating System Description" \
+            --field="Publish":DT "date" \
+            --field="Kernel:"CB "$kernels" \
+            --field="Dekstop:"CB "$desktop" \
+            --field="Network:"CB "Network Manager, Systemd Network" \
+            --field="Release":RO "rolling" \
+            --field="Generate Images:BTN" "yad --info --text='Generate ISO'" \
+            --field="Generate Profile:BTN" "yad --info --text='Generate Profile'" &> res1 & \
+            
+    GDK_BACKEND=x11 yad --tab-pos=left --notebook --key=980 --tab="Builder" --tab="Profile" --tab="About" --buttons-layout=start --button="Credit:0" --button="Close:1"
+
+    if [ "$?" -eq 0 ]; then
+        craine_dekstop &
+        craine_dekstop_panel_cred
+    elif [ $? -eq 252 ]||[ "$?" -eq 1 ]; then
+        exit 0
+    else
+        echo "Dialog closed or unexpected response."
+    fi
+}
+
+
+function craine_dekstop() {
+    craine_desktop_panel_list
+    craine_desktop_panel_cred
+    craine_desktop_panel_main
+}
