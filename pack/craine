@@ -4,14 +4,16 @@ set -e
 
 
 if [[ -d "/var/lib/craine" ]];then
-    appdirs=/var/lib/craine
+    approot="/var/lib/craine"
+    appdirs="/var/lib/craine"
+
 else
-    appdirs=$(pwd)/library
+    approot="$(pwd)/library"
+    appdirs="$(pwd)/library"
 fi
 
 
 ## BOOTLOADERER
-
 source "$appdirs/striper"
 
 
