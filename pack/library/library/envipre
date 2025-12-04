@@ -3,112 +3,18 @@
 set -e
 
 
-## SETUP USERPROJECTDIR
-if [[ ! -d "$HOME/.local/craine/" ]]; then
-    mkdir -p "$HOME/.local/craine/"
-    mkdir -p "$HOME/.local/craine/{project,profile}"
-fi
-
-
 
 # DIRECTORY ENVIRONMENT
 appmods="$appdirs/modul"
 
 
 
-## DISTROS ENVIRONMENT
-function craine_envi_lndistro() {
-
-    if [[ -z $distro_releases ]];then
-        distro_releases="falcone"
-    fi
-
-    source_build="$appdist/$distro_releases"
-
-    if [[ -d "/var/lib/craine" ]];then
-        parent_build="$HOME/.local/craine/"
-        target_build="$parent_build/project/$distro_releases/install"
-    else
-        parent_build="$appdirs/releases"
-        target_build="./release/$distro_releases/install"
-    fi
-
-    mkdir -p "./release/$distro_releases"
-    mkdir -p "./release/$distro_releases/profile"
-    mkdir -p "./release/$distro_releases/distrib"
-
-    cp -r "$source_build" "$target_build"
-    
-    echo "distro environment loaded"
-}
 
 
 
-## KERNELS ENVIRONMENT
-function craine_config_kernels() {
-
-    kernels_path="$appmods/kernel/linuxer/101"
-
-    if [ -e "$appmods/kernel/$distro_kernels/101/module" ];then
-        kernels_path="$appmods/kernel/$distro_kernels/101"
-    fi 
-
-    if [ -e "$appmods/kernel/$distro_kernels/$distro_protocol/module" ];then
-        kernels_path="$appmods/kernel/$distro_kernels/$distro_protocol"
-    fi
-
-    test -e "$kernels_path/config" && kernels_config="$kernels_path/config"
-    test -e "$kernels_path/module" && kernels_module="$kernels_path/module"
-    echo "Kernel environment loaded"
-}
-
-
-function craine_moding_kernels() {
-    test -e "$kernels_path/moding" && kernels_daemon="$kernels_path/moding" 
-}
 
 
 
-## DESKTOP ENVIRONMENT
-function craine_config_desktop() {
-
-    desktop_path="$appmods/deskto/plasma/101"
-
-    if [ -e "$appmods/deskto/$distro_desktop/101/module" ];then
-        desktop_path="$appmods/deskto/$distro_desktop/101"
-    fi
-
-    if [ -e "$appmods/deskto/$distro_desktop/$distro_protocol/module" ];then
-        desktop_path="$appmods/deskto/$distro_desktop/$distro_protocol"
-    fi
-
-    test -e "$desktop_path/config"  && dekstop_config="$desktop_path/config"
-    test -e "$desktop_path/module"  && dekstop_module="$desktop_path/module"
-    echo "desktop environment loaded"
-}
-
-
-function craine_moding_desktop() {
-    test -e "$desktop_path/moding" && dekstop_daemon="$desktop_path/moding"  
-}
 
 
 
-## AUDIO ENVIRONMENT
-function craine_envi_audiosy() {
-    audios_path="$appmods/audio/pipe/101"
-
-    if [ -e "$appmods/audio/$distro_audios/101/module" ];then
-        audios_path="$appmods/deskto/$distro_audios/101"
-    fi
-
-    if [ -e "$appmods/audio/$distro_audios/$distro_protocol/module" ];then
-        audios_path="$appmods/audio/$distro_audios/$distro_protocol"
-    fi
-
-    test -e "$audios_path/config"  && audio_config="$audios_path/config"
-    test -e "$audios_path/module"  && audio_module="$audios_path/module"
-    test -e "$audios_path/service" && audio_daemon="$audios_path/service"
-
-    echo "audio environment loaded"
-}

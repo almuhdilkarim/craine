@@ -66,8 +66,6 @@ function craine_install_ucodes() {
 }
 
 
-
-
 function craine_install() {
     craine_install_corest
 }

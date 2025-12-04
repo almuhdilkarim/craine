@@ -4,11 +4,24 @@
 set -e
 
 
+
+if [[ -z $distro_protocol ]];then
+    distro_protocol=101
+fi
+
+if [[ -z $distro_releases ]];then
+    distro_releases="falcone"
+fi
+
+
+
 ## USER PROJECTS
 if [[ ! -d "$HOME/.local/craine/" ]]; then
     mkdir -p "$HOME/.local/craine/"
     mkdir -p "$HOME/.local/craine/{project,profile}"
 fi
+
+
 
 ## LOAD LIBRARY
 source "$appdirs/library/hackers"
@@ -16,19 +29,13 @@ source "$appdirs/library/desktop"
 source "$appdirs/library/termine"
 
 
+
 ## LOAD PATHERS
-appdist=$appdirs/distros
-appbins=$appdirs/source
-apprule=$appdirs/protoc
-appview=$appdirs/viewer
+appmods="$appdirs/modul"
+appdist="$appdirs/distros"
+appbins="$appdirs/source"
+apprule="$appdirs/protoc"
+appview="$appdirs/viewer"
 
 
 ## LOAD MODULES
-
-
-
-function crainer_straper_environ() {
-	source "$appdirs/library/envipre"
-	source "$appdirs/library/userpre"
-	source "$appdirs/library/propers"
-}

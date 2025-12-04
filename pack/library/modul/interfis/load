@@ -1,1 +1,25 @@
 #!/bin/bash
+
+
+## DESKTOP ENVIRONMENT
+function craine_config_desktop() {
+
+    desktop_path="$appmods/deskto/plasma/101"
+
+    if [ -e "$appmods/deskto/$distro_desktop/101/module" ];then
+        desktop_path="$appmods/deskto/$distro_desktop/101"
+    fi
+
+    if [ -e "$appmods/deskto/$distro_desktop/$distro_protocol/module" ];then
+        desktop_path="$appmods/deskto/$distro_desktop/$distro_protocol"
+    fi
+
+    test -e "$desktop_path/config"  && dekstop_config="$desktop_path/config"
+    test -e "$desktop_path/module"  && dekstop_module="$desktop_path/module"
+    echo "desktop environment loaded"
+}
+
+
+function craine_moding_desktop() {
+    test -e "$desktop_path/moding" && dekstop_daemon="$desktop_path/moding"  
+}

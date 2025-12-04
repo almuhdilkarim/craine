@@ -1,1 +1,27 @@
 #!/bin/bash
+
+## DISTROS ENVIRONMENT
+function craine_envi_lndistro() {
+
+    if [[ -z $distro_releases ]];then
+        distro_releases="falcone"
+    fi
+
+    source_build="$appdist/$distro_releases"
+
+    if [[ -d "/var/lib/craine" ]];then
+        parent_build="$HOME/.local/craine/"
+        target_build="$parent_build/project/$distro_releases/install"
+    else
+        parent_build="$appdirs/releases"
+        target_build="./release/$distro_releases/install"
+    fi
+
+    mkdir -p "./release/$distro_releases"
+    mkdir -p "./release/$distro_releases/profile"
+    mkdir -p "./release/$distro_releases/distrib"
+
+    cp -r "$source_build" "$target_build"
+    
+    echo "distro environment loaded"
+}

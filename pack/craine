@@ -11,12 +11,15 @@ fi
 
 
 ## BOOTLOADERER
+
 source "$appdirs/striper"
+
 
 
 ## ENVIRONTMENT
 distro_releases=$2
 distro_protocol=$4
+
 
 
 if [[ $1 == "--dekstop" ]]; then

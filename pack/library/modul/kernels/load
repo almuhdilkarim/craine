@@ -1,1 +1,25 @@
 #!/bin/bash
+
+
+## KERNELS ENVIRONMENT
+function craine_config_kernels() {
+
+    kernels_path="$appmods/kernel/linuxer/101"
+
+    if [ -e "$appmods/kernel/$distro_kernels/101/module" ];then
+        kernels_path="$appmods/kernel/$distro_kernels/101"
+    fi 
+
+    if [ -e "$appmods/kernel/$distro_kernels/$distro_protocol/module" ];then
+        kernels_path="$appmods/kernel/$distro_kernels/$distro_protocol"
+    fi
+
+    test -e "$kernels_path/config" && kernels_config="$kernels_path/config"
+    test -e "$kernels_path/module" && kernels_module="$kernels_path/module"
+    echo "Kernel environment loaded"
+}
+
+
+function craine_moding_kernels() {
+    test -e "$kernels_path/moding" && kernels_daemon="$kernels_path/moding" 
+}
