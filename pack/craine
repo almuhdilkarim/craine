@@ -14,7 +14,7 @@ fi
 
 
 ## BOOTLOADERER
-source "$appdirs/striper"
+source "$appdirs/library/striper"
 
 
 
