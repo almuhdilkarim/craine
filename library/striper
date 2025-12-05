@@ -4,7 +4,7 @@ set -e
 
 
 ## LOAD PATHERS
-appmods="$applibs/library"
+applibs="$apppath/library"
 appprof="$applibs/profile"
 coreset="$applibs/preset"
 appsrcs="$applibs/source"
@@ -19,31 +19,10 @@ source "$applibs/interfe/termine"
 
 
 ## USER PROJECTS
-if [[ $setstatus != "debug" ]]; then
-    mkdir -p "$HOME/.local/craine/"
+if [[ $debuger == true ]]; then
+    mkdir -p "$apppath/systes/"{project,profile}
+else
     mkdir -p "$HOME/.local/craine/"{project,profile}
 fi
 
-if [[ $setstatus == "debug" ]]; then
-    mkdir -p "$apppath/systes/"{project,profile}
-fi
 
-
-
-## DISTRO PRESET
-if [[ -e $setfile ]];then
-    source $setfile
-else
-    source "$coreset/default.conf"
-    echo $distro_bootsize;
-fi
-
-
-if [[ -z $distro_protos ]];then
-    distro_protos=101
-fi
-
-
-if [[ -z $distro_naming ]];then
-    distro_naming="falcone"
-fi

@@ -1,12 +1,31 @@
 #!/bin/bash
 
+
+## DISTRO PRESET
+if [[ -e $setfile ]];then
+    source $setfile
+else
+    source "$coreset/default.conf"
+    echo $distro_bootsize;
+fi
+
+if [[ -z $distro_protos ]];then
+    distro_protos=101
+fi
+
+if [[ -z $distro_naming ]];then
+    distro_naming="falcone"
+fi
+
+echo $distro_naming
+
 ## LOAD MODULES
-source "$appmods/kernels/load"
-source "$appmods/sysbins/load"
-source "$appmods/bootsys/load"
-source "$appmods/audiole/load"
-source "$appmods/desktop/load"
-source "$appmods/kernels/load"
+#source "$appmods/kernels/load"
+#source "$appmods/sysbins/load"
+#source "$appmods/bootsys/load"
+#source "$appmods/audiole/load"
+#source "$appmods/desktop/load"
+#source "$appmods/kernels/load"
 
 
 

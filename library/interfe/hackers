@@ -1,21 +1,11 @@
 #!/bin/bash
 
 
-function craine_hackers_makers() {
+function craine_hackers_make() {
 	echo "os config file $1"
 }
 
 
-function craine_hackers_devels() {
+function craine_hackers_list() {
 	echo "select devels os"
-}
-
-
-function craine_hackers() {
-
-	if [[ $1 == "--devels" ]];then
-		craine_hackers_devels
-	else
-		craine_hackers_makers $1
-	fi
 }

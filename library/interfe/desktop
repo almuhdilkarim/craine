@@ -44,7 +44,7 @@ function craine_desktop_panel_list() {
 }
 
 
-function craine_dekstop_panel_cred() {
+function craine_desktop_panel_cred() {
      GDK_BACKEND=x11 yad --about \
             --image=./img/Tux.png \
             --website-label="Develop By Null" \
@@ -58,9 +58,9 @@ function craine_dekstop_panel_cred() {
             --buttons-layout=end
 
     if [ $? -eq 1 ]; then
-        craine_dekstop
+        craine_desktop
     elif [ $? -eq 252 ]; then
-        craine_dekstop
+        craine_desktop
     fi
 
 }
@@ -87,8 +87,8 @@ function craine_desktop_panel_main() {
     GDK_BACKEND=x11 yad --tab-pos=left --notebook --key=980 --tab="Builder" --tab="Profile" --tab="About" --buttons-layout=start --button="Credit:0" --button="Close:1"
 
     if [ "$?" -eq 0 ]; then
-        craine_dekstop &
-        craine_dekstop_panel_cred
+        craine_desktop &
+        craine_desktop_panel_cred
     elif [ $? -eq 252 ]||[ "$?" -eq 1 ]; then
         exit 0
     else
@@ -97,8 +97,7 @@ function craine_desktop_panel_main() {
 }
 
 
-function craine_dekstop() {
+function craine_desktop() {
     craine_desktop_panel_list
-    craine_desktop_panel_cred
     craine_desktop_panel_main
 }
