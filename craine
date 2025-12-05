@@ -13,7 +13,7 @@ fi
 
 
 ## BOOTLOADERER
-disfile="$2"
+setfile="$2"
 applibs="$apppath/library"
 source "$applibs/striper"
 

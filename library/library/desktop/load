@@ -10,8 +10,8 @@ function craine_config_desktop() {
         desktop_path="$appmods/deskto/$distro_desktop/101"
     fi
 
-    if [ -e "$appmods/deskto/$distro_desktop/$distro_protocol/module" ];then
-        desktop_path="$appmods/deskto/$distro_desktop/$distro_protocol"
+    if [ -e "$appmods/deskto/$distro_desktop/$distro_protos/module" ];then
+        desktop_path="$appmods/deskto/$distro_desktop/$distro_protos"
     fi
 
     test -e "$desktop_path/config"  && dekstop_config="$desktop_path/config"

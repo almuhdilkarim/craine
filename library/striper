@@ -6,6 +6,7 @@ set -e
 ## LOAD PATHERS
 appmods="$applibs/library"
 appprof="$applibs/profile"
+coreset="$applibs/preset"
 appsrcs="$applibs/source"
 
 
@@ -29,17 +30,20 @@ fi
 
 
 
-## DIST ENVIRONT
-if [[ -e $disfile ]];then
-    source $disfile
+## DISTRO PRESET
+if [[ -e $setfile ]];then
+    source $setfile
+else
+    source "$coreset/default.conf"
+    echo $distro_bootsize;
 fi
 
 
-if [[ -z $distro_protocol ]];then
-    distro_protocol=101
+if [[ -z $distro_protos ]];then
+    distro_protos=101
 fi
 
 
-if [[ -z $distro_releases ]];then
-    distro_releases="falcone"
+if [[ -z $distro_naming ]];then
+    distro_naming="falcone"
 fi

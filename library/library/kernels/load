@@ -6,12 +6,12 @@ function craine_config_kernels() {
 
     kernels_path="$appmods/kernel/linuxer/101"
 
-    if [ -e "$appmods/kernel/$distro_kernels/101/module" ];then
-        kernels_path="$appmods/kernel/$distro_kernels/101"
+    if [ -e "$appmods/kernel/$distro_kernel/101/module" ];then
+        kernels_path="$appmods/kernel/$distro_kernel/101"
     fi 
 
-    if [ -e "$appmods/kernel/$distro_kernels/$distro_protocol/module" ];then
-        kernels_path="$appmods/kernel/$distro_kernels/$distro_protocol"
+    if [ -e "$appmods/kernel/$distro_kernel/$distro_protos/module" ];then
+        kernels_path="$appmods/kernel/$distro_kernel/$distro_protos"
     fi
 
     test -e "$kernels_path/config" && kernels_config="$kernels_path/config"
