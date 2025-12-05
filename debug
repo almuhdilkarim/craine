@@ -22,11 +22,11 @@ done
 
 if [[ $mode == "dekstop" ]];then
     craine_dekstop
-elif [[ $1 == "guided" ]]; then
+elif [[ $mode == "talk" ]]; then
     craine_termine
-elif [[ $mode == "make" ]]&&[[ ! -z  $file ]];then
+elif [[ $mode == "make" ]]; then
     craine_hackers_make $file
-elif [[ $mode == "list" ]];then
+elif [[ $mode == "list" ]]; then
     craine_hackers_list 
 else
     echo "Craine Error: Mode not found"  
