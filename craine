@@ -24,7 +24,7 @@ if [[ $mode == "desktop" ]];then
     craine_desktop
 elif [[ $1 == "guided" ]]; then
     craine_termine
-elif [[ $mode == "make" ]]&&[[ ! -z  $file ]];then
+elif [[ $mode == "make" ]]&&[[ ! -z $file ]];then
     craine_hackers_make $file
 elif [[ $mode == "list" ]];then
     craine_hackers_list
