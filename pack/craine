@@ -3,31 +3,29 @@
 set -e
 
 
-if [[ -d "/var/lib/craine" ]];then
-    approot="/var/lib/craine"
-    appdirs="/var/lib/craine"
+setstatus="debug"
 
+if [[ $setstatus != "debug" ]];then
+    apppath="/var/lib/craine"
 else
-    approot="$(pwd)/library"
-    appdirs="$(pwd)/library"
+    apppath="$(pwd)"
 fi
 
 
 ## BOOTLOADERER
-source "$appdirs/library/striper"
-
-
-
-## ENVIRONTMENT
-distro_releases=$2
-distro_protocol=$4
-
+disfile="$2"
+applibs="$apppath/library"
+source "$applibs/striper"
 
 
 if [[ $1 == "--dekstop" ]]; then
     craine_dekstop
 elif [[ $1 == "--dialog" ]]; then
     craine_termine
-else
-    craine_hackers
+elif [[ $1 == "--devels" ]]; then
+    craine_hackers --devels
+elif [[ -e $1 ]]; then
+    craine_hackers $1
+else 
+    echo "Craine Error: parameter is empty or config file not found"
 fi

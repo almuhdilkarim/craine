@@ -14,8 +14,6 @@ function craine_dialog_username() {
 }
 
 
-
-
 function craine_dialoger_mainav() {
     selection=$(yad --stdout --ok-label "Select" --cancel-label "Cancel Installation" --menu "Choose an option:" 0 0 0 \
         1 "Configure Disk Partition" \
@@ -28,6 +26,7 @@ function craine_dialoger_mainav() {
         echo "User cancelled the menu."
     fi
 }
+
 
 
 function craine_termine() {

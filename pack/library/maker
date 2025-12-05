@@ -1,0 +1,13 @@
+#!/bin/bash
+
+## LOAD MODULES
+source "$appmods/kernels/load"
+source "$appmods/sysbins/load"
+source "$appmods/bootsys/load"
+source "$appmods/audiole/load"
+source "$appmods/desktop/load"
+source "$appmods/kernels/load"
+
+
+
+## PROC GENERAT

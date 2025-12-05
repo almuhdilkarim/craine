@@ -1,42 +1,45 @@
 #!/bin/bash
 
-
 set -e
 
+
+## LOAD PATHERS
+appmods="$applibs/library"
+appprof="$applibs/profile"
+appsrcs="$applibs/source"
+
+
+
+## LOAD INTERFACE
+source "$applibs/interfe/hackers"
+source "$applibs/interfe/desktop"
+source "$applibs/interfe/termine"
+
+
+
+## USER PROJECTS
+if [[ $setstatus != "debug" ]]; then
+    mkdir -p "$HOME/.local/craine/"
+    mkdir -p "$HOME/.local/craine/"{project,profile}
+fi
+
+if [[ $setstatus == "debug" ]]; then
+    mkdir -p "$apppath/systes/"{project,profile}
+fi
+
+
+
+## DIST ENVIRONT
+if [[ -e $disfile ]];then
+    source $disfile
+fi
 
 
 if [[ -z $distro_protocol ]];then
     distro_protocol=101
 fi
 
+
 if [[ -z $distro_releases ]];then
     distro_releases="falcone"
 fi
-
-
-
-## USER PROJECTS
-if [[ ! -d "$HOME/.local/craine/" ]]; then
-    mkdir -p "$HOME/.local/craine/"
-    mkdir -p "$HOME/.local/craine/{project,profile}"
-fi
-
-
-
-## LOAD LIBRARY
-source "$appdirs/library/hackers"
-source "$appdirs/library/desktop"
-source "$appdirs/library/termine"
-
-
-
-## LOAD PATHERS
-appmods="$appdirs/modul"
-appdist="$appdirs/distros"
-appbins="$appdirs/source"
-apprule="$appdirs/protoc"
-appview="$appdirs/viewer"
-
-
-
-## LOAD MODULES
