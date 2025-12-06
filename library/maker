@@ -7,13 +7,15 @@
 function craine_maker_prep_presets() {
 
     distro_reset=0
+    ospath=${preset_name,,}
 
-    if [[ -e "$usrconf/$preset_file.conf" ]]&&[[ ! -z $preset_file ]]; then
+
+    if [[ -e "$initdir/$preset_file.conf" ]]&&[[ ! -z $preset_file ]]; then
         read -p "preset $preset_file is existed, do you want replace it : [ y/N ] " preset_replace
     fi
 
-    if [[ -e "$usrconf/$preset_name.conf" ]]; then
-        read -p "preset $preset_name is existed, do you want replace it : [ y/N ] " preset_replace
+    if [[ -e "$initdir/$ospath.conf" ]]; then
+        read -p "preset $ospath is existed, do you want replace it : [ y/N ] " preset_replace
     fi
 
 
@@ -25,85 +27,88 @@ function craine_maker_prep_presets() {
         distro_reset=1
     fi
 
-    if [[ -e "$usrconf/$preset_name.conf" ]]&&[[ $distro_reset == 0 ]];then
+    if [[ -e "$initdir/$ospath.conf" ]]&&[[ $distro_reset == 0 ]];then
         return
     fi
+
+    
+    mkdir -p "$initdir/$ospath"
 
    
     if [[ -e $preset_file ]]; then
     
         echo "create preset from user defined"
-        cp -f $preset_file "$usrconf/$preset_name.conf"
+        cp -f $preset_file "$initdir/$ospath/raptor.conf"
 
     elif [[ -e "$apppath/preset/$preset_file.conf" ]]; then
 
         echo "create preset from system available preset"
-        cat "$apppath/preset/$preset_file.conf" > "$usrconf/$preset_name.conf"
+        cat "$apppath/preset/$preset_file.conf" > "$initdir/$ospath/raptor.conf"
 
-    elif [[ -e "$apppath/preset/$preset_name.conf" ]]; then
+    elif [[ -e "$apppath/preset/$ospath.conf" ]]; then
 
         echo "create preset from system available preset"
-        cat "$apppath/preset/$preset_name.conf" > "$usrconf/$preset_name.conf"
+        cat "$apppath/preset/$ospath.conf" > "$initdir/$ospath/raptor.conf"
 
     else
 
         echo "create preset from default system preset"
-        cp -f "$apppath/preset/falcone.conf" "$usrconf/$preset_name.conf"
+        cp -f "$apppath/preset/default.conf" "$initdir/$ospath/raptor.conf"
 
     fi
 
-    source "$usrconf/$preset_name.conf"
+    sed -i '1cdistro_naming="'${preset_name^}'"'  "$initdir/$ospath/raptor.conf"
+    sed -i '2cdistro_unique="'${preset_name,,}'"' "$initdir/$ospath/raptor.conf"
+
+    source "$initdir/$ospath/raptor.conf"
 
 }
 
 
 function craine_maker_prep_profile() {
 
-    if [[ $distro_reset == 0 ]]&&[[ -d "$usrdirs/$preset_name/profile" ]]; then
+    if [[ $distro_reset == 0 ]]&&[[ -d "$initdir/$ospath/profile" ]]; then
         return
     fi
 
-    if [[ -d "$usrdirs/$preset_name/profile" ]];then
-        rm -fr "$usrdirs/$preset_name/profile"
+    if [[ -d "$initdir/$ospath/distro" ]];then
+        rm -fr "$initdir/$ospath/distro"
     fi
-
-    mkdir -p $usrdirs/$preset_name
-
 
     if [[ -d $preset_prof ]]; then
 
         echo "create profile from user define"
-        cp -fr $preset_prof "$usrdirs/$preset_name/profile"
+        cp -fr $preset_prof "$initdir/$ospath/distro"
 
-    elif [[ -d "$usrdirs/$preset_prof/profile" ]]&&[[ ! -z $preset_prof ]]; then
+    elif [[ -d "$initdir/$preset_prof/profile" ]]&&[[ ! -z $preset_prof ]]; then
 
         echo "create profile from available user profile"
-        cp -fr "$usrdirs/$preset_prof/profile" "$usrdirs/$preset_name/profile"
+        cp -fr "$initdir/$preset_prof/profile" "$initdir/$ospath/distro"
 
     elif [[ -d "$apppath/profile/$preset_prof" ]]&&[[ ! -z $preset_prof ]]; then
 
         echo "create profile from available system profile"
-        cp -fr "$apppath/profile/$preset_prof" "$usrdirs/$preset_name/profile"
+        cp -fr "$apppath/profile/$preset_prof" "$initdir/$ospath/distro"
 
-    elif [[ -d "$usrdirs/$preset_file/profile" ]]&&[[ ! -z $preset_file ]]; then
+    elif [[ -d "$initdir/$preset_file/profile" ]]&&[[ ! -z $preset_file ]]; then
 
         echo "create profile from available user profile"
-        cp -fr "$usrdirs/$preset_file/profile" "$usrdirs/$preset_name/profile"
+        cp -fr "$initdir/$preset_file/profile" "$initdir/$ospath/distro"
 
     elif [[ -d "$apppath/profile/$preset_file" ]]&&[[ ! -z $preset_file ]]; then
 
         echo "create profile from available system profile"
-        cp -fr "$apppath/profile/$preset_file" "$usrdirs/$preset_name/profile"
+        cp -fr "$apppath/profile/$preset_file" "$initdir/$ospath/distro"
 
-    elif [[ -d "$apppath/profile/$preset_name" ]]; then
+    elif [[ -d "$apppath/profile/$ospath" ]]; then
 
         echo "create profile from available system profile"
-        cp -fr "$apppath/profile/$preset_name" "$usrdirs/$preset_name/profile"
+        cp -fr "$apppath/profile/$ospath" "$initdir/$ospath/distro"
 
     else
 
         echo "create profile from default system profile"
-        cp -fr "$apppath/profile/falcone" "$usrdirs/$preset_name/profile"
+        cp -fr "$apppath/profile/default" "$initdir/$ospath/distro"
 
     fi
 }
@@ -111,16 +116,16 @@ function craine_maker_prep_profile() {
 
 function craine_maker_prep_release() {
 
-    initcfg="$usrdirs/$preset_name/install/config"
-    initpkg="$usrdirs/$preset_name/install/packer"
+    initcfg="$initdir/$ospath/auxel/config"
+    initpkg="$initdir/$ospath/auxel/packer"
 
-    local osrelease="$usrdirs/$preset_name/install/release"
+    local osrelease="$initdir/$ospath/auxel/release"
 
-    mkdir -p "$usrdirs/$preset_name/"{distrib,packer} &&
-    cp -fr "$applibs/installe" "$usrdirs/$preset_name/install" &&
+    mkdir -p "$initdir/$ospath/"{relpre,locals} &&
+    cp -fr "$applibs/installe" "$initdir/$ospath/auxel" &&
 
-    if [[ -e  "$usrdirs/$preset_name/install/.gitignore" ]];then
-        mv -f "$usrdirs/$preset_name/install/.gitignore" "$usrdirs/$preset_name/"
+    if [[ -e  "$initdir/$ospath/auxel/.gitignore" ]];then
+        mv -f "$initdir/$ospath/auxel/.gitignore" "$initdir/$ospath/"
     fi
        
     touch $osrelease
@@ -178,9 +183,9 @@ function craine_maker_prep_release() {
        echo 'LOGO=falcone-linux' >> $osrelease
     fi
 
-    mkdir -p "$usrdirs/$preset_name/install/config/usr/lib/"
-    cat $osrelease > "$usrdirs/$preset_name/install/config/usr/lib/os-release"
-    cat $osrelease > "$usrdirs/$preset_name/profile/airootfs/etc/os-release"
+    mkdir -p "$initdir/$ospath/auxel/config/usr/lib/"
+    cat $osrelease > "$initdir/$ospath/auxel/config/usr/lib/os-release"
+    cat $osrelease > "$initdir/$ospath/distro/airootfs/etc/os-release"
     rm $osrelease
 }
 

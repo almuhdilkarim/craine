@@ -21,14 +21,12 @@ source "$apppath/interfe/termine"
 
 ## USER PROJECTS
 if [[ $debuger == true ]]; then
-    mkdir -p "$tespath/systes/"{preset,builds}
-    usrdirs="$tespath/systes/builds"
-    usrconf="$tespath/systes/preset"
+    mkdir -p "$tespath/systes"
+    initdir="$tespath/systes"
 else
     
-    mkdir -p "$HOME/.local/craine/"{preset,profile}
-    usrmake="$HOME/.local/craine/builds"
-    usrsets="$HOME/.local/craine/preset"
+    mkdir -p "$HOME/.local/craine/"
+    initdir="$HOME/.local/craine"
 fi
 
 
