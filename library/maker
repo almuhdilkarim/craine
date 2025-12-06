@@ -19,6 +19,7 @@ function craine_maker_prep_presets() {
     fi
 
 
+
     if [[ $preset_replace == "Y" ]];then
         distro_reset=1
     fi
@@ -31,10 +32,10 @@ function craine_maker_prep_presets() {
         return
     fi
 
-    
+
     mkdir -p "$initdir/$ospath"
 
-   
+
     if [[ -e $preset_file ]]; then
     
         echo "create preset from user defined"
@@ -60,7 +61,11 @@ function craine_maker_prep_presets() {
     sed -i '1cdistro_naming="'${preset_name^}'"'  "$initdir/$ospath/raptor.conf"
     sed -i '2cdistro_unique="'${preset_name,,}'"' "$initdir/$ospath/raptor.conf"
 
+    ## prepare distro preset
     source "$initdir/$ospath/raptor.conf"
+
+    ## prepare distor hooker
+    mv "$initdir/$ospath/auxel/install" "$initdir/$ospath/$ospath"
 
 }
 
@@ -203,7 +208,7 @@ function craine_maker_prep() {
     craine_maker_prep_presets &&
     craine_maker_prep_profile &&
     craine_maker_prep_release &&
-    craine_maker_prep_modular
+    craine_maker_prep_modular 
 }
 
 
