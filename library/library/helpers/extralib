@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+function craine_write_postmake() {
+    if [[ -e "$1/posmak" ]]; then
+        echo "" >> $initmke  &&  cat "$1/posmak" >> $initmke
+    fi 
+}
+
+function craine_write_prepmake() {
+    if [[ -e "$1/posmak" ]]; then
+        echo "" >> $initmke  &&  cat "$1/premak" >> $initmke
+    fi 
+}

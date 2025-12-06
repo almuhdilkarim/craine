@@ -18,6 +18,9 @@ source "$apppath/interfe/desktop"
 source "$apppath/interfe/termine"
 
 
+## HELPER LIBRARY
+source "$applibs/helpers/extralib"
+
 
 ## USER PROJECTS
 if [[ $debuger == true ]]; then
@@ -28,6 +31,7 @@ else
     mkdir -p "$HOME/.local/craine/"
     initdir="$HOME/.local/craine"
 fi
+
 
 
 ## LOAD PROCCESS

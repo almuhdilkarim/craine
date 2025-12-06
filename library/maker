@@ -2,22 +2,19 @@
 
 
 ## PRESET PREPARATION 
-
-
 function craine_maker_prep_presets() {
 
     distro_reset=0
     ospath=${preset_name,,}
 
 
-    if [[ -e "$initdir/$preset_file.conf" ]]&&[[ ! -z $preset_file ]]; then
+    if [[ -e "$initdir/$preset_file/raptor.conf" ]]&&[[ ! -z $preset_file ]]; then
         read -p "preset $preset_file is existed, do you want replace it : [ y/N ] " preset_replace
     fi
 
-    if [[ -e "$initdir/$ospath.conf" ]]; then
+    if [[ -e "$initdir/$ospath/raptor.conf" ]]; then
         read -p "preset $ospath is existed, do you want replace it : [ y/N ] " preset_replace
     fi
-
 
 
     if [[ $preset_replace == "Y" ]];then
@@ -28,8 +25,8 @@ function craine_maker_prep_presets() {
         distro_reset=1
     fi
 
-    if [[ -e "$initdir/$ospath.conf" ]]&&[[ $distro_reset == 0 ]];then
-        return
+    if [[ -e "$initdir/$ospath/raptor.conf" ]]&&[[ $distro_reset == 1 ]];then
+        rm -fr "$initdir/$ospath"
     fi
 
 
@@ -63,10 +60,6 @@ function craine_maker_prep_presets() {
 
     ## prepare distro preset
     source "$initdir/$ospath/raptor.conf"
-
-    ## prepare distor hooker
-    mv "$initdir/$ospath/auxel/install" "$initdir/$ospath/$ospath"
-
 }
 
 
@@ -122,7 +115,8 @@ function craine_maker_prep_profile() {
 function craine_maker_prep_release() {
 
     initcfg="$initdir/$ospath/auxel/config"
-    initpkg="$initdir/$ospath/auxel/packer"
+    initpkg="$initdir/$ospath/auxel/packer/module"
+    
 
     local osrelease="$initdir/$ospath/auxel/release"
 
@@ -192,10 +186,24 @@ function craine_maker_prep_release() {
     cat $osrelease > "$initdir/$ospath/auxel/config/usr/lib/os-release"
     cat $osrelease > "$initdir/$ospath/distro/airootfs/etc/os-release"
     rm $osrelease
+
+
+    ## prepare distro builder launcher
+    initexe="$initdir/$ospath/$distro_unique"
+    initmke="$initdir/$ospath/auxel/makes"
+    initres="$initdir/$ospath/auxel/reset"
+    mv "$initdir/$ospath/auxel/install" "$initexe"
 }
 
 
-function craine_maker_prep_modular() {
+function craine_maker_prep() {
+    craine_maker_prep_presets &&
+    craine_maker_prep_profile &&
+    craine_maker_prep_release 
+}
+
+
+function craine_maker_envi() {
     source "$applibs/kernels/load"
     source "$applibs/sysbins/load"
     source "$applibs/bootsys/load"
@@ -204,11 +212,13 @@ function craine_maker_prep_modular() {
 }
 
 
-function craine_maker_prep() {
-    craine_maker_prep_presets &&
-    craine_maker_prep_profile &&
-    craine_maker_prep_release &&
-    craine_maker_prep_modular 
+function craine_maker_make() {
+    craine_write_prepmake $kernel_path
+}
+
+
+function craine_maker_post() {
+    craine_write_postmake $kernel_path
 }
 
 
@@ -217,6 +227,9 @@ function craine_maker() {
     local preset_name=$1
     local preset_file=$2
     local preset_prof=$3
- 
+
     craine_maker_prep
+    craine_maker_envi
+    craine_maker_make
+    craine_maker_post
 }
