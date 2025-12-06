@@ -4,25 +4,34 @@ set -e
 
 
 ## LOAD PATHERS
+
+
 applibs="$apppath/library"
-appprof="$applibs/profile"
-coreset="$applibs/preset"
-appsrcs="$applibs/source"
+appsrcs="$apppath/source"
+
 
 
 
 ## LOAD INTERFACE
-source "$applibs/interfe/hackers"
-source "$applibs/interfe/desktop"
-source "$applibs/interfe/termine"
+source "$apppath/interfe/hackers"
+source "$apppath/interfe/desktop"
+source "$apppath/interfe/termine"
 
 
 
 ## USER PROJECTS
 if [[ $debuger == true ]]; then
-    mkdir -p "$apppath/systes/"{project,profile}
+    mkdir -p "$tespath/systes/"{preset,builds}
+    usrdirs="$tespath/systes/builds"
+    usrconf="$tespath/systes/preset"
 else
-    mkdir -p "$HOME/.local/craine/"{project,profile}
+    
+    mkdir -p "$HOME/.local/craine/"{preset,profile}
+    usrmake="$HOME/.local/craine/builds"
+    usrsets="$HOME/.local/craine/preset"
 fi
 
+
+## LOAD PROCCESS
+source "$apppath/maker"
 

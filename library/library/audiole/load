@@ -3,26 +3,28 @@
 
 
 function craine_envi_audiosys_translate() {
-
-
+    echo "translate module"
 }
 
 
 ## AUDIO ENVIRONMENT
-function craine_envi_audiosy() {
-    audios_path="$appmods/audio/pipe/101"
+function craine_libs_audiole() {
 
-    #if [ -e "$appmods/audio/$distro_audios/101/module" ];then
-    #    audios_path="$appmods/deskto/$distro_audios/101"
-    #fi
+    audios_path="$applibs/audio/pipe/101"
 
-    #if [ -e "$appmods/audio/$distro_audios/$distro_protos/module" ];then
-    #    audios_path="$appmods/audio/$distro_audios/$distro_protos"
-    #fi
+    if [ -e "$applibs/audio/$distro_audios/101/module" ];then
+        audios_path="$applibs/deskto/$distro_audios/101"
+    fi
+
+    if [ -e "$applibs/audio/$distro_audios/$distro_protoc/module" ];then
+        audios_path="$applibs/audio/$distro_audios/$distro_protoc"
+    fi
+
+
 
     #test -e "$audios_path/config"  && audio_config="$audios_path/config"
     #test -e "$audios_path/module"  && audio_module="$audios_path/module"
-    #test -e "$audios_path/service" && audio_daemon="$audios_path/service"
+    #test -e "$audios_path/service" && audio_daemon="$audios_path/moding"
 
     #echo "audio environment loaded"
 }

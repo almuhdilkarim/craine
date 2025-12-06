@@ -1,32 +1,212 @@
 #!/bin/bash
 
 
-## DISTRO PRESET
-if [[ -e $setfile ]];then
-    source $setfile
-else
-    source "$coreset/default.conf"
-    echo $distro_bootsize;
-fi
-
-if [[ -z $distro_protos ]];then
-    distro_protos=101
-fi
-
-if [[ -z $distro_naming ]];then
-    distro_naming="falcone"
-fi
-
-echo $distro_naming
-
-## LOAD MODULES
-#source "$appmods/kernels/load"
-#source "$appmods/sysbins/load"
-#source "$appmods/bootsys/load"
-#source "$appmods/audiole/load"
-#source "$appmods/desktop/load"
-#source "$appmods/kernels/load"
+## PRESET PREPARATION 
 
 
+function craine_maker_prep_presets() {
 
-## PROC GENERAT
+    distro_reset=0
+
+    if [[ -e "$usrconf/$preset_file.conf" ]]&&[[ ! -z $preset_file ]]; then
+        read -p "preset $preset_file is existed, do you want replace it : [ y/N ] " preset_replace
+    fi
+
+    if [[ -e "$usrconf/$preset_name.conf" ]]; then
+        read -p "preset $preset_name is existed, do you want replace it : [ y/N ] " preset_replace
+    fi
+
+
+    if [[ $preset_replace == "Y" ]];then
+        distro_reset=1
+    fi
+
+    if [[ $preset_replace == "y" ]];then
+        distro_reset=1
+    fi
+
+    if [[ -e "$usrconf/$preset_name.conf" ]]&&[[ $distro_reset == 0 ]];then
+        return
+    fi
+
+   
+    if [[ -e $preset_file ]]; then
+    
+        echo "create preset from user defined"
+        cp -f $preset_file "$usrconf/$preset_name.conf"
+
+    elif [[ -e "$apppath/preset/$preset_file.conf" ]]; then
+
+        echo "create preset from system available preset"
+        cat "$apppath/preset/$preset_file.conf" > "$usrconf/$preset_name.conf"
+
+    elif [[ -e "$apppath/preset/$preset_name.conf" ]]; then
+
+        echo "create preset from system available preset"
+        cat "$apppath/preset/$preset_name.conf" > "$usrconf/$preset_name.conf"
+
+    else
+
+        echo "create preset from default system preset"
+        cp -f "$apppath/preset/falcone.conf" "$usrconf/$preset_name.conf"
+
+    fi
+
+    source "$usrconf/$preset_name.conf"
+
+}
+
+
+function craine_maker_prep_profile() {
+
+    if [[ $distro_reset == 0 ]]&&[[ -d "$usrdirs/$preset_name/profile" ]]; then
+        return
+    fi
+
+    if [[ -d "$usrdirs/$preset_name/profile" ]];then
+        rm -fr "$usrdirs/$preset_name/profile"
+    fi
+
+    mkdir -p $usrdirs/$preset_name
+
+
+    if [[ -d $preset_prof ]]; then
+
+        echo "create profile from user define"
+        cp -fr $preset_prof "$usrdirs/$preset_name/profile"
+
+    elif [[ -d "$usrdirs/$preset_prof/profile" ]]&&[[ ! -z $preset_prof ]]; then
+
+        echo "create profile from available user profile"
+        cp -fr "$usrdirs/$preset_prof/profile" "$usrdirs/$preset_name/profile"
+
+    elif [[ -d "$apppath/profile/$preset_prof" ]]&&[[ ! -z $preset_prof ]]; then
+
+        echo "create profile from available system profile"
+        cp -fr "$apppath/profile/$preset_prof" "$usrdirs/$preset_name/profile"
+
+    elif [[ -d "$usrdirs/$preset_file/profile" ]]&&[[ ! -z $preset_file ]]; then
+
+        echo "create profile from available user profile"
+        cp -fr "$usrdirs/$preset_file/profile" "$usrdirs/$preset_name/profile"
+
+    elif [[ -d "$apppath/profile/$preset_file" ]]&&[[ ! -z $preset_file ]]; then
+
+        echo "create profile from available system profile"
+        cp -fr "$apppath/profile/$preset_file" "$usrdirs/$preset_name/profile"
+
+    elif [[ -d "$apppath/profile/$preset_name" ]]; then
+
+        echo "create profile from available system profile"
+        cp -fr "$apppath/profile/$preset_name" "$usrdirs/$preset_name/profile"
+
+    else
+
+        echo "create profile from default system profile"
+        cp -fr "$apppath/profile/falcone" "$usrdirs/$preset_name/profile"
+
+    fi
+}
+
+
+function craine_maker_prep_release() {
+
+    initcfg="$usrdirs/$preset_name/install/config"
+    initpkg="$usrdirs/$preset_name/install/packer"
+
+    local osrelease="$usrdirs/$preset_name/install/release"
+
+    mkdir -p "$usrdirs/$preset_name/"{distrib,packer} &&
+    cp -fr "$applibs/installe" "$usrdirs/$preset_name/install" &&
+
+    if [[ -e  "$usrdirs/$preset_name/install/.gitignore" ]];then
+        mv -f "$usrdirs/$preset_name/install/.gitignore" "$usrdirs/$preset_name/"
+    fi
+       
+    touch $osrelease
+
+    if [[ ! -z "$distro_naming" ]];then
+        echo 'NAME="'$distro_naming'"' > $osrelease
+        echo 'PRETTY_NAME="'$distro_naming'"' >> $osrelease
+    else
+        echo 'NAME="Falcone OS"' > $osrelease
+        echo 'PRETTY_NAME="Falcone OS"' >> $osrelease
+    fi
+
+    if [[ ! -z "$distro_unique" ]];then
+        echo 'ID='$distro_unique'' >> $osrelease
+    else
+        echo 'ID=falcone' >> $osrelease
+    fi
+
+    echo 'ANSI_COLOR="38;2;23;147;209"' >> $osrelease
+
+    if [[ -z "$distro_websit" ]];then
+        echo 'HOME_URL="https://'$distro_unique'.yuros.org"' >> $osrelease
+        
+    else
+        echo 'HOME_URL="'$distro_websit'"' >> $osrelease
+    fi
+
+    if [[ -z "$distro_docuse" ]];then
+        echo 'DOCUMENTATION_URL="https://'$distro_unique'.yuros.org/docs"' >> $osrelease
+    else
+       echo 'DOCUMENTATION_URL="'$distro_docuse'"' >> $osrelease
+    fi
+
+    if [[ -z "$distro_forums" ]];then
+        echo 'SUPPORT_URL="https://'$distro_unique'.yuros.org/forum"' >> $osrelease
+    else
+       echo 'SUPPORT_URL="'$distro_forums'"' >> $osrelease
+    fi
+
+    if [[ -z "$distro_report" ]];then
+        echo 'BUG_REPORT_URL="https://'$distro_unique'.yuros.org/issues"' >> $osrelease
+    else
+       echo 'BUG_REPORT_URL="'$distro_report'"' >> $osrelease
+    fi
+
+    if [[ -z "$distro_privac" ]];then
+        echo 'PRIVACY_POLICY_URL="https://'$distro_unique'.yuros.org/privacy"' >> $osrelease
+    else
+       echo 'PRIVACY_POLICY_URL="'$distro_privac'"' >> $osrelease
+    fi
+
+    if [[ ! -z "$distro_brands" ]];then
+        echo 'LOGO='$distro_unique'-linux' >> $osrelease
+    else
+       echo 'LOGO=falcone-linux' >> $osrelease
+    fi
+
+    mkdir -p "$usrdirs/$preset_name/install/config/usr/lib/"
+    cat $osrelease > "$usrdirs/$preset_name/install/config/usr/lib/os-release"
+    cat $osrelease > "$usrdirs/$preset_name/profile/airootfs/etc/os-release"
+    rm $osrelease
+}
+
+
+function craine_maker_prep_modular() {
+    source "$applibs/kernels/load"
+    source "$applibs/sysbins/load"
+    source "$applibs/bootsys/load"
+    source "$applibs/audiole/load"
+    source "$applibs/desktop/load"
+}
+
+
+function craine_maker_prep() {
+    craine_maker_prep_presets &&
+    craine_maker_prep_profile &&
+    craine_maker_prep_release &&
+    craine_maker_prep_modular
+}
+
+
+function craine_maker() {
+
+    local preset_name=$1
+    local preset_file=$2
+    local preset_prof=$3
+ 
+    craine_maker_prep
+}

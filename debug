@@ -5,29 +5,32 @@ set -e
 
 ## BOOT LOADERS
 debuger=true
-apppath="$(pwd)"
-source "$apppath/library/striper"
+apppath="$(pwd)/library"
+tespath="$(pwd)"
+source "$apppath/striper"
 
 
 ## OPTIONS PROC
-while getopts ":m:f:" opt; do
+while getopts ":m:n:f:p" opt; do
     case $opt in
         m) mode="${OPTARG}"
         ;;
+        n) name="${OPTARG}"
+        ;;
         f) file="${OPTARG}"
+        ;;
+        p) prof="${OPTARG}"
         ;;
     esac
 done
 
 
-if [[ $mode == "dekstop" ]];then
-    craine_dekstop
-elif [[ $mode == "talk" ]]; then
+if [[ $mode == "desktop" ]];then
+    craine_desktop
+elif [[ $mode == "guide" ]]; then
     craine_termine
-elif [[ $mode == "make" ]]; then
-    craine_hackers_make $file
-elif [[ $mode == "list" ]]; then
-    craine_hackers_list 
+elif [[ ! -z $mode ]]&&[[ ! -z $name ]];then
+    craine_hackers $mode $name $file $prof
 else
-    echo "Craine Error: Mode not found"  
+    echo "Craine error: Mode parameter not found"  
 fi

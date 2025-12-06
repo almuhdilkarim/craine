@@ -1,11 +1,40 @@
 #!/bin/bash
 
 
-function craine_hackers_make() {
-	echo "os config file $1"
+
+
+function craine_hacker_list_view() {
+	echo "List available Profile"
 }
 
 
-function craine_hackers_list() {
-	echo "select devels os"
+function craine_hacker_list_show() {
+	echo "Show Os Profile"
+}
+
+
+function craine_hacker_list_edit() {
+	echo "Edit Os Profile"
+}
+
+
+function craine_hacker_list_make() {
+	echo "Generate Operating System Builder"
+	craine_maker $1 $2 $3
+}
+
+
+function craine_hackers() {
+
+	if [[ $1 == "edit" ]]&&[[ ! -z $2 ]]; then
+		craine_hacker_list_edit $2
+	elif [[ $1 == "show" ]]&&[[ ! -z $2 ]];then
+		craine_hacker_list_show $2
+	elif [[ $1 == "make" ]]&&[[ ! -z $2 ]]; then
+		craine_hacker_list_make $2 $3 $4
+	elif [[ $1 == "list" ]]; then
+		craine_hacker_list_view
+	else
+		echo "Crain Error: -m ( process mode ) parameter note found." 
+	fi
 }

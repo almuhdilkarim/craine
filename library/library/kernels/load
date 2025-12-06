@@ -2,24 +2,34 @@
 
 
 ## KERNELS ENVIRONMENT
-function craine_config_kernels() {
+if [[ $distro_kernel == "zen" ]];then
+    local kernel="linuzen"
+elif [[ $distro_kernel == "lqx" ]];then
+    local kernel="liquerix"
+elif [[ $distro_kernel == "lts" ]];then
+    local kernel="linuxlts"
+elif [[ $distro_kernel == "lts" ]];then
+    local kernel="linuxlts"
+else
+    local kernel="linuxer"
+fi
 
-    kernels_path="$appmods/kernel/linuxer/101"
+echo $kernel
 
-    if [ -e "$appmods/kernel/$distro_kernel/101/module" ];then
-        kernels_path="$appmods/kernel/$distro_kernel/101"
-    fi 
+kernel_path="$applibs/kernels/$kernel/101"
 
-    if [ -e "$appmods/kernel/$distro_kernel/$distro_protos/module" ];then
-        kernels_path="$appmods/kernel/$distro_kernel/$distro_protos"
-    fi
+if [ -e "$applibs/kernels/$kernel/$distro_protoc/module" ];then
+    kernel_path="$applibs/kernels/$kernel/$distro_protoc"
+fi
 
-    test -e "$kernels_path/config" && kernels_config="$kernels_path/config"
-    test -e "$kernels_path/module" && kernels_module="$kernels_path/module"
-    echo "Kernel environment loaded"
-}
+echo $kernel_path
+
+test -e "$kernel_path/config" && cp -fr "$kernel_path/config/*" "$initcfg"
+test -e "$kernel_path/module" && cat "$kernel_path/module"   >> "$initpkg"
+echo "Kernel environment loaded"
+
 
 
 function craine_moding_kernels() {
-    test -e "$kernels_path/moding" && kernels_daemon="$kernels_path/moding" 
+    test -e "$kernel_path/moding" && kernels_daemon="$kernel_path/moding" 
 }
