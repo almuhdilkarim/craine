@@ -2,6 +2,11 @@
 
 
 ## PRESET PREPARATION 
+function craine_maker_prep_gitrepo() {
+    echo $osgitrepo
+}
+
+
 function craine_maker_prep_presets() {
 
     distro_reset=0
@@ -16,7 +21,6 @@ function craine_maker_prep_presets() {
         read -p "preset $ospath is existed, do you want replace it : [ y/N ] " preset_replace
     fi
 
-
     if [[ $preset_replace == "Y" ]];then
         distro_reset=1
     fi
@@ -29,10 +33,10 @@ function craine_maker_prep_presets() {
         rm -fr "$initdir/$ospath"
     fi
 
-
+    echo $preset_gitr
     mkdir -p "$initdir/$ospath"
 
-
+    
     if [[ -e $preset_file ]]; then
     
         echo "create preset from user defined"
@@ -197,6 +201,7 @@ function craine_maker_prep_release() {
 
 
 function craine_maker_prep() {
+    craine_maker_prep_gitrepo &&
     craine_maker_prep_presets &&
     craine_maker_prep_profile &&
     craine_maker_prep_release 
@@ -224,9 +229,26 @@ function craine_maker_post() {
 
 function craine_maker() {
 
-    local preset_name=$1
-    local preset_file=$2
-    local preset_prof=$3
+    echo "Generate Operating System Builder"
+
+	## OPTIONS PROC
+	while getopts ":n:f:p:g" opt; do
+		case $opt in
+			n) name="${OPTARG}"
+			;;
+			f) file="${OPTARG}"
+			;;
+			p) prof="${OPTARG}"
+			;;
+			g) gitr="${OPTARG}"
+			;;
+		esac
+	done
+
+    preset_name=$name
+    preset_file=$file
+    preset_prof=$prof
+    preset_gitr=$gitr
 
     craine_maker_prep
     craine_maker_envi

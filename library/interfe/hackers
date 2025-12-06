@@ -18,21 +18,35 @@ function craine_hacker_list_edit() {
 }
 
 
-function craine_hacker_list_make() {
-	echo "Generate Operating System Builder"
-	craine_maker $1 $2 $3
-}
-
-
 function craine_hackers() {
 
-	if [[ $1 == "edit" ]]&&[[ ! -z $2 ]]; then
-		craine_hacker_list_edit $2
-	elif [[ $1 == "show" ]]&&[[ ! -z $2 ]];then
-		craine_hacker_list_show $2
-	elif [[ $1 == "make" ]]&&[[ ! -z $2 ]]; then
-		craine_hacker_list_make $2 $3 $4
-	elif [[ $1 == "list" ]]; then
+	## OPTIONS PROC
+	while getopts ":m:n:g:f:p" opt; do
+		case $opt in
+			m) mode="${OPTARG}"
+			;;
+			n) name="${OPTARG}"
+			;;
+			f) file="${OPTARG}"
+			;;
+			p) prof="${OPTARG}"
+			;;
+			g) gitr="${OPTARG}"
+			;;
+		esac
+	done
+
+	if [[ -z $gitr ]];then
+		gitr="none"
+	fi
+
+	if [[ $mode == "edit" ]]&&[[ ! -z $name ]]; then
+		craine_hacker_list_edit $name
+	elif [[ $mode == "show" ]]&&[[ ! -z $name ]];then
+		craine_hacker_list_show $name
+	elif [[ $mode == "make" ]]&&[[ ! -z $name ]]; then
+		craine_maker -n $name -g $gitr -f $file -p $prof 
+	elif [[ $mode == "list" ]]; then
 		craine_hacker_list_view
 	else
 		echo "Crain Error: -m ( process mode ) parameter note found." 
