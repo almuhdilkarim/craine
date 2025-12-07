@@ -1,0 +1,10 @@
+NAME="BlackOS"
+PRETTY_NAME="BlackOS"
+ID=blackos
+ANSI_COLOR="38;2;23;147;209"
+HOME_URL="https://blackos.yuros.org"
+DOCUMENTATION_URL="https://blackos.yuros.org/docs"
+SUPPORT_URL="https://blackos.yuros.org/forum"
+BUG_REPORT_URL="https://blackos.yuros.org/issues"
+PRIVACY_POLICY_URL="https://blackos.yuros.org/privacy"
+LOGO=falcone-linux
