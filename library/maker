@@ -3,7 +3,19 @@
 
 ## PRESET PREPARATION 
 function craine_maker_prep_gitrepo() {
-    echo $osgitrepo
+
+    if [[ -d "$initdir/$ospath" ]];then
+
+        git -C "$initdir/$ospath" pull origin main
+
+    else
+        git clone $preset_gitr "$initdir/$ospath"
+        if [ $? -eq 0 ]; then
+            echo "git close successful"
+        else
+            echo "git add failed" && exit 1
+        fi
+    fi
 }
 
 
@@ -33,31 +45,44 @@ function craine_maker_prep_presets() {
         rm -fr "$initdir/$ospath"
     fi
 
-    echo $preset_gitr
-    mkdir -p "$initdir/$ospath"
 
-    
-    if [[ -e $preset_file ]]; then
-    
+    ## setup distro profile 
+    if [[ -z $preset_gitr ]];then
+        mkdir -p "$initdir/$ospath/confe"
+    else
+        craine_maker_prep_gitrepo
+    fi
+
+
+    if [[ -e "$preset_file/distro.conf" ]]; then
+
         echo "create preset from user defined"
-        cp -f $preset_file "$initdir/$ospath/prepare.conf"
+        source "$preset_file/distro.conf"
+        cp -f "$preset_file/distro.conf" "$initdir/$ospath/distro.conf"
+        cp -f "$preset_file/profil.conf" "$initdir/$ospath/confe/default.conf"
 
-    elif [[ -e "$apppath/preset/$preset_file.conf" ]]; then
-
-        echo "create preset from system available preset"
-        cat "$apppath/preset/$preset_file.conf" > "$initdir/$ospath/prepare.conf"
-
-    elif [[ -e "$apppath/preset/$ospath.conf" ]]; then
+    elif [[ -e "$apppath/preset/$preset_file/distro.conf" ]]; then
 
         echo "create preset from system available preset"
-        cat "$apppath/preset/$ospath.conf" > "$initdir/$ospath/prepare.conf"
+        source "$apppath/preset/$preset_file/distro.conf"
+        cat "$apppath/preset/$preset_file/distro.conf" > "$initdir/$ospath/prepare.conf"
+        cp -f "$apppath/preset/$preset_file/profil.conf" "$initdir/$ospath/confe/default.conf"
+
+    elif [[ -e "$apppath/preset/$ospath/distro.conf" ]]; then
+
+        echo "create preset from system available preset"
+        source  "$apppath/preset/$ospath/distro.conf"
+        cat "$apppath/preset/$ospath/distro.conf" > "$initdir/$ospath/prepare.conf"
+        cp -f "$apppath/preset/$ospath/profil.conf" "$initdir/$ospath/confe/default.conf"
 
     else
 
         echo "create preset from default system preset"
-        cp -f "$apppath/preset/default.conf" "$initdir/$ospath/prepare.conf"
-
+        source "$apppath/preset/default/distro.conf"
+        cp -f "$apppath/preset/default/distro.conf" "$initdir/$ospath/prepare.conf"
+        cp -f "$apppath/preset/default/profil.conf" "$initdir/$ospath/confe/default.conf"
     fi
+
 
     sed -i '1cdistro_naming="'${preset_name^}'"'  "$initdir/$ospath/prepare.conf"
     sed -i '2cdistro_unique="'${preset_name,,}'"' "$initdir/$ospath/prepare.conf"
@@ -211,7 +236,6 @@ function craine_maker_prep_release() {
 
 
 function craine_maker_prep() {
-    craine_maker_prep_gitrepo &&
     craine_maker_prep_presets &&
     craine_maker_prep_profile &&
     craine_maker_prep_release 
@@ -234,6 +258,14 @@ function craine_maker_make() {
 
 function craine_maker_post() {
     craine_write_postmake $kernel_path
+}
+
+
+function craine_maker_done() {
+    cd "$initdir/$ospath"
+    git add . &&
+    git commit -m "$(date)" &&
+    git push
 }
 
 
@@ -260,8 +292,9 @@ function craine_maker() {
     preset_prof=$prof
     preset_gitr=$gitr
 
-    craine_maker_prep
-    craine_maker_envi
-    craine_maker_make
-    craine_maker_post
+    craine_maker_prep &&
+    craine_maker_envi &&
+    craine_maker_make &&
+    craine_maker_post &&
+    craine_maker_done
 }
