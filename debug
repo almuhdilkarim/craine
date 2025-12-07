@@ -31,8 +31,10 @@ if [[ $mode == "desktop" ]];then
     craine_desktop
 elif [[ $mode == "guide" ]]; then
     craine_termine
-elif [[ ! -z $mode ]]&&[[ ! -z $name ]];then
-    craine_hackers -m $mode -n $name -g $gitr -f $file -p $prof
+elif [[ $mode == "make" ]]&&[[ ! -z $name ]]; then
+    craine_maker -n $name -g $gitr -f $file -p $prof
+elif [[ $mode == "edit" ]]&&[[ ! -z $name ]]; then
+    craine_edito -n $name -g $gitr -f $file -p $prof
 else
     echo "Craine error: Mode parameter not found"  
 fi

@@ -13,11 +13,11 @@ function craine_maker_prep_presets() {
     ospath=${preset_name,,}
 
 
-    if [[ -e "$initdir/$preset_file/raptor.conf" ]]&&[[ ! -z $preset_file ]]; then
+    if [[ -e "$initdir/$preset_file/prepare.conf" ]]&&[[ ! -z $preset_file ]]; then
         read -p "preset $preset_file is existed, do you want replace it : [ y/N ] " preset_replace
     fi
 
-    if [[ -e "$initdir/$ospath/raptor.conf" ]]; then
+    if [[ -e "$initdir/$ospath/prepare.conf" ]]; then
         read -p "preset $ospath is existed, do you want replace it : [ y/N ] " preset_replace
     fi
 
@@ -29,7 +29,7 @@ function craine_maker_prep_presets() {
         distro_reset=1
     fi
 
-    if [[ -e "$initdir/$ospath/raptor.conf" ]]&&[[ $distro_reset == 1 ]];then
+    if [[ -e "$initdir/$ospath/prepare.conf" ]]&&[[ $distro_reset == 1 ]];then
         rm -fr "$initdir/$ospath"
     fi
 
@@ -40,27 +40,35 @@ function craine_maker_prep_presets() {
     if [[ -e $preset_file ]]; then
     
         echo "create preset from user defined"
-        cp -f $preset_file "$initdir/$ospath/raptor.conf"
+        cp -f $preset_file "$initdir/$ospath/prepare.conf"
 
     elif [[ -e "$apppath/preset/$preset_file.conf" ]]; then
 
         echo "create preset from system available preset"
-        cat "$apppath/preset/$preset_file.conf" > "$initdir/$ospath/raptor.conf"
+        cat "$apppath/preset/$preset_file.conf" > "$initdir/$ospath/prepare.conf"
 
     elif [[ -e "$apppath/preset/$ospath.conf" ]]; then
 
         echo "create preset from system available preset"
-        cat "$apppath/preset/$ospath.conf" > "$initdir/$ospath/raptor.conf"
+        cat "$apppath/preset/$ospath.conf" > "$initdir/$ospath/prepare.conf"
 
     else
 
         echo "create preset from default system preset"
-        cp -f "$apppath/preset/default.conf" "$initdir/$ospath/raptor.conf"
+        cp -f "$apppath/preset/default.conf" "$initdir/$ospath/prepare.conf"
 
     fi
 
-    sed -i '1cdistro_naming="'${preset_name^}'"'  "$initdir/$ospath/raptor.conf"
-    sed -i '2cdistro_unique="'${preset_name,,}'"' "$initdir/$ospath/raptor.conf"
+    sed -i '1cdistro_naming="'${preset_name^}'"'  "$initdir/$ospath/prepare.conf"
+    sed -i '2cdistro_unique="'${preset_name,,}'"' "$initdir/$ospath/prepare.conf"
+
+
+    ## cleaned distro preset
+    sed '/^[[:blank:]]*#/d' "$initdir/$ospath/prepare.conf" > "$initdir/$ospath/level1.conf"
+    sed '/^[[:space:]]*$/d' "$initdir/$ospath/level1.conf" > "$initdir/$ospath/raptor.conf"
+    rm -f "$initdir/$ospath/prepare.conf"
+    rm -f "$initdir/$ospath/level1.conf"
+    
 
     ## prepare distro preset
     source "$initdir/$ospath/raptor.conf"
@@ -196,7 +204,9 @@ function craine_maker_prep_release() {
     initexe="$initdir/$ospath/$distro_unique"
     initmke="$initdir/$ospath/auxel/makes"
     initres="$initdir/$ospath/auxel/reset"
-    mv "$initdir/$ospath/auxel/install" "$initexe"
+    if [[ -e "$initdir/$ospath/auxel/install"  ]];then
+        mv "$initdir/$ospath/auxel/install" "$initexe"
+    fi
 }
 
 

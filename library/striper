@@ -12,14 +12,9 @@ appsrcs="$apppath/source"
 
 
 
-## LOAD INTERFACE
-source "$apppath/interfe/hackers"
-source "$apppath/interfe/desktop"
-source "$apppath/interfe/termine"
-
-
 ## HELPER LIBRARY
 source "$applibs/helpers/extralib"
+source "$applibs/helpers/desktop"
 
 
 ## USER PROJECTS

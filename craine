@@ -31,5 +31,5 @@ elif [[ $1 == "guide" ]]; then
 elif [[ -z $mode ]]&&[[ ! -z $name ]];then
     craine_hackers $mode $name $file $prof
 else
-    echo "Craine Error: Mode not found"  
+    echo "Craine error: Mode not found"  
 fi
