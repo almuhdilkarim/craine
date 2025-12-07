@@ -7,14 +7,15 @@ if [[ $distro_kernel == "zen" ]];then
 elif [[ $distro_kernel == "lqx" ]];then
     kernel_type="liquerix"
 elif [[ $distro_kernel == "lts" ]];then
-    kernel_type="linuxlts"
-elif [[ $distro_kernel == "lts" ]];then
-    kernel_type="linuxlts"
+    kernel_type="hardened"
+elif [[ $distro_kernel == "hardened" ]];then
+    kernel_type="hardened"
 else
     kernel_type="linuxer"
 fi
 
 kernel_path="$applibs/kernels/$kernel_type/101"
+
 
 if [ -e "$applibs/kernels/$kernel_type/$distro_protoc/module" ];then
     kernel_path="$applibs/kernels/$kernel_type/$distro_protoc"
