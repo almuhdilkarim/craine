@@ -8,9 +8,7 @@ set -e
 function craine_maker_paths() {
 
 
-    local target_name=${preset_name,,}
-    local preset_folder="$apppath/preset/default"
-
+    local preset_name=${preset_name,,}
 
     # raptor target installation
     raptor_rooter="$initdir/$preset_name"
@@ -22,9 +20,10 @@ function craine_maker_paths() {
     raptor_packfa="$initdir/$preset_name/auxel/packer/packfa"
 
 
-    ## property replace variables
-    test -z $preset_name && preset_name="default"
-    test -z $preset_conf && preset_conf="$preset_name"
+    ## prepare folder information   
+    preset_folder="$apppath/preset/default"
+    test -d "$apppath/preset/$preset_base" && preset_folder="$apppath/preset/$preset_base"
+    test -d "$preset_conf" && preset_folder="$preset_conf"
 
 
     ## preaprea default configure
@@ -32,12 +31,6 @@ function craine_maker_paths() {
     test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
     test -e "$preset_folder/instal.conf" && preset_instal="$preset_folder/instal.conf"
   
-
-    ## prepare folder information   
-    test -d "$apppath/preset/$preset_name" && preset_folder="$apppath/preset/$preset_name"
-    test -d "$apppath/preset/$preset_conf" && preset_folder="$apppath/preset/$preset_conf"
-    test -d "$preset_conf" && preset_folder="$preset_conf"
-
 
     ## prepare distro information    
     test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
@@ -107,6 +100,7 @@ function craine_maker_repos() {
         test -d "$initdir/$preset_name" && rm -fr "$initdir/$preset_name" &&
         craine_maker_clone && mkdir -p "$initdir/$preset_name/auxel/datum/" &&
         echo $preset_gitr > $distro_repos 
+        
 
 
     ## pull git repodata
@@ -132,7 +126,6 @@ function craine_maker_repos() {
 }
 
 
-
 ## PREPSYSBASE 
 function craine_maker_cores() {
     
@@ -144,8 +137,9 @@ function craine_maker_cores() {
 }
 
 
-function craine_maker_distr() {
+function craine_maker_confi() {
 
+    ## ENVIRONTMENT
     local distro_repos="$initdir/$preset_name/auxel/datum/raptors.conf"
     mkdir -p "$initdir/$preset_name/auxel/datum" &&
     cp $preset_distro "$initdir/$preset_name/auxel/datum/prep1" &&
@@ -248,15 +242,16 @@ function craine_maker_genis() {
 
 
 function craine_maker_envir() {
-    source "$applibs/libkern/load"
-    source "$applibs/libboot/load"
-    source "$applibs/libdisk/load"
-    source "$applibs/libnets/load"
-    source "$applibs/libaudi/load"
-    source "$applibs/libguis/load"
-    source "$applibs/libsecs/load"
-    source "$applibs/libcore/load"
-    source "$applibs/libhids/load"
+    source "$applibs/libkern/load" &&
+    source "$applibs/libboot/load" &&
+    source "$applibs/libdisk/load" &&
+    source "$applibs/libnets/load" &&
+    source "$applibs/libaudi/load" &&
+    source "$applibs/libguis/load" &&
+    source "$applibs/libsecs/load" &&
+    source "$applibs/libcore/load" &&
+    source "$applibs/libhids/load" &&
+    source "$preset_folder/loader"
 }
 
 
@@ -267,7 +262,7 @@ function craine_maker_based() {
     if [[ $reset_distro == "Y" ]]||[[ $reset_distro == "y" ]]; then
         rm -f $distro_repos && touch $distro_repos &&
         craine_maker_cores &&
-        craine_maker_distr &&
+        craine_maker_confi &&
         craine_maker_relea &&
         craine_maker_genis &&
         craine_maker_envir 
@@ -275,7 +270,7 @@ function craine_maker_based() {
 
     if [[ ! -e $distro_repos ]]; then
         craine_maker_cores &&
-        craine_maker_distr &&
+        craine_maker_confi &&
         craine_maker_relea &&
         craine_maker_genis &&
         craine_maker_envir 
@@ -320,22 +315,24 @@ function craine_maker() {
     echo "Generate Operating System Builder"
 
 	## OPTIONS PROC
-	while getopts ":n:f:p:c" opt; do
+	while getopts ":n:b:g:c" opt; do
 		case $opt in
 			n) name="${OPTARG}"
 			;;
-			c) conf="${OPTARG}"
-			;;
-			p) prof="${OPTARG}"
+			b) base="${OPTARG}"
 			;;
 			g) gitr="${OPTARG}"
+			;;
+            c) conf="${OPTARG}"
 			;;
 		esac
 	done
 
-    preset_name=${name,,}
     preset_conf=$conf
-    preset_prof=$prof
     preset_gitr=$gitr
+    preset_name=${name,,}
+    preset_base=${base,,}
+    test -z $base && preset_base=${name,,}
+
     craine_maker_proc
 }

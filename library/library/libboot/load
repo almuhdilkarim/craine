@@ -6,7 +6,7 @@ function craine_module_boots_loader() {
 
 
     ## ENVIRONMENTS
-    local boots_dirs="$applibs/libaudi"
+    local boots_dirs="$applibs/libboot"
 
     if [[ $distro_booter == "boster" ]];then
         boots_type="$boots_dirs/boster"

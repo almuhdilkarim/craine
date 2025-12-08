@@ -11,7 +11,7 @@ source "$apppath/striper"
 
 
 ## OPTIONS PROC
-while getopts ":m:n:g:c:p" opt; do
+while getopts ":m:n:g:b:c" opt; do
     case $opt in
         m) mode="${OPTARG}"
         ;;
@@ -19,20 +19,23 @@ while getopts ":m:n:g:c:p" opt; do
         ;;
         g) gitr="${OPTARG}"
         ;;
+        b) base="${OPTARG}"
+        ;;
         c) conf="${OPTARG}"
         ;;
     esac
 done
 
+echo $gitr
 
 if [[ $mode == "desktop" ]];then
     craine_desktop
 elif [[ $mode == "guide" ]]; then
     craine_termine
 elif [[ $mode == "make" ]]&&[[ ! -z $name ]]; then
-    craine_maker -n $name -g $gitr -c $conf -p $prof
+    craine_maker -n $name -g $gitr -c $conf -b $base
 elif [[ $mode == "edit" ]]&&[[ ! -z $name ]]; then
-    craine_edito -n $name -g $gitr -f $file -p $prof
+    craine_edito -n $name -g $gitr -c $conf -b $base
 else
     echo "Craine error: Mode parameter not found"  
 fi
