@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 set -e 
 
 
@@ -30,6 +29,7 @@ function craine_maker_paths() {
     test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
     test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
     test -e "$preset_folder/instal.conf" && preset_userde="$preset_folder/instal.conf"
+    test -e "$preset_folder/protos.conf" && source "$preset_folder/protos.conf"
   
 
     ## prepare distro buidlprofil
@@ -152,11 +152,8 @@ function craine_maker_confi() {
 
 
 function craine_maker_relea() {
-
   
     local osrelease="$initdir/$preset_name/auxel/release"
-    source "$initdir/$preset_name/auxel/datum/raptors.conf"
- 
 
     if [[ ! -z "$distro_naming" ]];then
         echo 'NAME="'$distro_naming'"' > $osrelease
@@ -306,7 +303,7 @@ function craine_maker_posts() {
 
 
 function craine_maker_done() {
-    cd "$initdir/$ospath"
+    cd $raptor_rooter &&
     git add . &&
     git commit -m "$(date)" &&
     git push
