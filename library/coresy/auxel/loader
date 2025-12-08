@@ -10,6 +10,22 @@ test -e "$buildauxe/makes" && source "$buildauxe/makes"
 test -e "$buildauxe/makos" && source "$buildauxe/makos"
 
 
+## PACKAGES
 pack_pacmir="$buildpack/pacmir"
 pack_packfa="$buildpack/packfa"
 pack_packco="$buildpack/packco"
+pack_pacman="$buildpack/instal"
+
+
+## microcode
+pack_ucodes=$(grep "vendor_id" /proc/cpuinfo | head -n 1 | awk '{print $3}')
+
+if [[ "$pack_ucodes" == "GenuineIntel" ]]; then
+    echo "intel-ucode" > "$buildpack/instal"
+elif [[ "$pack_ucodes" == "AuthenticAMD" ]]; then
+    echo "amd-ucode" > "$buildpack/instal"
+fi
+
+
+## gathering
+cat $pack_pacmir >> $pack_pacman

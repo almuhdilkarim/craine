@@ -1,4 +1,8 @@
 
-function raptor_audio_post() {
+function raptor_audio_post_serve() {
     arch-chroot /mnt systemctl enable --global pipewire-pulse.service
+}
+
+function raptor_audio_post() {
+   echo "audio post make"
 }

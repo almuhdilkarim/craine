@@ -1,13 +1,21 @@
 
+
 function raptor_cores_prep_mulibs() {
 
+    if [[ -n $distro_libs32 ]]&&[[ $distro_libs32 == true ]];then
+        echo "" >>  "/etc/pacman.conf" &&
+        echo "[multilib]" >> "/etc/pacman.conf" &&
+        echo "Include = /etc/pacman.d/mirrorlist" >> "/etc/pacman.conf"
+    fi
 }
 
 function raptor_cores_prep_pacmir() {
-    test -e $pack_pacmir && pacstrap -U /mnt - < $pack_pacmir 
+    test -e $pack_pacman && pacstrap -U /mnt - < $pack_pacman 
 }
 
 function raptor_cores_prep() {
-    raptor_cores_prep_mulibs &&
-    raptor_cores_prep_pacmir
+
+    test -e $pack_pacman && echo $pack_pacman 
+    #raptor_cores_prep_mulibs &&
+    #raptor_cores_prep_pacmir 
 }

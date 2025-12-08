@@ -15,10 +15,10 @@ fi
 
 
 if [[ $1 == "--reset" ]];then
-   raptor_reset 
+    raptor_procmode="reset" && raptor_makes  
 fi
 
 
 if [[ $1 == "--install" ]];then
-    raptor_makes
+    raptor_procmode="puref" && raptor_makes
 fi

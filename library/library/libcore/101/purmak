@@ -1,5 +1,5 @@
 
-function craine_prep_install() {
+function raptor_prep_install() {
     raptor_disks_prep
     raptor_cores_prep
     raptor_kerns_prep
@@ -12,7 +12,7 @@ function craine_prep_install() {
     raptor_distr_prep
 }
 
-function craine_post_install() {
+function raptor_post_install() {
     raptor_cores_post
     raptor_disks_post
     raptor_kerns_post
@@ -25,11 +25,13 @@ function craine_post_install() {
     raptor_distr_post
 }
 
-function craine_post_finishe() {
+function raptor_post_finishe() {
     mkinitcpio -P &&
     umount -R /mnt
 }
 
-craine_prep_install &&
-craine_post_install &&
-craine_post_finishe
+function raptor_makes() {
+    raptor_prep_install &&
+    raptor_post_install &&
+    raptor_post_finishe
+}
