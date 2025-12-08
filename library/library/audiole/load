@@ -10,9 +10,8 @@ else
 fi
 
 
-echo $audio_type
+## LOAD MODULES
 
-## ONLYLOAD FORDESKTOP
 if [[ $audio_type != "none" ]]; then
 
     audio_path="$applibs/audiole/$audio_type/101"

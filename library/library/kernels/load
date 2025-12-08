@@ -15,10 +15,10 @@ else
 fi
 
 
-kernel_path="$applibs/kernelis/$kernel_type/101"
+kernel_path="$applibs/kernels/$kernel_type/101"
 
-if [ -e "$applibs/kernelis/$kernel_type/$distro_protoc/module" ];then
-    kernel_path="$applibs/kernelis/$kernel_type/$distro_protoc"
+if [ -e "$applibs/kernels/$kernel_type/$distro_protoc/module" ];then
+    kernel_path="$applibs/kernels/$kernel_type/$distro_protoc"
 fi
 
 
@@ -29,10 +29,10 @@ echo "Kernel environment loaded"
 
 
 function kernel_write_prepare() {
-
+    echo "kernel prepare"
 }
 
 
 function kernel_write_postcon() {
-    
+    echo "kernel post conf"
 }

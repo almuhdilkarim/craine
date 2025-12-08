@@ -1,1 +1,28 @@
 #!/bin/bash
+
+## BOOT ENVIRONMENTS
+if [[ $distro_audios == "alsa" ]];then
+    audio_type="alsas"
+elif [[ $distro_audios == "pipewire" ]];then
+    audio_type="piper"
+elif [[ $distro_audios == "pulse" ]];then
+    audio_type="pulse"
+else
+    audio_type="none"
+fi
+
+
+## BOOT MODULES
+
+if [[ $audio_type != "none" ]]; then
+
+    audio_path="$applibs/audiole/$audio_type/101"
+
+    if [ -e "$applibs/audiole/$audio_type/$distro_protoc/module" ];then
+        audio_path="$applibs/audiole/$audio_type/$distro_protoc"
+    fi
+
+    test -e "$audio_path/module" && cat "$audio_path/module" >>   "$raptor_packer"
+    test -e "$audio_path/config" && cp -fr "$audio_path/config/*" "$raptor_config"
+    echo "Audio environment loaded"
+fi
