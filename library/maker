@@ -302,7 +302,7 @@ function craine_maker_posts() {
 }
 
 
-function craine_maker_done() {
+function craine_maker_doned() {
     cd $raptor_rooter &&
     git add . &&
     git commit -m "$(date)" &&
@@ -311,11 +311,12 @@ function craine_maker_done() {
 
 
 function craine_maker_proc() {
-    craine_maker_paths
-    craine_maker_repos
-    craine_maker_based
-    craine_maker_preps
-    craine_maker_posts
+    craine_maker_paths &&
+    craine_maker_repos &&
+    craine_maker_based &&
+    craine_maker_preps &&
+    craine_maker_posts &&
+    craine_maker_doned
 }
 
 
