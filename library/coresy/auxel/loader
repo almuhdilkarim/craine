@@ -1,10 +1,12 @@
 #!/bin/bash
 
+builddata="$buildauxe/datum"
 buildauxe="$buildroot/auxel"
 buildconf="$buildauxe/config"
 buildpack="$buildauxe/packer"
 buildlibs="$buildauxe/corest"
-builddata="$buildauxe/datum"
+buildprof="$buildauxe/profile"
+
 
 
 ## DISTVARS
@@ -38,3 +40,7 @@ fi
 
 ## gathering
 cat $pack_pacmir >> $pack_pacman
+
+
+## PROFILING
+test -e $3 && source "$buildprof/$3" 
