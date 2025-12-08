@@ -10,16 +10,18 @@ else
 fi
 
 
+echo $audio_type
+
 ## ONLYLOAD FORDESKTOP
 if [[ $audio_type != "none" ]]; then
 
-    audio_path="$applibs/kernels/$audio_type/101"
+    audio_path="$applibs/audiole/$audio_type/101"
 
-    if [ -e "$applibs/kernels/$audio_type/$distro_protoc/module" ];then
-        audio_path="$applibs/kernels/$audio_type/$distro_protoc"
+    if [ -e "$applibs/audiole/$audio_type/$distro_protoc/module" ];then
+        audio_path="$applibs/audiole/$audio_type/$distro_protoc"
     fi
 
-    test -e "$audio_path/module" && cat "$audio_path/module" >> "$initpkg"
-    test -e "$audio_path/config" && cp -fr "$audio_path/config/*" "$initcfg"
+    test -e "$audio_path/module" && cat "$audio_path/module" >>   "$raptor_packer"
+    test -e "$audio_path/config" && cp -fr "$audio_path/config/*" "$raptor_config"
     echo "Audio environment loaded"
 fi
