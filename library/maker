@@ -12,6 +12,8 @@ function craine_maker_preps() {
 
     # raptor target installation
     raptor_rooter="$initdir/$preset_name"
+    raptor_makers="$initdir/$preset_name/auxel/makes"
+    raptor_resete="$initdir/$preset_name/auxel/resete"
     raptor_config="$initdir/$preset_name/auxel/config"
     raptor_packer="$initdir/$preset_name/auxel/packer/packer"
     raptor_packco="$initdir/$preset_name/auxel/packer/packco"
@@ -132,9 +134,9 @@ function craine_maker_repos() {
 ## PREPSYSBASE 
 function craine_maker_based_cores() {
     
+    cp -fr "$appcore/"* "$raptor_rooter"  &&
+    cp -fr "$appcore/."* "$raptor_rooter" &&
     mkdir -p "$raptor_rooter/"{locals,relpre} &&
-    cp -fr "$applibs/coresys/"* "$raptor_rooter"  &&
-    cp -fr "$applibs/coresys/."* "$raptor_rooter" &&
     cp -fr "$preset_profil" "$raptor_rooter/distro" &&
     mv "$raptor_rooter/install" "$raptor_rooter/$preset_name-install"
 }
@@ -245,10 +247,13 @@ function craine_maker_based_genis() {
 
 function craine_maker_based_envir() {
     source "$applibs/kernels/load"
-    source "$applibs/sysbins/load"
     source "$applibs/bootsys/load"
+    source "$applibs/storage/load"
+    source "$applibs/netgate/load"
     source "$applibs/audiole/load"
     source "$applibs/desktop/load"
+    source "$applibs/securet/load"
+    source "$applibs/protoco/load"
 }
 
 

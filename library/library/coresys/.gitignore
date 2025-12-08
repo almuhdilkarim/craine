@@ -1,7 +1,0 @@
-packer/*
-packer
-distrib/*
-distrib
-distrib/release/*
-config/define/*
-config/define

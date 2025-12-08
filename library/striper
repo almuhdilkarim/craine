@@ -8,13 +8,15 @@ set -e
 
 applibs="$apppath/library"
 appsrcs="$apppath/source"
+appcore="$apppath/coresy"
+apphelp="$apppath/helper"
 inetcon=$( ping -q -c1 google.com &>/dev/null && echo true || echo false )
 
 
 
 ## HELPER LIBRARY
-source "$applibs/helpers/extralib"
-source "$applibs/helpers/desktop"
+source "$apphelp/extralib"
+source "$apphelp/desktop"
 
 
 ## USER PROJECTS
