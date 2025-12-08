@@ -127,7 +127,7 @@ function craine_maker_cores() {
     cp -fr "$appcore/."* "$raptor_rooter" &&
     mkdir -p "$raptor_rooter/"{locals,relpre,auxel/profile} &&
     cp -fr "$preset_profil" "$raptor_rooter/distro" &&
-    mv "$raptor_rooter/install" "$raptor_rooter/$preset_name-install"
+    mv "$raptor_rooter/install" "$raptor_rooter/installer"
 
     # default installation profile
     cp -f $preset_userde $raptor_userde
