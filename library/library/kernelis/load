@@ -14,14 +14,25 @@ else
     kernel_type="linuxer"
 fi
 
-kernel_path="$applibs/kernels/$kernel_type/101"
 
+kernel_path="$applibs/kernelis/$kernel_type/101"
 
-if [ -e "$applibs/kernels/$kernel_type/$distro_protoc/module" ];then
-    kernel_path="$applibs/kernels/$kernel_type/$distro_protoc"
+if [ -e "$applibs/kernelis/$kernel_type/$distro_protoc/module" ];then
+    kernel_path="$applibs/kernelis/$kernel_type/$distro_protoc"
 fi
 
 
 test -e "$kernel_path/module" && cat "$kernel_path/module" >>   "$raptor_packer"
 test -e "$kernel_path/config" && cp -fr "$kernel_path/config/*" "$raptor_config"
 echo "Kernel environment loaded"
+
+
+
+function kernel_write_prepare() {
+
+}
+
+
+function kernel_write_postcon() {
+    
+}
