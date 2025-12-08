@@ -12,3 +12,4 @@ function craine_write_prepmake() {
         echo "" >> $initmke  &&  cat "$1/premak" >> $initmke
     fi 
 }
+

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-iso_name="osname"
-iso_label="osname_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
-iso_publisher="osname OS <https://blackroom.yuros.org/blezing>"
-iso_application="osname Recovery"
+iso_name="OSNAMEOS"
+iso_label="osnameid_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
+iso_publisher="OSNAMEOS <https://blackroom.yuros.org/blezing>"
+iso_application="OSNAMEOS Recovery"
 iso_version="$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y.%m.%d)"
 install_dir="arch"
 buildmodes=('iso')

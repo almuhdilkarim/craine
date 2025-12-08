@@ -1,170 +1,167 @@
 #!/bin/bash
 
 
-## PRESET PREPARATION 
-function craine_maker_prep_gitrepo() {
+## PREPARATION 
+function craine_maker_preps() {
 
-    if [[ -d "$initdir/$ospath" ]];then
 
-        git -C "$initdir/$ospath" pull origin main
+    local preset_name=${preset_name,,}
+    local preset_folder="$apppath/preset/default"
 
-    else
-        git clone $preset_gitr "$initdir/$ospath"
-        if [ $? -eq 0 ]; then
-            echo "git close successful"
-        else
-            echo "git add failed" && exit 1
-        fi
+
+
+    # raptor target installation
+    raptor_rooter="$initdir/$preset_name"
+    raptor_config="$initdir/$preset_name/auxel/config"
+    raptor_packer="$initdir/$preset_name/auxel/packer/packer"
+    raptor_packco="$initdir/$preset_name/auxel/packer/packco"
+    raptor_packfa="$initdir/$preset_name/auxel/packer/packfa"
+
+
+
+    ## property replace variables
+    test -z $preset_name && preset_name="default"
+    test -z $preset_conf && preset_conf="$preset_name"
+
+
+    ## preaprea default configure
+    test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
+    test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
+    test -e "$preset_folder/instal.conf" && preset_instal="$preset_folder/instal.conf"
+  
+
+
+    ## prepare folder information   
+    test -d "$apppath/preset/$preset_name" && preset_folder="$apppath/preset/$preset_name"
+    test -d "$apppath/preset/$preset_conf" && preset_folder="$apppath/preset/$preset_conf"
+    test -d "$preset_conf" && preset_folder="$preset_conf"
+
+
+    ## prepare distro information    
+    test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
+    test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
+    test -e "$preset_folder/instal.conf" && preset_instal="$preset_folder/instal.conf"
+
+
+
+    ## prepare distro buidlprofil
+    test -d "$apppath/profile" && preset_profil="$apppath/profile"
+
+
+    ## validation existing config
+    if [[ -e "$initdir/$preset_name/auxel/datum/gitrepo.conf" ]]&&[[ -n $preset_gitr ]]&&[[ $inetcon == true ]];then
+        read -p "Git repoository preset for $preset_conf is existed, do you want replace it : [ y/N ] " reset_gitrep
+    fi
+
+    if [[ -e "$initdir/$preset_name/auxel/datum/raptors.conf" ]];then
+        read -p "Distro preset $preset_conf is existed, do you want replace it : [ y/N ] " reset_distro
+    fi
+
+    if [[ -e "$initdir/$preset_name/profil/default" ]];then
+        read -p "Installation preset $preset_conf is existed, do you want replace it : [ y/N ] " reset_instal
+    fi
+
+    if [[ -d "$initdir/$preset_name/profile" ]];then
+        read -p "Profile preset $preset_conf is existed, do you want replace it : [ y/N ] " reset_profil
     fi
 }
 
 
-function craine_maker_prep_presets() {
 
-    distro_reset=0
-    ospath=${preset_name,,}
-
-
-    if [[ -e "$initdir/$preset_file/prepare.conf" ]]&&[[ ! -z $preset_file ]]; then
-        read -p "preset $preset_file is existed, do you want replace it : [ y/N ] " preset_replace
-    fi
-
-    if [[ -e "$initdir/$ospath/prepare.conf" ]]; then
-        read -p "preset $ospath is existed, do you want replace it : [ y/N ] " preset_replace
-    fi
-
-    if [[ $preset_replace == "Y" ]];then
-        distro_reset=1
-    fi
-
-    if [[ $preset_replace == "y" ]];then
-        distro_reset=1
-    fi
-
-    if [[ -e "$initdir/$ospath/prepare.conf" ]]&&[[ $distro_reset == 1 ]];then
-        rm -fr "$initdir/$ospath"
-    fi
-
-
-    ## setup distro profile 
-    if [[ -z $preset_gitr ]];then
-        mkdir -p "$initdir/$ospath/confe"
+## PREPGITREPO 
+function craine_maker_repos_clone() {
+    
+    git clone $preset_gitr "$initdir/$preset_name"
+    
+    if [ $? -eq 0 ]; then
+        echo "git clone is successful"
     else
-        craine_maker_prep_gitrepo
+        echo "git clone is failed" && exit 1
     fi
+}
 
 
-    if [[ -e "$preset_file/distro.conf" ]]; then
-
-        echo "create preset from user defined"
-        source "$preset_file/distro.conf"
-        cp -f "$preset_file/distro.conf" "$initdir/$ospath/distro.conf"
-        cp -f "$preset_file/profil.conf" "$initdir/$ospath/confe/default.conf"
-
-    elif [[ -e "$apppath/preset/$preset_file/distro.conf" ]]; then
-
-        echo "create preset from system available preset"
-        source "$apppath/preset/$preset_file/distro.conf"
-        cat "$apppath/preset/$preset_file/distro.conf" > "$initdir/$ospath/prepare.conf"
-        cp -f "$apppath/preset/$preset_file/profil.conf" "$initdir/$ospath/confe/default.conf"
-
-    elif [[ -e "$apppath/preset/$ospath/distro.conf" ]]; then
-
-        echo "create preset from system available preset"
-        source  "$apppath/preset/$ospath/distro.conf"
-        cat "$apppath/preset/$ospath/distro.conf" > "$initdir/$ospath/prepare.conf"
-        cp -f "$apppath/preset/$ospath/profil.conf" "$initdir/$ospath/confe/default.conf"
-
-    else
-
-        echo "create preset from default system preset"
-        source "$apppath/preset/default/distro.conf"
-        cp -f "$apppath/preset/default/distro.conf" "$initdir/$ospath/prepare.conf"
-        cp -f "$apppath/preset/default/profil.conf" "$initdir/$ospath/confe/default.conf"
-    fi
+function craine_maker_repos_pulls() {
+    git -C "$initdir/$preset_name" pull origin main
+}
 
 
-    sed -i '1cdistro_naming="'${preset_name^}'"'  "$initdir/$ospath/prepare.conf"
-    sed -i '2cdistro_unique="'${preset_name,,}'"' "$initdir/$ospath/prepare.conf"
+function craine_maker_repos() {
 
 
-    ## cleaned distro preset
-    sed '/^[[:blank:]]*#/d' "$initdir/$ospath/prepare.conf" > "$initdir/$ospath/level1.conf"
-    sed '/^[[:space:]]*$/d' "$initdir/$ospath/level1.conf" > "$initdir/$ospath/raptor.conf"
-    rm -f "$initdir/$ospath/prepare.conf"
-    rm -f "$initdir/$ospath/level1.conf"
+    local distro_repos="$initdir/$preset_name/auxel/datum/gitrepo.conf"
+    test -e $distro_repos && repodata=$( cat $distro_repos )
+
+
+    ## make new git repository
+    if [[ -n $preset_gitr ]]&&[[ -z $repodata ]]&&[[ $inetcon == true ]]; then
+        test -d "$initdir/$preset_name" && rm -fr "$initdir/$preset_name" &&
+        craine_maker_repos_clone && mkdir -p "$initdir/$preset_name/auxel/datum/" &&
+        echo $preset_gitr > $distro_repos 
     
 
-    ## prepare distro preset
-    source "$initdir/$ospath/raptor.conf"
-}
+    ## reset git repository
+    elif [[ $reset_gitrep == "Y" ]]||[[ $reset_gitrep == "y" ]]&&[[ -n $repodata ]]&&[[ -n $preset_gitr ]]&&[[ $inetcon == true ]]; then
+        test -d "$initdir/$preset_name" && rm -fr "$initdir/$preset_name" &&
+        craine_maker_repos_clone && mkdir -p "$initdir/$preset_name/auxel/datum/" &&
+        echo $preset_gitr > $distro_repos 
 
 
-function craine_maker_prep_profile() {
+    ## pull git repodata
+    elif [[ -n $repodata ]]&&[[ $inetcon == true ]]; then
+        read -p "Do you want to pull remote repository : [ y/N ] " pull_repos
+        test $pull_repos == "Y" && craine_maker_repos_pulls
+        test $pull_repos == "y" && craine_maker_repos_pulls
 
-    if [[ $distro_reset == 0 ]]&&[[ -d "$initdir/$ospath/profile" ]]; then
-        return
-    fi
 
-    if [[ -d "$initdir/$ospath/distro" ]];then
-        rm -fr "$initdir/$ospath/distro"
-    fi
+    ## create local repodata
+    elif [[ -n $preset_gitr ]]&&[[ -z $repodata ]]&&[[ $inetcon == false ]]; then
+        mkdir -p "$initdir/$preset_name/auxel/datum/" && touch $distro_repos
+        echo $preset_gitr > $distro_repos 
+ 
 
-    if [[ -d $preset_prof ]]; then
-
-        echo "create profile from user define"
-        cp -fr $preset_prof "$initdir/$ospath/distro"
-
-    elif [[ -d "$initdir/$preset_prof/profile" ]]&&[[ ! -z $preset_prof ]]; then
-
-        echo "create profile from available user profile"
-        cp -fr "$initdir/$preset_prof/profile" "$initdir/$ospath/distro"
-
-    elif [[ -d "$apppath/profile/$preset_prof" ]]&&[[ ! -z $preset_prof ]]; then
-
-        echo "create profile from available system profile"
-        cp -fr "$apppath/profile/$preset_prof" "$initdir/$ospath/distro"
-
-    elif [[ -d "$initdir/$preset_file/profile" ]]&&[[ ! -z $preset_file ]]; then
-
-        echo "create profile from available user profile"
-        cp -fr "$initdir/$preset_file/profile" "$initdir/$ospath/distro"
-
-    elif [[ -d "$apppath/profile/$preset_file" ]]&&[[ ! -z $preset_file ]]; then
-
-        echo "create profile from available system profile"
-        cp -fr "$apppath/profile/$preset_file" "$initdir/$ospath/distro"
-
-    elif [[ -d "$apppath/profile/$ospath" ]]; then
-
-        echo "create profile from available system profile"
-        cp -fr "$apppath/profile/$ospath" "$initdir/$ospath/distro"
-
-    else
-
-        echo "create profile from default system profile"
-        cp -fr "$apppath/profile/default" "$initdir/$ospath/distro"
-
+    ## create local repodata
+    elif [[ -z $preset_gitr ]]&&[[ -z $repodata ]]; then
+        mkdir -p "$initdir/$preset_name/auxel/datum/" && touch $distro_repos
+        echo $preset_gitr > $distro_repos 
     fi
 }
 
 
-function craine_maker_prep_release() {
 
-    initcfg="$initdir/$ospath/auxel/config"
-    initpkg="$initdir/$ospath/auxel/packer/module"
+## PREPSYSBASE 
+function craine_maker_based_cores() {
     
+    mkdir -p "$raptor_rooter/"{locals,relpre} &&
+    cp -fr "$applibs/coresys/"* "$raptor_rooter"  &&
+    cp -fr "$applibs/coresys/."* "$raptor_rooter" &&
+    cp -fr "$preset_profil" "$raptor_rooter/distro" &&
+    mv "$raptor_rooter/install" "$raptor_rooter/$preset_name-install"
+}
 
-    local osrelease="$initdir/$ospath/auxel/release"
 
-    mkdir -p "$initdir/$ospath/"{relpre,locals} &&
-    cp -fr "$applibs/installe" "$initdir/$ospath/auxel" &&
+function craine_maker_based_distr() {
 
-    if [[ -e  "$initdir/$ospath/auxel/.gitignore" ]];then
-        mv -f "$initdir/$ospath/auxel/.gitignore" "$initdir/$ospath/"
-    fi
-       
-    touch $osrelease
+    local distro_repos="$initdir/$preset_name/auxel/datum/raptors.conf"
+    mkdir -p "$initdir/$preset_name/auxel/datum" &&
+    cp $preset_distro "$initdir/$preset_name/auxel/datum/prep1" &&
+    sed -i '1cdistro_naming="'${preset_name^}'"'  "$initdir/$preset_name/auxel/datum/prep1" &&
+    sed -i '2cdistro_unique="'${preset_name,,}'"' "$initdir/$preset_name/auxel/datum/prep1" &&
+
+    sed '/^[[:blank:]]*#/d' "$initdir/$preset_name/auxel/datum/prep1" > "$initdir/$preset_name/auxel/datum/prep2" &&
+    sed '/^[[:space:]]*$/d' "$initdir/$preset_name/auxel/datum/prep2" > $distro_repos &&
+
+    rm "$initdir/$preset_name/auxel/datum/prep1" &&
+    rm "$initdir/$preset_name/auxel/datum/prep2"
+}
+
+
+function craine_maker_based_relea() {
+
+  
+    local osrelease="$initdir/$preset_name/auxel/release"
+    source "$initdir/$preset_name/auxel/datum/raptors.conf"
+ 
 
     if [[ ! -z "$distro_naming" ]];then
         echo 'NAME="'$distro_naming'"' > $osrelease
@@ -219,30 +216,34 @@ function craine_maker_prep_release() {
        echo 'LOGO=falcone-linux' >> $osrelease
     fi
 
-    mkdir -p "$initdir/$ospath/auxel/config/usr/lib/"
-    cat $osrelease > "$initdir/$ospath/auxel/config/usr/lib/os-release"
-    cat $osrelease > "$initdir/$ospath/distro/airootfs/etc/os-release"
-    rm $osrelease
-
-
-    ## prepare distro builder launcher
-    initexe="$initdir/$ospath/$distro_unique"
-    initmke="$initdir/$ospath/auxel/makes"
-    initres="$initdir/$ospath/auxel/reset"
-    if [[ -e "$initdir/$ospath/auxel/install"  ]];then
-        mv "$initdir/$ospath/auxel/install" "$initexe"
-    fi
+    cat $osrelease > "$initdir/$preset_name/auxel/config/usr/lib/os-release"
+    cat $osrelease > "$initdir/$preset_name/distro/airootfs/etc/os-release"
+    rm  $osrelease
 }
 
 
-function craine_maker_prep() {
-    craine_maker_prep_presets &&
-    craine_maker_prep_profile &&
-    craine_maker_prep_release 
+function craine_maker_based_genis() {
+
+    sleep 1 &&
+
+    local search_string="OSNAMEOS"
+    local distro_string="$distro_naming"
+    local geniso_gruber="$initdir/$preset_name/distro/grub"
+    local geniso_syslin="$initdir/$preset_name/distro/syslinux"
+    local geniso_efibot="$initdir/$preset_name/distro/efiboot/loader/entries"
+    
+
+    sed -i "s/$search_string/$distro_string/g" "$geniso_syslin/"*.cfg
+    sed -i "s/$search_string/$distro_string/g" "$geniso_gruber/"*.cfg
+    sed -i "s/$search_string/$distro_string/g" "$geniso_efibot/"*.conf
+
+
+    sed -i "s/osnameid/$distro_unique/g" "$initdir/$preset_name/distro/profiledef.sh"
+    sed -i "s/$search_string/$distro_string/g" "$initdir/$preset_name/distro/profiledef.sh"   
 }
 
 
-function craine_maker_envi() {
+function craine_maker_based_envir() {
     source "$applibs/kernels/load"
     source "$applibs/sysbins/load"
     source "$applibs/bootsys/load"
@@ -250,6 +251,32 @@ function craine_maker_envi() {
     source "$applibs/desktop/load"
 }
 
+
+function craine_maker_based() {
+
+    local distro_repos="$initdir/$preset_name/auxel/datum/raptors.conf"
+
+    if [[ $reset_distro == "Y" ]]||[[ $reset_distro == "y" ]]; then
+        rm -f $distro_repos && touch $distro_repos &&
+        craine_maker_based_cores &&
+        craine_maker_based_distr &&
+        craine_maker_based_relea &&
+        craine_maker_based_genis &&
+        craine_maker_based_envir 
+    fi
+
+    if [[ ! -e $distro_repos ]]; then
+        craine_maker_based_cores &&
+        craine_maker_based_distr &&
+        craine_maker_based_relea &&
+        craine_maker_based_genis &&
+        craine_maker_based_envir
+    fi
+}
+
+
+
+## PREPSYSBASE 
 
 function craine_maker_make() {
     craine_write_prepmake $kernel_path
@@ -274,11 +301,11 @@ function craine_maker() {
     echo "Generate Operating System Builder"
 
 	## OPTIONS PROC
-	while getopts ":n:f:p:g" opt; do
+	while getopts ":n:f:p:c" opt; do
 		case $opt in
 			n) name="${OPTARG}"
 			;;
-			f) file="${OPTARG}"
+			c) conf="${OPTARG}"
 			;;
 			p) prof="${OPTARG}"
 			;;
@@ -288,13 +315,37 @@ function craine_maker() {
 	done
 
     preset_name=$name
-    preset_file=$file
+    preset_conf=$conf
     preset_prof=$prof
     preset_gitr=$gitr
 
-    craine_maker_prep &&
-    craine_maker_envi &&
-    craine_maker_make &&
-    craine_maker_post &&
-    craine_maker_done
+    craine_maker_preps
+    craine_maker_repos
+    craine_maker_based
+    #craine_maker_insta
+    #craine_maker_profi
+
+    #craine_maker_prep 
+    #craine_maker_envi 
+    #craine_maker_make 
+    #craine_maker_post 
+    #craine_maker_done
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

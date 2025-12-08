@@ -10,13 +10,13 @@ source "$apppath/striper"
 
 
 ## OPTIONS PROC
-while getopts ":m:n:f:p" opt; do
+while getopts ":m:n:c:p" opt; do
     case $opt in
         m) mode="${OPTARG}"
         ;;
         n) name="${OPTARG}"
         ;;
-        f) file="${OPTARG}"
+        c) conf="${OPTARG}"
         ;;
         p) prof="${OPTARG}"
         ;;
@@ -29,7 +29,7 @@ if [[ $1 == "desktop" ]];then
 elif [[ $1 == "guide" ]]; then
     craine_termine
 elif [[ -z $mode ]]&&[[ ! -z $name ]];then
-    craine_hackers $mode $name $file $prof
+    craine_hackers $mode $name $conf $prof
 else
     echo "Craine error: Mode not found"  
 fi

@@ -18,5 +18,5 @@ fi
 
 
 if [[ $1 == "--install" ]];then
-    rapto_makes
+    raptor_makes
 fi

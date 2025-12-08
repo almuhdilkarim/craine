@@ -8,7 +8,7 @@ set -e
 
 applibs="$apppath/library"
 appsrcs="$apppath/source"
-
+inetcon=$( ping -q -c1 google.com &>/dev/null && echo true || echo false )
 
 
 
