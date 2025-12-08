@@ -1,0 +1,4 @@
+
+function craine_disks_post() {
+    echo "disk post make"
+}

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+
+function craine_module_procie_loader() {
+
+    ## ENVIRONMENTS
+    local procs_dirs="$applibs/libproc"
+    procs_path="$procs_dirs/101"
+    test -d "$procs_dirs/$protoc_destop" &&  procs_path="$procs_dirs/$protoc_destop"
+}
+
+craine_module_procie_loader

@@ -12,4 +12,3 @@ function craine_write_prepmake() {
         echo "" >> $raptor_makers  &&  cat "$1/premak" >> $raptor_makers
     fi 
 }
-

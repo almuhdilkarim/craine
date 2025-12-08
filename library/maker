@@ -251,7 +251,7 @@ function craine_maker_envir() {
     source "$applibs/libsecs/load" &&
     source "$applibs/libcore/load" &&
     source "$applibs/libhids/load" &&
-    source "$preset_folder/loader" &&
+    source "$preset_folder/loader"
 }
 
 
@@ -280,9 +280,10 @@ function craine_maker_based() {
 
 ## PREPSYSBASE 
 function craine_maker_preps() {
-    craine_write_prepmake $kernel_path
-    craine_write_prepmake $booter_path
-    echo $booter_path 
+    test -d $disks_path && echo $disks_path
+    craine_write_prepmake $disks_path
+    craine_write_prepmake $kerns_path
+    craine_write_prepmake $boots_path
 }
 
 

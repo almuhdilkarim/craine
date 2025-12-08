@@ -1,0 +1,21 @@
+
+function craine_disks_prep_boot() {
+    echo "prep boot"
+}
+
+
+function craine_disks_prep_proc() {
+    echo "prep boot"
+}
+
+
+function craine_disks_prep_home() {
+    echo "prep boot"
+}
+
+
+function craine_disks_prep() {
+    craine_disks_prep_boot
+    craine_disks_prep_proc
+    craine_disks_prep_home
+}
