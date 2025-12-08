@@ -251,7 +251,7 @@ function craine_maker_envir() {
     source "$applibs/libsecs/load" &&
     source "$applibs/libcore/load" &&
     source "$applibs/libhids/load" &&
-    source "$preset_folder/loader"
+    source "$preset_folder/loader" &&
 }
 
 
