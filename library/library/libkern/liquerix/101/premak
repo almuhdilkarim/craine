@@ -4,5 +4,9 @@ function raptor_kerns_prep_install() {
 }
 
 function raptor_kerns_prep() {
-    echo "kernel prepmake"
+    
+    sleep 2 && clear
+    echo "Kernel module installation"
+
+    # raptor_kerns_prep_install
 }

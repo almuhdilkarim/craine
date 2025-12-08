@@ -1,4 +1,5 @@
 
 function raptor_mitig_post() {
-    echo "Migitagtion post"
+    sleep 2 && clear
+    echo "Mitigation module configuration"
 }

@@ -1,4 +1,5 @@
 
-function raptop_secur_post() {
-    echo "raptor security post"
+function raptor_secur_post() {
+    sleep 2 && clear
+    echo "Security module configuration"
 }

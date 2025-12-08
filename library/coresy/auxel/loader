@@ -6,6 +6,12 @@ buildpack="$buildauxe/packer"
 buildlibs="$buildauxe/corest"
 builddata="$buildauxe/datum"
 
+
+## DISTVARS
+test -e "$builddata/raptors.conf" && source "$builddata/raptors.conf"
+
+
+## FUNCTION
 test -e "$buildauxe/makes" && source "$buildauxe/makes"
 test -e "$buildauxe/makos" && source "$buildauxe/makos"
 
@@ -21,10 +27,13 @@ pack_pacman="$buildpack/instal"
 pack_ucodes=$(grep "vendor_id" /proc/cpuinfo | head -n 1 | awk '{print $3}')
 
 if [[ "$pack_ucodes" == "GenuineIntel" ]]; then
-    echo "intel-ucode" > "$buildpack/instal"
+    echo "intel-ucode" > "$pack_pacman"
 elif [[ "$pack_ucodes" == "AuthenticAMD" ]]; then
-    echo "amd-ucode" > "$buildpack/instal"
+    echo "amd-ucode"   > "$pack_pacman"
 fi
+
+
+## graphical
 
 
 ## gathering

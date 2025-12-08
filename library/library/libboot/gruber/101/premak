@@ -1,4 +1,5 @@
 
 function raptor_boots_prep() {
-    echo "sysboot prepmake"
+    sleep 2 && clear
+    echo "Booting module installation"
 }

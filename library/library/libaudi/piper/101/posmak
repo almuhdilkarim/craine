@@ -4,5 +4,6 @@ function raptor_audio_post_serve() {
 }
 
 function raptor_audio_post() {
-   echo "audio post make"
+    sleep 2 && clear
+    echo "Audio module configuration"
 }

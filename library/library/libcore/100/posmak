@@ -1,4 +1,5 @@
 
 function raptor_cores_post() {
-    echo "system core post"
+    sleep 2 && clear
+    echo "Base module configuration"
 }

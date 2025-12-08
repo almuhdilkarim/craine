@@ -1,4 +1,5 @@
 
 function raptor_audio_post() {
-    echo "Alsa post"
+    sleep 2 && clear
+    echo "Audio module configuration"
 }

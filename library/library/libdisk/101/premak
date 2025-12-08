@@ -44,22 +44,26 @@ function raptor_disks_prep_boot() {
 
     raptor_disks_prep_boot_vali
 
-    if [[ dualboot == true ]];then
-        raptor_disks_prep_boot_mono
-    else
+    if [[ $dualboot == true ]];then
         raptor_disks_prep_boot_dual
+    else
+        raptor_disks_prep_boot_mono        
     fi
 }
 
 function raptor_disks_prep_proc() {
-    echo "prep boot"
+    echo "prep proc partition"
 }
 
 function raptor_disks_prep_home() {
-    echo "prep boot"
+    echo "prep home partition"
 }
 
 function raptor_disks_prep() {
+
+    sleep 2 && clear
+    echo "Partition installation"
+    
     raptor_disks_prep_boot
     raptor_disks_prep_proc
     raptor_disks_prep_home

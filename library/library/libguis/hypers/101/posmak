@@ -1,4 +1,5 @@
 
 function raptor_deskt_post() {
-    echo "Hyprland postmake"
+    sleep 2 && clear
+    echo "Desktop module configuration"
 }

@@ -1,4 +1,5 @@
 
 function raptor_kerns_prep() {
-    echo "raptor kernel make"
+    sleep 2 && clear
+    echo "Kernel module installation"
 }

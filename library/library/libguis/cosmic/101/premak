@@ -1,4 +1,5 @@
 
 function raptor_deskt_prep() {
-    echo "Cosmic Premake"
+    sleep 2 && clear
+    echo "Desktop module installation"
 }

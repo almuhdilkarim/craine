@@ -1,4 +1,5 @@
 
 function raptor_deskt_prep() {
-    echo "Gnome Premake"
+    sleep 2 && clear
+    echo "Desktop module installation"
 }

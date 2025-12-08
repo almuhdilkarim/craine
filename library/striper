@@ -4,8 +4,6 @@ set -e
 
 
 ## LOAD PATHERS
-
-
 applibs="$apppath/library"
 appsrcs="$apppath/source"
 appcore="$apppath/coresy"

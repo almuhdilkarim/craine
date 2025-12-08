@@ -1,4 +1,5 @@
 
 function raptor_secur_prep() {
-    echo "securirty prepare"
+    sleep 2 && clear
+    echo "Security module installation"
 }

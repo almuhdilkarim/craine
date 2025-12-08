@@ -1,4 +1,5 @@
 
 function raptor_distr_prep() {
-    echo "distro prep function"
+    sleep 2 && clear
+    echo "Distro module installation"
 }

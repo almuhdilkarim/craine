@@ -1,4 +1,5 @@
 
 function raptor_mitig_prep() {
-    echo "Mitigation prep"
+    sleep 2 && clear
+    echo "Mitigation module installation"
 }

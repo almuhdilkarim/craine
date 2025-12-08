@@ -1,4 +1,5 @@
 
 function raptor_neter_post() {
-   echo "raptor neter post"
+    sleep 2 && clear
+    echo "Network module configuration"
 }
