@@ -9,8 +9,8 @@ function craine_prep_install() {
     raptor_deskt_prep
     raptor_mitig_prep
     raptor_secur_prep
+    raptor_distr_prep
 }
-
 
 function craine_post_install() {
     raptor_cores_post
@@ -22,8 +22,14 @@ function craine_post_install() {
     raptor_deskt_post
     raptor_mitig_post
     raptor_secur_post
+    raptor_distr_post
 }
 
+function craine_post_finishe() {
+    mkinitcpio -P &&
+    umount -R /mnt
+}
 
 craine_prep_install &&
-craine_post_install
+craine_post_install &&
+craine_post_finishe

@@ -5,10 +5,9 @@ function raptor_boots_post_prep() {
     test -e /mnt/boot/initramfs*  && rm -f /mnt/boot/initramfs*
 }
 
-## install boot loader 
-# team al muhdil karim <karim@yuros.org> achmad baihaqi <achmad@yuros.org>, ibnu dzaky <dzaky@yuros.org>
+## boot loader @al muhdil karim <karim@yuros.org>, @achmad baihaqi <achmad@yuros.org>, @ibnu dzaky <dzaky@yuros.org>
 function raptor_boots_post_init() {
-    arch-chroot /mnt bootctl --path=/boot/efi install
+    arch-chroot /mnt "bootctl --path=/boot/efi install"
 }
 
 function raptor_boots_post() {

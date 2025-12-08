@@ -1,6 +1,5 @@
 
-## Dualboot validator
-# team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
+## dualboot validator team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
 function raptor_disks_prep_boot_vali() {
 
     take_efipath=($(lsblk -o path,fstype | grep vfat | awk '{print $1}'))
@@ -25,8 +24,7 @@ function raptor_disks_prep_boot_mono() {
     echo "set efi at linux only partition" 
 }
 
-## Dualboot
-# team @Al Muhdil Karim <karim@yuros.org>, @Achmad Baihaqi <achmad@yuros.org>, @Ibnu Dzaky Solihin <dzaky@yuros.org>
+## dualboot team @Al Muhdil Karim <karim@yuros.org>, @Achmad Baihaqi <achmad@yuros.org>, @Ibnu Dzaky Solihin <dzaky@yuros.org>
 function raptor_disks_prep_boot_dual() {
     echo "set efi for dualboot partitions" 
 

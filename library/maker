@@ -286,6 +286,7 @@ function craine_maker_preps() {
     craine_write_prepmake $deskt_path
     craine_write_prepmake $mitig_path
     craine_write_prepmake $secur_path
+    craine_write_prepmake $distr_path
 }
 
 
@@ -299,6 +300,7 @@ function craine_maker_posts() {
     craine_write_postmake $mitig_path
     craine_write_postmake $neter_path
     craine_write_postmake $secur_path
+    craine_write_postmake $distr_path
     craine_write_donemake $cores_path
 }
 

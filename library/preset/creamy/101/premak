@@ -1,0 +1,4 @@
+
+function raptor_distr_prep() {
+    echo "distro prep function"
+}

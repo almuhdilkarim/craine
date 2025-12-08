@@ -1,4 +1,22 @@
 
+function craine_cores_post_base() {
+
+    if [[ $hostaname ]];then
+        echo "$hostaname" > /mnt/etc/hostname 
+    else
+        echo "$ID" > /mnt/etc/hostname 
+    fi
+    locale-gen
+}
+
+function raptor_cores_post_time() {
+    arch-chroot /mnt ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
+    arch-chroot /mnt hwclock --systohc
+    arch-chroot /mnt timedatectl set-ntp true
+    arch-chroot /mnt timedatectl set-timezone $timezone 
+}
+
 function raptor_cores_post() {
-    echo "System core post"
+    craine_cores_post_base
+    raptor_cores_post_time
 }

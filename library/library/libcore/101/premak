@@ -1,9 +1,13 @@
 
-## pacstrap installation
-function raptor_cores_prep_packers() {
+function raptor_cores_prep_mulibs() {
+
+}
+
+function raptor_cores_prep_pacmir() {
     test -e $pack_pacmir && pacstrap -U /mnt - < $pack_pacmir 
 }
 
 function raptor_cores_prep() {
-    craine_corest_prep_packers
+    raptor_cores_prep_mulibs &&
+    raptor_cores_prep_pacmir
 }
