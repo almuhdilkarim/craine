@@ -1,4 +1,4 @@
 
-function raptop_audio_prep() {
-    echo "Pulse Audit Premake"
+function raptor_audio_prep() {
+    echo "Pulse audio prep"
 }

@@ -1,5 +1,4 @@
-#!/bin/bash
 
-function raptop_audio_post() {
+function raptor_audio_post() {
     echo "Alsa postmake"
 }

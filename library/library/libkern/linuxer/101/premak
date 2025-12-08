@@ -1,4 +1,4 @@
 
-function raptor_kernel_prep() {
+function raptor_kerns_prep() {
     echo "raptor kernel make"
 }

@@ -1,4 +1,4 @@
 
-function raptop_desktop_prep() {
+function raptor_deskt_prep() {
     echo "Gnome Premake"
 }

@@ -1,4 +1,4 @@
 
-function raptop_audio_post() {
-    echo "Network Manager post make"
+function raptor_neter_post() {
+   echo "raptor neter post"
 }

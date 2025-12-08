@@ -1,10 +1,8 @@
 
-
-function raptor_network_post_service() {
+function raptor_neter_post_service() {
     arch-chroot /mnt systemctl enable sshd
 }
 
-
-function raptop_network_post() {
+function raptop_neter_post() {
     raptor_network_post_service
 }

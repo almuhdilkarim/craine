@@ -1,5 +1,8 @@
-#!/bin/bash
 
-function raptor_kernel_prep() {
+function raptor_kerns_prep_install() {
+    arch-chroot /mnt "curl -s 'https://liquorix.net/install-liquorix.sh' | sudo bash"
+}
+
+function raptor_kerns_prep() {
     echo "kernel prepmake"
 }

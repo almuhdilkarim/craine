@@ -1,4 +1,4 @@
 
-function craine_cores_post() {
-    echo "disk post make"
+function raptor_cores_post() {
+    echo "system core post"
 }

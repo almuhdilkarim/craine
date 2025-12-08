@@ -1,4 +1,4 @@
 
-function raptor_sysbot_postmake() {
+function raptor_boots_post() {
     echo "sysboot postmake"
 }

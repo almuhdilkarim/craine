@@ -19,8 +19,8 @@ function craine_module_neter_loader() {
 
     ## LOAD MODULES
     test -d "$neter_type/$protoc_netter" &&  neter_path="$neter_type/$protoc_netter"
-    test -e "$neter_path/module"   && cat "$neter_path/module" >>   "$raptor_packer"
-    test -e "$neter_path/config/"* && cp -fr "$neter_path/config/"* "$raptor_config"
+    test -e "$neter_path/module" && cat "$neter_path/module" >>   "$raptor_packer"
+    test -e "$neter_path/config" && cp -fr "$neter_path/config/"* "$raptor_config"
     echo "Networking environment loaded"
 }
 

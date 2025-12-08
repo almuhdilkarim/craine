@@ -1,21 +1,68 @@
 
-function craine_disks_prep_boot() {
+## Dualboot validator
+# team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
+function raptor_disks_prep_boot_vali() {
+
+    take_efipath=($(lsblk -o path,fstype | grep vfat | awk '{print $1}'))
+
+    for item_efipath in "${take_efipath[@]}"; do
+
+        echo "check efi partition at $item_efipath" 
+        sudo mount $item_efipath /srv && sleep 2 && 
+       
+        if [[ -d "/srv/EFI/Microsoft" ]]; then
+            winefipath="$item_efipath" && mkdir -p "$item_efipath/Linux" &&
+            echo "check windows efi partition found at $item_efipath"
+            dualboot=true
+        fi
+
+        sleep 1 && sudo umount -R /srv && sleep 2
+
+    done
+}
+
+function raptor_disks_prep_boot_mono() {
+    echo "set efi at linux only partition" 
+}
+
+## Dualboot
+# team @Al Muhdil Karim <karim@yuros.org>, @Achmad Baihaqi <achmad@yuros.org>, @Ibnu Dzaky Solihin <dzaky@yuros.org>
+function raptor_disks_prep_boot_dual() {
+    echo "set efi for dualboot partitions" 
+
+    ## create boot partition
+
+    ## format boot partition to ext4
+
+    ## mount boot partition to /mnt/boot
+
+    ## create efi directory on /boot
+
+    ## mount windows partition to /boot/efi
+
+}
+
+function raptor_disks_prep_boot() {
+
+    raptor_disks_prep_boot_vali
+
+    if [[ dualboot == true ]];then
+        raptor_disks_prep_boot_mono
+    else
+        raptor_disks_prep_boot_dual
+    fi
+}
+
+function raptor_disks_prep_proc() {
     echo "prep boot"
 }
 
-
-function craine_disks_prep_proc() {
+function raptor_disks_prep_home() {
     echo "prep boot"
 }
 
-
-function craine_disks_prep_home() {
-    echo "prep boot"
-}
-
-
-function craine_disks_prep() {
-    craine_disks_prep_boot
-    craine_disks_prep_proc
-    craine_disks_prep_home
+function raptor_disks_prep() {
+    raptor_disks_prep_boot
+    raptor_disks_prep_proc
+    raptor_disks_prep_home
 }

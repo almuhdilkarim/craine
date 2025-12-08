@@ -1,4 +1,4 @@
 
-function raptor_kernel_post() {
+function raptor_kerns_post() {
     echo "raptor kernel post"
 }

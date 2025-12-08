@@ -1,5 +1,4 @@
-#!/bin/bash
 
-function raptop_audio_prep() {
+function raptor_audio_prep() {
     echo "Alsa Premake"
 }

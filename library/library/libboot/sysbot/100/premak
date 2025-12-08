@@ -1,4 +1,4 @@
 
-function raptor_sysbot_prepmake() {
+function raptor_boots_prep() {
     echo "sysboot prepmake"
 }

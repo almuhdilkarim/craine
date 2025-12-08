@@ -11,8 +11,8 @@ function craine_module_secur_loader() {
 
     ## LOAD MODULES
     test -d "$secur_path/$protoc_secure" &&  secur_path="$secur_path/$protoc_secure"
-    test -e "$secur_path/module"   && cat "$secur_path/module" >>   "$raptor_packer"
-    test -d "$secur_path/config/"* && cp -fr "$secur_path/config/"* "$raptor_config"
+    test -e "$secur_path/module" && cat "$secur_path/module" >>   "$raptor_packer"
+    test -d "$secur_path/config" && cp -fr "$secur_path/config/"* "$raptor_config"
     echo "Security environment loaded"
 }
 

@@ -12,3 +12,9 @@ function craine_write_prepmake() {
         echo "" >> $raptor_makers  &&  cat "$1/premak" >> $raptor_makers
     fi 
 }
+
+function craine_write_donemake() {
+    if [[ -e "$1/purmak" ]]; then
+        echo "" >> $raptor_makers  &&  cat "$1/purmak" >> $raptor_makers
+    fi 
+}

@@ -1,4 +1,4 @@
 
-function raptor_mitigat_prep() {
-    echo "raptor kernel make"
+function raptor_mitig_prep() {
+    echo "Mitigation prep"
 }

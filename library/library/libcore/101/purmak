@@ -1,0 +1,36 @@
+
+function craine_prep_install() {
+    raptor_disks_prep
+    raptor_cores_prep
+    raptor_kerns_prep
+    raptor_boots_prep
+    raptor_neter_prep
+    raptor_audio_prep
+    raptor_deskt_prep
+    raptor_mitig_prep
+    raptor_secur_prep
+}
+
+function craine_post_install() {
+    raptor_cores_post
+    raptor_disks_post
+    raptor_kerns_post
+    raptor_boots_post
+    raptor_neter_post
+    raptor_audio_post
+    raptor_deskt_post
+    raptor_mitig_post
+    raptor_secur_post
+}
+
+
+
+function craine_post_finishe() {
+    mkinitcpio -P
+    umount -R /mnt
+}
+
+
+craine_prep_install &&
+craine_post_install &&
+craine_post_finishe

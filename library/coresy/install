@@ -3,7 +3,9 @@
 
 set -e
 
-source $(pwd)/auxel/loader
+## ENVIRONMENT
+buildroot=$(pwd)
+source "$buildroot/auxel/loader"
 
 
 if [[ -z $1 ]]; then

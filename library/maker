@@ -15,10 +15,10 @@ function craine_maker_paths() {
     raptor_makers="$initdir/$preset_name/auxel/makes"
     raptor_resete="$initdir/$preset_name/auxel/resete"
     raptor_config="$initdir/$preset_name/auxel/config"
-    raptor_packer="$initdir/$preset_name/auxel/packer/packer"
+    raptor_packer="$initdir/$preset_name/auxel/packer/pacmir"
     raptor_packco="$initdir/$preset_name/auxel/packer/packco"
     raptor_packfa="$initdir/$preset_name/auxel/packer/packfa"
-
+    raptor_userde="$initdir/$preset_name/auxel/profile/default"
 
     ## prepare folder information   
     preset_folder="$apppath/preset/default"
@@ -29,14 +29,8 @@ function craine_maker_paths() {
     ## preaprea default configure
     test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
     test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
-    test -e "$preset_folder/instal.conf" && preset_instal="$preset_folder/instal.conf"
+    test -e "$preset_folder/instal.conf" && preset_userde="$preset_folder/instal.conf"
   
-
-    ## prepare distro information    
-    test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
-    test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
-    test -e "$preset_folder/instal.conf" && preset_instal="$preset_folder/instal.conf"
-
 
     ## prepare distro buidlprofil
     test -d "$apppath/profile" && preset_profil="$apppath/profile"
@@ -131,9 +125,12 @@ function craine_maker_cores() {
     
     cp -fr "$appcore/"* "$raptor_rooter"  &&
     cp -fr "$appcore/."* "$raptor_rooter" &&
-    mkdir -p "$raptor_rooter/"{locals,relpre} &&
+    mkdir -p "$raptor_rooter/"{locals,relpre,auxel/profile} &&
     cp -fr "$preset_profil" "$raptor_rooter/distro" &&
     mv "$raptor_rooter/install" "$raptor_rooter/$preset_name-install"
+
+    # default installation profile
+    cp -f $preset_userde $raptor_userde
 }
 
 
@@ -280,17 +277,29 @@ function craine_maker_based() {
 
 ## PREPSYSBASE 
 function craine_maker_preps() {
-    test -d $disks_path && echo $disks_path
     craine_write_prepmake $disks_path
+    craine_write_prepmake $cores_path
     craine_write_prepmake $kerns_path
     craine_write_prepmake $boots_path
+    craine_write_prepmake $neter_path
+    craine_write_prepmake $audio_path
+    craine_write_prepmake $deskt_path
+    craine_write_prepmake $mitig_path
+    craine_write_prepmake $secur_path
 }
 
 
 function craine_maker_posts() {
-    craine_write_postmake $kernel_path
-    craine_write_postmake $booter_path
-    
+    craine_write_postmake $disks_path
+    craine_write_postmake $kerns_path
+    craine_write_postmake $boots_path
+    craine_write_postmake $cores_path
+    craine_write_postmake $audio_path
+    craine_write_postmake $deskt_path
+    craine_write_postmake $mitig_path
+    craine_write_postmake $neter_path
+    craine_write_postmake $secur_path
+    craine_write_donemake $cores_path
 }
 
 

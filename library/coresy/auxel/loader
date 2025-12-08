@@ -1,1 +1,15 @@
 #!/bin/bash
+
+buildauxe="$buildroot/auxel"
+buildconf="$buildauxe/config"
+buildpack="$buildauxe/packer"
+buildlibs="$buildauxe/corest"
+builddata="$buildauxe/datum"
+
+test -e "$buildauxe/makes" && source "$buildauxe/makes"
+test -e "$buildauxe/makos" && source "$buildauxe/makos"
+
+
+pack_pacmir="$buildpack/pacmir"
+pack_packfa="$buildpack/packfa"
+pack_packco="$buildpack/packco"

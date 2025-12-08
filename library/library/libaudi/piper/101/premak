@@ -1,4 +1,3 @@
-#!/bin/bash
 
 function raptor_audio_prep() {
     echo "Pipewire Premake"

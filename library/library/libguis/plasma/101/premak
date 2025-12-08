@@ -1,4 +1,4 @@
 
-function raptop_desktop_prep() {
-    echo "Pulse Audit Premake"
+function raptor_deskt_prep() {
+    echo "Plasma dekstop prep"
 }

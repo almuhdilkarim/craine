@@ -1,4 +1,4 @@
 
-function raptor_boots_post() {
+function raptor_boots_prep() {
     echo "sysboot prepmake"
 }

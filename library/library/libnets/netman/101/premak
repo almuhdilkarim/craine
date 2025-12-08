@@ -1,4 +1,4 @@
 
-function raptop_desktop_prep() {
-    echo "Network Manager premake"
+function raptor_neter_prep() {
+   echo "raptor neter prep"
 }

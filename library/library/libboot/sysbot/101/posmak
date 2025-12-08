@@ -1,4 +1,16 @@
 
+function raptor_boots_post_prep() {
+    test -e /mnt/boot/*-ucode.img && mv /mnt/boot/*-ucode.img /boot/kernel/ 
+    test -e /mnt/boot/vmlinuz-*   && mv /mnt/boot/vmlinuz-*  /boot/kernel/ 
+    test -e /mnt/boot/initramfs*  && rm -f /mnt/boot/initramfs*
+}
+
+## install boot loader 
+# team al muhdil karim <karim@yuros.org> achmad baihaqi <achmad@yuros.org>, ibnu dzaky <dzaky@yuros.org>
+function raptor_boots_post_init() {
+    arch-chroot /mnt bootctl --path=/boot/efi install
+}
+
 function raptor_boots_post() {
     echo "sysboot postmake"
 }

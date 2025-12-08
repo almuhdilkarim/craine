@@ -1,4 +1,4 @@
 
-function craine_cores_prep() {
-    echo "disk prep make"
+function raptor_cores_prep() {
+    echo "system core prep"
 }

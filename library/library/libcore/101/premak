@@ -1,5 +1,9 @@
 
+## pacstrap installation
+function raptor_cores_prep_packers() {
+    test -e $pack_pacmir && pacstrap -U /mnt - < $pack_pacmir 
+}
 
-function craine_cores_prep() {
-    echo "disk prep make"
+function raptor_cores_prep() {
+    craine_corest_prep_packers
 }
