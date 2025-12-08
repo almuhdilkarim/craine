@@ -1,0 +1,8 @@
+
+
+
+
+function raptor_network_prep() {
+    cp "/etc/systemd/network"* "/etc/systemd/network"
+    test -e "/var/lib/iwd/"* && cp "/var/lib/iwd/"*.psk "/var/lib/iwd/"
+}

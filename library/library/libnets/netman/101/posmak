@@ -1,0 +1,4 @@
+
+function raptop_audio_post() {
+    echo "Network Manager post make"
+}

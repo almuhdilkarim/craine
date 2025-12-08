@@ -1,0 +1,5 @@
+#!/bin/bash
+
+function raptor_audio_post() {
+    arch-chroot /mnt systemctl enable --global pipewire-pulse.service
+}

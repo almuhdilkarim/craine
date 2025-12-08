@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -e
+
+function craine_module_audio_loader() {
+
+
+    ## ENVIRONMENTS
+    local audio_dirs="$applibs/libaudi"
+
+    if [[ $distro_audios == "alsa" ]];then
+        audio_type="$audio_dirs/alsas"
+    elif [[ $distro_audios == "pipewire" ]];then
+        audio_type="$audio_dirs/piper"
+    elif [[ $distro_audios == "pulse" ]];then
+        audio_type="$audio_dirs/pulse"
+    fi
+    audio_path="$audio_type/101"
+
+    
+    ## LOAD MODULES
+    if [[ -n $audio_type ]]; then
+        test -d "$audio_type/$protoc_audios" && audio_path="$audio_type/$protoc_audios"
+        test -e "$audio_path/module"  && cat "$audio_path/module" >>   "$raptor_packer"
+        test -e "$audio_path/config"* && cp -fr "$audio_path/config/"* "$raptor_config"
+        echo "Audio environment loaded"
+    fi
+}
+
+craine_module_audio_loader

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+function craine_module_cores_loader() {
+
+    ## ENVIRONMENTS
+    local cores_dirs="$applibs/libcore"
+    cores_path="$cores_dirs/101"
+
+
+    ## LOAD MODULES
+    test -d "$cores_path/$protoc_system" &&  cores_path="$cores_path/$protoc_system"
+    test -e "$cores_path/module"   && cat "$cores_path/module" >>   "$raptor_packer"
+    test -e "$cores_path/config/"* && cp -fr "$cores_path/config/"* "$raptor_config"
+    echo "Based system environment loaded"
+}
+
+craine_module_cores_loader

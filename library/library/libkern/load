@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+
+function craine_module_kernel_loader() {
+
+    ## ENVIRONMENTS
+    local kerns_dirs="$applibs/libkern"
+
+     if [[ $distro_kernel == "zen" ]];then
+        kerns_type="$kerns_dirs/linuzen"
+    elif [[ $distro_kernel == "lqx" ]];then
+        kerns_type="$kerns_dirs/liquerix"
+    elif [[ $distro_kernel == "lts" ]];then
+        kerns_type="$kerns_dirs/hardened"
+    elif [[ $distro_kernel == "hardened" ]];then
+        kerns_type="$kerns_dirs/harden"
+    else
+        kerns_type="$kerns_dirs/linuxer"
+    fi
+    kerns_path="$kerns_type/101"
+
+
+    ## LOAD MODULES
+    test -d "$kerns_type/$protoc_kernel" &&  kerns_path="$kerns_type/$protoc_kernel"
+    test -e "$kerns_path/module"   && cat "$kerns_path/module" >>   "$raptor_packer"
+    test -e "$kerns_path/config/"* && cp -fr "$kerns_path/config/"* "$raptor_config"
+    echo "Kernel environment loaded"
+}
+
+craine_module_kernel_loader

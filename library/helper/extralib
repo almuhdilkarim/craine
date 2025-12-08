@@ -3,13 +3,13 @@
 
 function craine_write_postmake() {
     if [[ -e "$1/posmak" ]]; then
-        echo "" >> $initmke  &&  cat "$1/posmak" >> $initmke
+        echo "" >> $raptor_makers  &&  cat "$1/posmak" >> $raptor_makers
     fi 
 }
 
 function craine_write_prepmake() {
     if [[ -e "$1/posmak" ]]; then
-        echo "" >> $initmke  &&  cat "$1/premak" >> $initmke
+        echo "" >> $raptor_makers  &&  cat "$1/premak" >> $raptor_makers
     fi 
 }
 

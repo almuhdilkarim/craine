@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+
+function craine_module_deskto_loader() {
+
+    ## ENVIRONMENTS
+    local dekst_dirs="$applibs/libguis"
+
+    if [[ $distro_destop == "cosmic" ]];then
+        deskt_type="$dekst_dirs/cosmic"
+    elif [[ $distro_destop == "gnome" ]];then
+        deskt_type="$dekst_dirs/gnome"
+    elif [[ $distro_destop == "hyperland" ]];then
+        deskt_type="$dekst_dirs/hypers"
+    elif [[ $distro_destop == "plasma" ]];then
+        deskt_type="$dekst_dirs/plasma"
+    fi
+    deskt_path="$deskt_type/101"
+
+
+    ## LOAD MODULES
+    if [[ -n $deskt_type ]]; then
+        test -d "$deskt_type/$protoc_destop" &&  deskt_path="$deskt_type/$protoc_destop"
+        test -e "$deskt_path/module"   && cat "$deskt_path/module" >>   "$raptor_packer"
+        test -e "$deskt_path/config/"* && cp -fr "$deskt_path/config/"* "$raptor_config"
+        echo "Desktop environment loaded"
+    fi
+}
+
+craine_module_deskto_loader

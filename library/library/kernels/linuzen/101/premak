@@ -1,4 +1,0 @@
-
-function raptor_kernel_make() {
-    echo "raptor kernel make"
-}

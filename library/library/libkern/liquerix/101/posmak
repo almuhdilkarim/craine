@@ -1,0 +1,5 @@
+#!/bin/bash
+
+function raptor_kernel_post() {
+    echo "kernel postmake"
+}

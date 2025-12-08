@@ -1,0 +1,4 @@
+
+function raptop_desktop_post() {
+    echo "Gnome post make"
+}

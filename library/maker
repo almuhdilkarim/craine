@@ -1,13 +1,15 @@
 #!/bin/bash
 
 
+set -e 
+
+
 ## PREPARATION 
 function craine_maker_paths() {
 
 
-    local preset_name=${preset_name,,}
+    local target_name=${preset_name,,}
     local preset_folder="$apppath/preset/default"
-
 
 
     # raptor target installation
@@ -18,7 +20,6 @@ function craine_maker_paths() {
     raptor_packer="$initdir/$preset_name/auxel/packer/packer"
     raptor_packco="$initdir/$preset_name/auxel/packer/packco"
     raptor_packfa="$initdir/$preset_name/auxel/packer/packfa"
-
 
 
     ## property replace variables
@@ -32,7 +33,6 @@ function craine_maker_paths() {
     test -e "$preset_folder/instal.conf" && preset_instal="$preset_folder/instal.conf"
   
 
-
     ## prepare folder information   
     test -d "$apppath/preset/$preset_name" && preset_folder="$apppath/preset/$preset_name"
     test -d "$apppath/preset/$preset_conf" && preset_folder="$apppath/preset/$preset_conf"
@@ -43,7 +43,6 @@ function craine_maker_paths() {
     test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
     test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
     test -e "$preset_folder/instal.conf" && preset_instal="$preset_folder/instal.conf"
-
 
 
     ## prepare distro buidlprofil
@@ -69,11 +68,10 @@ function craine_maker_paths() {
 }
 
 
-
 ## PREPGITREPO 
 function craine_maker_clone() {
     
-    git clone $preset_gitr "$initdir/$preset_name"
+    git clone $preset_gitr "$initdir/${preset_name,,}"
     
     if [ $? -eq 0 ]; then
         echo "git clone is successful"
@@ -94,10 +92,12 @@ function craine_maker_repos() {
     local distro_repos="$initdir/$preset_name/auxel/datum/gitrepo.conf"
     test -e $distro_repos && repodata=$( cat $distro_repos )
 
-
+   
     ## make new git repository
     if [[ -n $preset_gitr ]]&&[[ -z $repodata ]]&&[[ $inetcon == true ]]; then
-        test -d "$initdir/$preset_name" && rm -fr "$initdir/$preset_name" &&
+
+       
+        test -d "$initdir/$preset_name" && rm -fr "$initdir/$preset_name"
         craine_maker_clone && mkdir -p "$initdir/$preset_name/auxel/datum/" &&
         echo $preset_gitr > $distro_repos 
     
@@ -112,8 +112,10 @@ function craine_maker_repos() {
     ## pull git repodata
     elif [[ -n $repodata ]]&&[[ $inetcon == true ]]; then
         read -p "Do you want to pull remote repository : [ y/N ] " pull_repos
-        test $pull_repos == "Y" && craine_maker_pulls
-        test $pull_repos == "y" && craine_maker_pulls
+
+        if [[ $pull_repos == "Y" ]]||[[  $pull_repos == "y" ]];then
+            craine_maker_pulls
+        fi
 
 
     ## create local repodata
@@ -246,23 +248,32 @@ function craine_maker_genis() {
 
 
 function craine_maker_envir() {
-    source "$applibs/kernels/load"
-    source "$applibs/bootsys/load"
-    source "$applibs/storage/load"
-    source "$applibs/netgate/load"
-    source "$applibs/audiole/load"
-    source "$applibs/desktop/load"
-    source "$applibs/securet/load"
-    source "$applibs/protoco/load"
+    source "$applibs/libkern/load"
+    source "$applibs/libboot/load"
+    source "$applibs/libdisk/load"
+    source "$applibs/libnets/load"
+    source "$applibs/libaudi/load"
+    source "$applibs/libguis/load"
+    source "$applibs/libsecs/load"
+    source "$applibs/libcore/load"
+    source "$applibs/libhids/load"
 }
 
 
-function craine_maker_preps() {
+function craine_maker_based() {
 
     local distro_repos="$initdir/$preset_name/auxel/datum/raptors.conf"
 
-    if [[ $reset_distro == "Y" ]]||[[ $reset_distro == "y" ]]||[[ ! -e $distro_repos ]]; then
-        test -e $distro_repos && rm -f $distro_repos && touch $distro_repos
+    if [[ $reset_distro == "Y" ]]||[[ $reset_distro == "y" ]]; then
+        rm -f $distro_repos && touch $distro_repos &&
+        craine_maker_cores &&
+        craine_maker_distr &&
+        craine_maker_relea &&
+        craine_maker_genis &&
+        craine_maker_envir 
+    fi
+
+    if [[ ! -e $distro_repos ]]; then
         craine_maker_cores &&
         craine_maker_distr &&
         craine_maker_relea &&
@@ -273,14 +284,17 @@ function craine_maker_preps() {
 
 
 ## PREPSYSBASE 
-
-function craine_maker_make() {
+function craine_maker_preps() {
     craine_write_prepmake $kernel_path
+    craine_write_prepmake $booter_path
+    echo $booter_path 
 }
 
 
-function craine_maker_post() {
+function craine_maker_posts() {
     craine_write_postmake $kernel_path
+    craine_write_postmake $booter_path
+    
 }
 
 
@@ -295,15 +309,9 @@ function craine_maker_done() {
 function craine_maker_proc() {
     craine_maker_paths
     craine_maker_repos
+    craine_maker_based
     craine_maker_preps
-    #craine_maker_insta
-    #craine_maker_profi
-
-    #craine_maker_prep 
-    #craine_maker_envi 
-    #craine_maker_make 
-    #craine_maker_post 
-    #craine_maker_done
+    craine_maker_posts
 }
 
 
@@ -325,27 +333,9 @@ function craine_maker() {
 		esac
 	done
 
-    preset_name=$name
+    preset_name=${name,,}
     preset_conf=$conf
     preset_prof=$prof
     preset_gitr=$gitr
     craine_maker_proc
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

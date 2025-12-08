@@ -1,0 +1,4 @@
+
+function raptor_mitigat_prep() {
+    echo "raptor kernel make"
+}

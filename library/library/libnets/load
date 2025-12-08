@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+
+function craine_module_neter_loader() {
+
+
+    ## ENVIRONMENTS
+    local neter_dirs="$applibs/libnets"
+
+    if [[ $distro_booter == "network-manager" ]];then
+        neter_type="$neter_dirs/netman"
+    else
+        neter_type="$neter_dirs/sysdnet"
+    fi
+    neter_path="$neter_type/101"
+
+
+    ## LOAD MODULES
+    test -d "$neter_type/$protoc_netter" &&  neter_path="$neter_type/$protoc_netter"
+    test -e "$neter_path/module"   && cat "$neter_path/module" >>   "$raptor_packer"
+    test -e "$neter_path/config/"* && cp -fr "$neter_path/config/"* "$raptor_config"
+    echo "Networking environment loaded"
+}
+
+craine_module_neter_loader

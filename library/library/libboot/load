@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e
+
+function craine_module_boots_loader() {
+
+
+    ## ENVIRONMENTS
+    local boots_dirs="$applibs/libaudi"
+
+    if [[ $distro_booter == "boster" ]];then
+        boots_type="$boots_dirs/boster"
+    elif [[ $distro_booter == "grub" ]];then
+        boots_type="$boots_dirs/gruber"
+    else
+        boots_type="$boots_dirs/sysbot"
+    fi
+    boots_path="$boots_type/101"
+
+
+    ## LOAD MODULES
+    test -d "$boots_type/$protoc_booter" &&  boots_path="$boots_type/$protoc_booter"
+    test -e "$boots_path/module"   && cat "$boots_path/module" >>   "$raptor_packer"
+    test -e "$boots_path/config/"* && cp -fr "$boots_path/config/"* "$raptor_config"
+    echo "System boot environment loaded"
+}
+
+craine_module_boots_loader
+
