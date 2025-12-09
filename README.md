@@ -1,4 +1,4 @@
-# craine
+# Craine Studio
 Operating System Studio Maker 
 
 ## debuging
