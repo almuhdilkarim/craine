@@ -13,4 +13,6 @@ function raptor_boots_post_init() {
 function raptor_boots_post() {
     sleep 2 && clear
     echo "Booting module configuration"
+    raptor_boots_post_prep
+    raptor_boots_post_init
 }

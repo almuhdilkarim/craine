@@ -1,10 +1,10 @@
 #!/bin/bash
 
-
 set -e
 
 ## ENVIRONMENT
 buildroot="/install"
+deprofile=$3
 source "$buildroot/auxel/loader"
 
 
@@ -20,5 +20,5 @@ fi
 
 
 if [[ $1 == "--install" ]];then
-    raptor_procmode="puref" && raptor_makes $3
+    raptor_procmode="puref" && raptor_makes $deprofile
 fi

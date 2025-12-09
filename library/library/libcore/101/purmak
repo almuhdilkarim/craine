@@ -27,8 +27,8 @@ function raptor_post_install() {
 
 function raptor_post_finishe() {
     echo "finish installation" 
-    #mkinitcpio -P &&
-    #umount -R /mnt
+    mkinitcpio -P &&
+    umount -R /mnt
 }
 
 function raptor_makes() {

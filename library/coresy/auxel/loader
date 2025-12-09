@@ -1,7 +1,7 @@
 #!/bin/bash
 
-builddata="$buildauxe/datum"
 buildauxe="$buildroot/auxel"
+builddata="$buildauxe/datum"
 buildconf="$buildauxe/config"
 buildpack="$buildauxe/packer"
 buildlibs="$buildauxe/corest"
@@ -43,4 +43,4 @@ cat $pack_pacmir >> $pack_pacman
 
 
 ## PROFILING
-test -e $3 && source "$buildprof/$3" 
+test -e "$buildprof/$3" && source "$buildprof/$3" 
