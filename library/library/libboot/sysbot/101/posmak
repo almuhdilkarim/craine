@@ -42,7 +42,8 @@ function raptor_boots_post_init() {
     echo "installation systemd boot"
 
     if [[ $dualboot == true ]];then
-        bootctl --esp-path=/mnt/boot/efi --boot-path=/mnt/boot/ install
+        #bootctl --esp-path=/mnt/boot/efi --boot-path=/mnt/boot/ install
+        bootctl --path=/mnt/boot/ install
     else
         bootctl --path=/mnt/boot/ install
     fi
