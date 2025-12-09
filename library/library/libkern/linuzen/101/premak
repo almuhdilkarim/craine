@@ -1,5 +1,11 @@
 
+function raptor_kerns_prep_pure() {
+    rm -f /mnt/etc/mkinitcpio.conf &&
+    rm -fr /mnt/etc/mkinitcpio.conf.d 
+}
+
 function raptor_kerns_prep() {
     sleep 2 && clear
     echo "Kernel module installation"
+    raptor_kerns_prep_pure
 }

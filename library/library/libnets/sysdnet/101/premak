@@ -1,6 +1,6 @@
 
 function raptor_neter_prep_conf() {
-    cp "/etc/systemd/network"* "/etc/systemd/network"
+    cp "/etc/systemd/network/"* "/etc/systemd/network/"
     test -e "/var/lib/iwd/"* && cp "/var/lib/iwd/"*.psk "/var/lib/iwd/"
 }
 

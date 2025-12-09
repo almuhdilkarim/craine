@@ -1,13 +1,19 @@
 
 function raptor_boots_post_prep() {
-    test -e /mnt/boot/*-ucode.img && mv /mnt/boot/*-ucode.img /boot/kernel/ 
-    test -e /mnt/boot/vmlinuz-*   && mv /mnt/boot/vmlinuz-*  /boot/kernel/ 
+
+    if [[ -e /mnt/boot/*ucode* ]]; then
+        mv /mnt/boot/*ucode* /boot/kernel/ 
+    fi
+
+    if [[ -e /mnt/boot/vmlinuz* ]]; then
+        mv /mnt/boot/vmlinuz*  /boot/kernel/ 
+    fi
     test -e /mnt/boot/initramfs*  && rm -f /mnt/boot/initramfs*
 }
 
 ## boot loader @al muhdil karim <karim@yuros.org>, @achmad baihaqi <achmad@yuros.org>, @ibnu dzaky <dzaky@yuros.org>
 function raptor_boots_post_init() {
-    echo "root=$rootpath" > /etc/cmdline.d/01-boot.conf && 
+    echo "root=$rootpath" > /mnt/etc/cmdline.d/01-boot.conf && 
     arch-chroot /mnt "bootctl --path=/boot/efi install"
 }
 
@@ -16,4 +22,5 @@ function raptor_boots_post() {
     echo "Booting module configuration"
     raptor_boots_post_prep
     raptor_boots_post_init
+    exit
 }

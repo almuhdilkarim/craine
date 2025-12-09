@@ -289,9 +289,9 @@ function craine_maker_preps() {
 
 function craine_maker_posts() {
     craine_write_postmake $disks_path
+    craine_write_postmake $cores_path
     craine_write_postmake $kerns_path
     craine_write_postmake $boots_path
-    craine_write_postmake $cores_path
     craine_write_postmake $audio_path
     craine_write_postmake $deskt_path
     craine_write_postmake $mitig_path
