@@ -1,5 +1,12 @@
 
+function raptor_neter_post_serve() {
+    arch-chroot /mnt systemctl enable sshd
+    arch-chroot /mnt systemctl enable NetworkManager
+    arch-chroot /mnt systemctl enable dnsmasq
+}
+
 function raptor_neter_post() {
     sleep 2 && clear
     echo "Network module configuration"
+    raptor_neter_post_serve
 }

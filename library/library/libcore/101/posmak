@@ -18,6 +18,12 @@ function raptor_cores_post_time() {
     arch-chroot /mnt timedatectl set-timezone $timezone 
 }
 
+function raptor_cores_post_user() {
+    arch-chroot /mnt useradd -m $username &&
+    arch-chroot /mnt usermod -aG wheel $username &&
+    arch-chroot /mnt echo "$username:$password" | chpasswd
+}
+
 function raptor_cores_post() {
     sleep 2 && clear
     echo "Base module configuration"

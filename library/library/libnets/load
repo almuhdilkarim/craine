@@ -9,7 +9,7 @@ function craine_module_neter_loader() {
     ## ENVIRONMENTS
     local neter_dirs="$applibs/libnets"
 
-    if [[ $distro_booter == "network-manager" ]];then
+    if [[ $distro_netter == "network-manager" ]];then
         neter_type="$neter_dirs/netman"
     else
         neter_type="$neter_dirs/sysdnet"
