@@ -1,4 +1,6 @@
 
+
+
 function craine_cores_post_base() {
 
     if [[ $hostaname ]];then

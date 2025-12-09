@@ -7,6 +7,7 @@ function raptor_boots_post_prep() {
 
 ## boot loader @al muhdil karim <karim@yuros.org>, @achmad baihaqi <achmad@yuros.org>, @ibnu dzaky <dzaky@yuros.org>
 function raptor_boots_post_init() {
+    echo "root=$rootpath" > /etc/cmdline.d/01-boot.conf && 
     arch-chroot /mnt "bootctl --path=/boot/efi install"
 }
 
