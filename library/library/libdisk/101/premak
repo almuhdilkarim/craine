@@ -46,7 +46,6 @@ function raptor_disks_init() {
     raptor_disks_init_swip
 }
 
-
 ## MAKE PARTITION
 function raptor_disks_make_uefi() {
 
