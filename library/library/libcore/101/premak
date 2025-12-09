@@ -1,5 +1,4 @@
 
-
 function raptor_cores_prep_mulibs() {
 
     local ismultilib=$(cat /etc/pacman.conf | grep "#[multilib]")
@@ -16,12 +15,10 @@ function raptor_cores_prep_pacmir() {
     test -e $pack_pacman && pacstrap /mnt - < $pack_pacman
 }
 
-
 function craine_cores_post_config() {
     genfstab -U /mnt > /mnt/etc/fstab &&
     cp -fr $buildconf/* /mnt
 }
-
 
 function raptor_cores_prep() {
     
