@@ -24,7 +24,6 @@ function raptor_cores_prep() {
     
     sleep 2 && clear
     echo "Base module installation"
-    
     raptor_cores_prep_mulibs &&
     raptor_cores_prep_pacmir &&
     craine_cores_post_config

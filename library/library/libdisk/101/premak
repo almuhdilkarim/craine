@@ -30,7 +30,7 @@ function raptor_disks_init_dual() {
 
 function raptor_disks_init_swip() {
 
-    if [[ -z $( lsblk | grep $efispath ) ]]&&[[ $dualboot == false ]];then
+    if [[ -z $( lsblk -o label | grep "UEFI" ) ]]&&[[ $dualboot == false ]];then
 
         read -p "Do yout want swipe partition table : [y/N] " swipe_partition_table
 
@@ -135,7 +135,7 @@ function raptor_disks_form_uefi() {
 
 function raptor_disks_form_boot() {
     echo "format boot partition"
-    mkfs.ext4 -F -q -b 4096 -L "BOOT" "$bootpath"
+    mkfs.vfat -F32 -S 4096 -n "BOOT" "$bootpath"
 }
 
 function raptor_disks_form_root() {
@@ -172,12 +172,12 @@ function raptor_disks_mont_boot() {
     echo "mount boot partition"
     mount $bootpath /mnt/boot &&
     mkdir -p /mnt/boot/{efi,kernel,loader}
-    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
 }
 
 function raptor_disks_mont_uefi() {
     echo "mount uefi partition"
     mount -o uid=0,gid=0,dmask=007,fmask=007 $uefipath /mnt/boot/efi
+    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
 }
 
 function raptor_disks_mont_swap() {
@@ -205,4 +205,5 @@ function raptor_disks_prep() {
     raptor_disks_make &&
     raptor_disks_form &&
     raptor_disks_mont
+    echo "configration done"
 }

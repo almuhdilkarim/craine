@@ -1,13 +1,14 @@
 
 function raptor_neter_post_serve() {
-    arch-chroot /mnt "systemctl enable sshd"
-    arch-chroot /mnt "systemctl enable systemd-networkd.socket"
-    arch-chroot /mnt "systemctl enable systemd-resolved"
+    arch-chroot /mnt systemctl enable sshd
+    arch-chroot /mnt systemctl enable systemd-networkd.socket
+    arch-chroot /mnt systemctl enable systemd-resolved
 }
 
 function raptor_neter_post() {
 
     sleep 2 && clear
     echo "Network module configuration"
-    raptor_network_post_service
+    raptor_neter_post_serve
+    echo "Network module configured"
 }
