@@ -40,7 +40,13 @@ function raptor_boots_post_init() {
     echo "kernel parameter boot configuration"
     echo "root=$rootpath" > /mnt/etc/cmdline.d/01-boot.conf && 
     echo "installation systemd boot"
-    bootctl --esp-path=/mnt/boot/efi --boot-path=/mnt/boot/ install
+
+    if [[ $dualboot == true ]];then
+        bootctl --esp-path=/mnt/boot/efi --boot-path=/mnt/boot/ install
+    else
+        bootctl --path=/mnt/boot/ install
+    fi
+   
 }
 
 function raptor_boots_post() {

@@ -30,7 +30,7 @@ function raptor_disks_init_dual() {
 
 function raptor_disks_init_swip() {
 
-    if [[ -z $( lsblk -o label | grep "UEFI" ) ]]&&[[ $dualboot == false ]];then
+    if [[ $dualboot == false ]];then
 
         read -p "Do yout want swipe partition table : [y/N] " swipe_partition_table
 
@@ -49,13 +49,13 @@ function raptor_disks_init() {
 ## MAKE PARTITION
 function raptor_disks_make_uefi() {
 
-    if [[ -z $( lsblk -o label | grep "UEFI" ) ]]; then
+    if [[ -z $( lsblk -o label | grep "UEFI" ) ]]&&[[ $dualboot == true ]]; then
         echo "create uefi"
         echo -e "n\np\n\n\n+1G\nt\n\n1\nw" | fdisk "$drivpath" > /dev/null 2>&1
         sleep 2
         uefipath=$(lsblk -o path | tail -n 1)
         sleep 1
-    else
+    elif [[ $dualboot == true ]]; then
         echo "prepare uefi"
         uefipath=$(lsblk -o path,label | grep "UEFI" | awk '{print $1}')
     fi
@@ -63,11 +63,17 @@ function raptor_disks_make_uefi() {
 
 function raptor_disks_make_boot() {
 
-    if [[ -z $( lsblk -o label | grep "BOOT" ) ]]; then
+    if [[ -z $( lsblk -o label | grep "BOOT" ) ]]&&[[ $dualboot == true ]]; then
         echo "create boot"
         echo -e "n\np\n\n\n+1G\nw" | fdisk "$drivpath" > /dev/null 2>&1
         sleep 2
         bootpath=$(lsblk -o path | tail -n 1)
+        sleep 1
+    elif [[ -z $( lsblk -o label | grep "BOOT" ) ]]&&[[ -z $dualboot ]]; then
+        echo "create boot"
+        echo -e "n\np\n\n\n+2G\nt\n\n1\nw" | fdisk "$drivpath" > /dev/null 2>&1
+        sleep 2
+        bootpath=$(lsblk -o path | grep "$drivpath" | tail -n 1)
         sleep 1
     else
         echo "prepare boot"
@@ -81,7 +87,7 @@ function raptor_disks_make_root() {
         echo "create root"
         echo -e "n\np\n\n\n+27G\nw" | fdisk "$drivpath" > /dev/null 2>&1
         sleep 2
-        rootpath=$(lsblk -o path | tail -n 1)
+        rootpath=$(lsblk -o path | grep "$drivpath" | tail -n 1)
         sleep 1
     else
         echo "prepare root"
@@ -95,7 +101,7 @@ function raptor_disks_make_swap() {
         echo "create swap"
         echo -e "n\np\n\n\n+4G\nw" | fdisk "$drivpath" > /dev/null 2>&1
         sleep 2
-        swappath=$(lsblk -o path | tail -n 1)
+        swappath=$(lsblk -o path | grep "$drivpath" | tail -n 1)
         sleep 1
     else
         echo "prepare swap"
@@ -109,7 +115,7 @@ function raptor_disks_make_home() {
         echo "create home"
         echo -e "n\np\n\n\n\nw" | fdisk "$drivpath" > /dev/null 2>&1
         sleep 2
-        homepath=$(lsblk -o path | tail -n 1)
+        homepath=$(lsblk -o path | grep "$drivpath" | tail -n 1 )
         sleep 1
     else
         echo "prepare home"
@@ -128,13 +134,15 @@ function raptor_disks_make() {
 
 ## FORM PARTITION
 function raptor_disks_form_uefi() {
-    echo "format uefi partition"
-    mkfs.vfat -F32 -S 4096 -n "UEFI" "$uefipath"
+    if [[ $dualboot == true ]];then
+        echo "format uefi partition"
+        mkfs.vfat -F32 -S 4096 -n "UEFI" "$uefipath"
+    fi
 }
 
 function raptor_disks_form_boot() {
     echo "format boot partition"
-    mkfs.vfat -F32 -S 4096 -n "BOOT" "$bootpath"
+    mkfs.vfat -F32 -S 4096 -n "BOOT" $bootpath
 }
 
 function raptor_disks_form_root() {
@@ -148,8 +156,11 @@ function raptor_disks_form_swap() {
 }
 
 function raptor_disks_form_home() {
-    echo "format home partition"
-    mkfs.ext4 -F -q -b 4096 -L "HOME" $homepath
+
+    if [[ $raptor_procmode != "--reset" ]]; then
+        echo "format home partition"
+        mkfs.ext4 -F -q -b 4096 -L "HOME" $homepath
+    fi
 }
 
 function raptor_disks_form() {
@@ -168,15 +179,24 @@ function raptor_disks_mont_root() {
 }
 
 function raptor_disks_mont_boot() {
-    echo "mount boot partition"
-    mount $bootpath /mnt/boot &&
-    mkdir -p /mnt/boot/{efi,kernel,loader}
+
+    if [[ $dualboot == true ]];then
+        echo "mount boot partition"
+        mount $bootpath /mnt/boot &&
+        mkdir -p /mnt/boot/{efi,kernel,loader}
+    else
+        mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
+        mkdir -p /mnt/boot/{efi,kernel,loader}
+        mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+    fi
 }
 
 function raptor_disks_mont_uefi() {
-    echo "mount uefi partition"
-    mount -o uid=0,gid=0,dmask=007,fmask=007 $uefipath /mnt/boot/efi
-    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+    if [[ $dualboot == true ]];then
+        echo "mount uefi partition"
+        mount -o uid=0,gid=0,dmask=007,fmask=007 $uefipath /mnt/boot/efi
+        mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+    fi
 }
 
 function raptor_disks_mont_swap() {
@@ -203,6 +223,6 @@ function raptor_disks_prep() {
     raptor_disks_init &&
     raptor_disks_make &&
     raptor_disks_form &&
-    raptor_disks_mont
+    raptor_disks_mont &&
     echo "configration done"
 }
