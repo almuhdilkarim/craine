@@ -2,7 +2,9 @@
 
 function raptor_cores_prep_mulibs() {
 
-    if [[ -n $distro_libs32 ]]&&[[ $distro_libs32 == true ]];then
+    local ismultilib=$(cat /etc/pacman.conf | grep "#[multilib]")
+
+    if [[ -n $distro_libs32 ]]&&[[ $distro_libs32 == true ]]&&[[ -n $ismultilib ]];then
         echo "" >>  "/etc/pacman.conf" &&
         echo "[multilib]" >> "/etc/pacman.conf" &&
         echo "Include = /etc/pacman.d/mirrorlist" >> "/etc/pacman.conf"

@@ -1,6 +1,6 @@
 base
 base-devel
-linux-firmare
+linux-firmware
 git
 neovim
 polkit

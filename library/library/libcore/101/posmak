@@ -19,6 +19,6 @@ function raptor_cores_post_time() {
 function raptor_cores_post() {
     sleep 2 && clear
     echo "Base module configuration"
-    #craine_cores_post_base
-    #raptor_cores_post_time
+    craine_cores_post_base
+    raptor_cores_post_time
 }
