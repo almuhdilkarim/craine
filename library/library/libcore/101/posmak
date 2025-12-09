@@ -1,6 +1,4 @@
 
-
-
 function craine_cores_post_base() {
 
     if [[ $hostaname ]];then
@@ -19,9 +17,23 @@ function raptor_cores_post_time() {
 }
 
 function raptor_cores_post_user() {
+
+    echo "create administratif user"
     arch-chroot /mnt useradd -m $username &&
+
+    echo "grant administrator role"
     arch-chroot /mnt usermod -aG wheel $username &&
-    arch-chroot /mnt echo "$username:$password" | chpasswd
+    
+    echo "create user password"
+    echo "#!/bin/bash" > /mnt/createuser &&
+    echo "echo $username:$password | chpasswd" >> /mnt/createuser &&
+    arch-chroot /mnt /bin/bash createuser &&
+    rm /mnt/createuser
+    sleep 3
+}
+
+function raptor_cores_post_srvc() {
+    arch-chroot /mnt systemctl enable systemd-oomd
 }
 
 function raptor_cores_post() {
@@ -29,4 +41,9 @@ function raptor_cores_post() {
     echo "Base module configuration"
     craine_cores_post_base
     raptor_cores_post_time
+    raptor_cores_post_user
+    raptor_cores_post_srvc
+
+    echo "Base module configured"
+
 }
