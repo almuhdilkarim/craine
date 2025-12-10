@@ -9,8 +9,6 @@ function craine_maker_paths() {
 
     local preset_name=${preset_name,,}
 
-    echo $preset_name
-
     # raptor target installation
     raptor_rooter="$initdir/$preset_name"
     raptor_makers="$initdir/$preset_name/auxel/makes"
@@ -24,6 +22,7 @@ function craine_maker_paths() {
 
     ## prepare folder information   
     preset_folder="$apppath/preset/default"
+    test -d "$apppath/preset/$preset_name" && preset_folder="$apppath/preset/$preset_name"
     test -d "$apppath/preset/$preset_base" && preset_folder="$apppath/preset/$preset_base"
     test -d "$preset_conf" && preset_folder="$preset_conf"
 
@@ -32,105 +31,68 @@ function craine_maker_paths() {
     test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
     test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
     test -e "$preset_folder/instal.conf" && preset_userde="$preset_folder/instal.conf"
+    test -e "$preset_folder/readme.conf" && preset_readme="$preset_folder/readme.conf"
+    test -e "$preset_folder/licens.conf" && preset_licens="$preset_folder/readme.conf"
     test -e "$preset_folder/protos.conf" && source "$preset_folder/protos.conf"
   
 
     ## prepare distro buidlprofil
     test -d "$apppath/profile" && preset_profil="$apppath/profile"
-
-
-    ## validation existing config
-    if [[ -e "$initdir/$preset_name/auxel/datum/gitrepo.conf" ]]&&[[ -n $preset_gitr ]]&&[[ $inetcon == true ]];then
-        read -p "Git repoository preset for $preset_conf is existed, do you want replace it : [ y/N ] " reset_gitrep
-    fi
-
-    if [[ -e "$initdir/$preset_name/auxel/datum/raptors.conf" ]];then
-        read -p "Distro preset $preset_conf is existed, do you want replace it : [ y/N ] " reset_distro
-    fi
-
-    if [[ -e "$initdir/$preset_name/profil/default" ]];then
-        read -p "Installation preset $preset_conf is existed, do you want replace it : [ y/N ] " reset_instal
-    fi
-
-    if [[ -d "$initdir/$preset_name/profile" ]];then
-        read -p "Profile preset $preset_conf is existed, do you want replace it : [ y/N ] " reset_profil
-    fi
 }
 
 
 ## PREPGITREPO 
-function craine_maker_clone() {
-    
-    git clone $preset_gitr "$initdir/${preset_name,,}"
-    
-    if [ $? -eq 0 ]; then
-        echo "git clone is successful"
-    else
-        echo "git clone is failed" && exit 1
-    fi
-}
-
-
-function craine_maker_pulls() {
-    git -C "$initdir/$preset_name" pull origin main
-}
-
-
 function craine_maker_repos() {
 
-
     local distro_repos="$initdir/$preset_name/auxel/datum/gitrepo.conf"
-    test -e $distro_repos && repodata=$( cat $distro_repos )
+    local source_repos=$distro_gitrep
+    test -n $preset_gitr && source_repos=$preset_gitr
 
-   
-    ## make new git repository
-    if [[ -n $preset_gitr ]]&&[[ -z $repodata ]]&&[[ $inetcon == true ]]; then
-
+    ## create distro directory
+    if [[ $inetcon == true ]]; then
        
-        test -d "$initdir/$preset_name" && rm -fr "$initdir/$preset_name"
-        craine_maker_clone && mkdir -p "$initdir/$preset_name/auxel/datum/" &&
-        echo $preset_gitr > $distro_repos 
-    
+        test -e "$raptor_rooter" && rm -fr "$raptor_rooter" && 
+        git clone $source_repos $raptor_rooter
+       
+        if [ $? -eq 0 ]; then
 
-    ## reset git repository
-    elif [[ $reset_gitrep == "Y" ]]||[[ $reset_gitrep == "y" ]]&&[[ -n $repodata ]]&&[[ -n $preset_gitr ]]&&[[ $inetcon == true ]]; then
-        test -d "$initdir/$preset_name" && rm -fr "$initdir/$preset_name" &&
-        craine_maker_clone && mkdir -p "$initdir/$preset_name/auxel/datum/" &&
-        echo $preset_gitr > $distro_repos 
-        
-
-
-    ## pull git repodata
-    elif [[ -n $repodata ]]&&[[ $inetcon == true ]]; then
-        read -p "Do you want to pull remote repository : [ y/N ] " pull_repos
-
-        if [[ $pull_repos == "Y" ]]||[[  $pull_repos == "y" ]];then
-            craine_maker_pulls
+            rm -fr "$raptor_rooter/"* && 
+            mkdir -p "$initdir/$preset_name/auxel/datum/" && 
+            echo $source_repos > $distro_repos 
+            echo "git clone is successful"
+        else
+            echo "git clone is failed" && exit 1
         fi
-
-
-    ## create local repodata
-    elif [[ -n $preset_gitr ]]&&[[ -z $repodata ]]&&[[ $inetcon == false ]]; then
-        mkdir -p "$initdir/$preset_name/auxel/datum/" && touch $distro_repos
-        echo $preset_gitr > $distro_repos 
- 
-
-    ## create local repodata
-    elif [[ -z $preset_gitr ]]&&[[ -z $repodata ]]; then
-        mkdir -p "$initdir/$preset_name/auxel/datum/" && touch $distro_repos
-        echo $preset_gitr > $distro_repos 
+    else
+        test -d "$raptor_rooter" && rm -fr "$raptor_rooter" 
+        mkdir -p "$raptor_rooter/auxel/datum/" && touch $distro_repos
+        echo $source_repos > $distro_repos 
     fi
 }
 
 
 ## PREPSYSBASE 
 function craine_maker_cores() {
-    
+
+    ## prepare
+    mkdir -p "$raptor_rooter/"{locals,relpre,auxel/profile} &&
+
+    # coresys
     cp -fr "$appcore/"* "$raptor_rooter"  &&
     cp -fr "$appcore/."* "$raptor_rooter" &&
-    mkdir -p "$raptor_rooter/"{locals,relpre,auxel/profile} &&
+
+    
+    # profile
     cp -fr "$preset_profil" "$raptor_rooter/distro" &&
+
+    # installer
     mv "$raptor_rooter/install" "$raptor_rooter/installer"
+
+    # readme
+    cp $preset_readme $raptor_rooter/README.md
+
+    # license
+    cp $preset_licens $raptor_rooter/LICENSE
 
     # default installation profile
     cp -f $preset_userde $raptor_userde
@@ -155,7 +117,7 @@ function craine_maker_confi() {
 
 
 function craine_maker_relea() {
-  
+    
     local osrelease="$initdir/$preset_name/auxel/release"
 
     if [[ ! -z "$distro_naming" ]];then
@@ -239,6 +201,7 @@ function craine_maker_genis() {
 
 
 function craine_maker_envir() {
+ 
     source "$applibs/libkern/load" &&
     source "$applibs/libboot/load" &&
     source "$applibs/libdisk/load" &&
@@ -255,23 +218,13 @@ function craine_maker_envir() {
 function craine_maker_based() {
 
     local distro_repos="$initdir/$preset_name/auxel/datum/raptors.conf"
+    rm -f $distro_repos && touch $distro_repos
 
-    if [[ $reset_distro == "Y" ]]||[[ $reset_distro == "y" ]]; then
-        rm -f $distro_repos && touch $distro_repos &&
-        craine_maker_cores &&
-        craine_maker_confi &&
-        craine_maker_relea &&
-        craine_maker_genis &&
-        craine_maker_envir 
-    fi
-
-    if [[ ! -e $distro_repos ]]; then
-        craine_maker_cores &&
-        craine_maker_confi &&
-        craine_maker_relea &&
-        craine_maker_genis &&
-        craine_maker_envir 
-    fi
+    craine_maker_cores &&
+    craine_maker_confi &&
+    craine_maker_relea &&
+    craine_maker_genis &&
+    craine_maker_envir 
 }
 
 
@@ -325,19 +278,6 @@ function craine_maker_proc() {
 
 function craine_maker() {
 
-    echo "Generate Operating System Builder"
-    echo "name : $1"
-    echo "gits : $2"
-    echo "base : $3"
-    echo "conf : $4"
-
-    read -p "Build Operating System Development Kit : [Y/n] " buildosdevelkit
-
-    if [[ $buildosdevelkit != "Y" ]];then
-        echo "terminated build process"
-        exit 0
-    fi
-
     name=$1
     gitr=$2
     base=$3
@@ -348,6 +288,18 @@ function craine_maker() {
     preset_name=${name,,}
     preset_base=${base,,}
     test -z $base && preset_base=${name,,}
+    
+    echo "Operating System Overview"
+    echo "name : $preset_name"
+    echo "repo : $preset_gitr"
+    echo "base : $preset_base"
+    echo "conf : $preset_conf"
 
-    craine_maker_proc
+    read -p "Build $preset_name Operating System : [Y/n] " buildosdevelkit
+
+    if [[ $buildosdevelkit == "Y" ]];then
+        craine_maker_proc
+    else
+        exit 0
+    fi
 }

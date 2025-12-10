@@ -13,11 +13,19 @@ function raptor_cores_prep_mulibs() {
 
 function raptor_cores_prep_pacmir() {
     test -e $pack_pacman && pacstrap /mnt - < $pack_pacman
+    if [ $? -ne 0 ]; then
+        echo "Error: raptor package installation failed." >&2
+        exit 1
+    fi
 }
 
 function craine_cores_post_config() {
     genfstab -U /mnt > /mnt/etc/fstab &&
     cp -fr $buildconf/* /mnt
+    if [ $? -ne 0 ]; then
+        echo "Error: raptor configuration installation failed." >&2
+        exit 1
+    fi
 }
 
 function raptor_cores_prep() {

@@ -47,9 +47,29 @@ function raptor_disks_init() {
 }
 
 ## MAKE PARTITION
+function raptor_disks_make_uefi() {
+
+    if [[ -z $( lsblk -o label | grep "UEFI" ) ]]&&[[ $dualboot == true ]]; then
+        echo "create uefi"
+        echo -e "n\np\n\n\n+1G\nt\n\n1\nw" | fdisk "$drivpath" > /dev/null 2>&1
+        sleep 2
+        uefipath=$(lsblk -o path | tail -n 1)
+        sleep 1
+    elif [[ $dualboot == true ]]; then
+        echo "prepare uefi"
+        uefipath=$(lsblk -o path,label | grep "UEFI" | awk '{print $1}')
+    fi
+}
+
 function raptor_disks_make_boot() {
 
-   if [[ -z $( lsblk -o label | grep "BOOT" ) ]]; then
+    if [[ -z $( lsblk -o label | grep "BOOT" ) ]]&&[[ $dualboot == true ]]; then
+        echo "create boot"
+        echo -e "n\np\n\n\n+1G\nw" | fdisk "$drivpath" > /dev/null 2>&1
+        sleep 2
+        bootpath=$(lsblk -o path | tail -n 1)
+        sleep 1
+    elif [[ -z $( lsblk -o label | grep "BOOT" ) ]]&&[[ -z $dualboot ]]; then
         echo "create boot"
         echo -e "n\np\n\n\n+2G\nt\n\n1\nw" | fdisk "$drivpath" > /dev/null 2>&1
         sleep 2
@@ -105,32 +125,21 @@ function raptor_disks_make_home() {
 
 function raptor_disks_make() {
     echo "starting auto partitioning"
+    raptor_disks_make_uefi &&
     raptor_disks_make_boot &&
     raptor_disks_make_root &&
     raptor_disks_make_swap &&
     raptor_disks_make_home
 }
 
-## PREV PARTITION
-function raptor_disks_prev() {
-    
-    clear &&
-    echo "Storage Information preview"
-    echo "--------------------------------"
-    echo "boot path : $bootpath"
-    echo "root path : $rootpath"
-    echo "swap path : $swappath"
-    echo "home path : $homepath"
-    echo "--------------------------------"
-    read -p "Do you want continue installation : [Y/n] " confirmdiskpartition
-
-    if [[ $confirmdiskpartition != "Y" ]];then
-        echo "Proccess cancelation by user"
-        exit 1
-    fi
-} 
-
 ## FORM PARTITION
+function raptor_disks_form_uefi() {
+    if [[ $dualboot == true ]];then
+        echo "format uefi partition"
+        mkfs.vfat -F32 -S 4096 -n "UEFI" "$uefipath"
+    fi
+}
+
 function raptor_disks_form_boot() {
     echo "format boot partition"
     mkfs.vfat -F32 -S 4096 -n "BOOT" $bootpath
@@ -147,6 +156,7 @@ function raptor_disks_form_swap() {
 }
 
 function raptor_disks_form_home() {
+
     if [[ $raptor_procmode != "--reset" ]]; then
         echo "format home partition"
         mkfs.ext4 -F -q -b 4096 -L "HOME" $homepath
@@ -154,6 +164,7 @@ function raptor_disks_form_home() {
 }
 
 function raptor_disks_form() {
+    raptor_disks_form_uefi
     raptor_disks_form_boot
     raptor_disks_form_root
     raptor_disks_form_swap
@@ -168,10 +179,24 @@ function raptor_disks_mont_root() {
 }
 
 function raptor_disks_mont_boot() {
-    mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
-    mkdir -p /mnt/boot/{efi,kernel,loader}
-    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
 
+    if [[ $dualboot == true ]];then
+        echo "mount boot partition"
+        mount $bootpath /mnt/boot &&
+        mkdir -p /mnt/boot/{efi,kernel,loader}
+    else
+        mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
+        mkdir -p /mnt/boot/{efi,kernel,loader}
+        mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+    fi
+}
+
+function raptor_disks_mont_uefi() {
+    if [[ $dualboot == true ]];then
+        echo "mount uefi partition"
+        mount -o uid=0,gid=0,dmask=007,fmask=007 $uefipath /mnt/boot/efi
+        mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+    fi
 }
 
 function raptor_disks_mont_swap() {
@@ -187,6 +212,7 @@ function raptor_disks_mont_home() {
 function raptor_disks_mont() {
     raptor_disks_mont_root &&
     raptor_disks_mont_boot &&
+    raptor_disks_mont_uefi &&
     raptor_disks_mont_swap &&
     raptor_disks_mont_home
 }
@@ -196,7 +222,6 @@ function raptor_disks_prep() {
     clear && echo "Partition configuration"
     raptor_disks_init &&
     raptor_disks_make &&
-    raptor_disks_prev &&
     raptor_disks_form &&
     raptor_disks_mont &&
     echo "configration done"
