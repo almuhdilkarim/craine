@@ -26,16 +26,23 @@ while getopts ":m:n:g:b:c" opt; do
     esac
 done
 
-echo $gitr
 
 if [[ $mode == "desktop" ]];then
     craine_desktop
 elif [[ $mode == "guide" ]]; then
     craine_termine
 elif [[ $mode == "make" ]]&&[[ ! -z $name ]]; then
-    craine_maker -n $name -g $gitr -c $conf -b $base
+    craine_maker $name $gitr $base $conf
 elif [[ $mode == "edit" ]]&&[[ ! -z $name ]]; then
-    craine_edito -n $name -g $gitr -c $conf -b $base
+    craine_edito $name $gitr $base $conf
+elif [[ $mode == "lab1" ]]; then
+    craine_maker "tester1" git@github.com:yuros-learncamp/rogerlab1.git tester1
+elif [[ $mode == "lab2" ]]; then
+    craine_maker "tester2" git@github.com:yuros-learncamp/rogerlab2.git tester2 
+elif [[ $mode == "lab3" ]]; then
+    craine_maker "tester3" git@github.com:yuros-learncamp/rogerlab3.git tester3 
+elif [[ $mode == "lab4" ]]; then
+    craine_maker "tester4" git@github.com:yuros-learncamp/rogerlab4.git tester4 
 else
     echo "Craine error: Mode parameter not found"  
 fi

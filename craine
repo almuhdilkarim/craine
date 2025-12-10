@@ -23,11 +23,18 @@ while getopts ":m:n:c:p" opt; do
     esac
 done
 
-
 if [[ $1 == "desktop" ]];then
     craine_desktop
 elif [[ $1 == "guide" ]]; then
     craine_termine
+elif [[ $1 == "lab1" ]]; then
+    craine_hackers make tester1 tester1 $prof
+elif [[ $1 == "lab2" ]]; then
+    craine_hackers make tester2 tester2 $prof
+elif [[ $1 == "lab3" ]]; then
+    craine_hackers make tester3 tester3 $prof
+elif [[ $1 == "lab4" ]]; then
+    craine_hackers make tester4 tester4 $prof
 elif [[ -z $mode ]]&&[[ ! -z $name ]];then
     craine_hackers $mode $name $conf $prof
 else

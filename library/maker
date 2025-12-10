@@ -9,6 +9,8 @@ function craine_maker_paths() {
 
     local preset_name=${preset_name,,}
 
+    echo $preset_name
+
     # raptor target installation
     raptor_rooter="$initdir/$preset_name"
     raptor_makers="$initdir/$preset_name/auxel/makes"
@@ -18,6 +20,7 @@ function craine_maker_paths() {
     raptor_packco="$initdir/$preset_name/auxel/packer/packco"
     raptor_packfa="$initdir/$preset_name/auxel/packer/packfa"
     raptor_userde="$initdir/$preset_name/auxel/profile/default"
+
 
     ## prepare folder information   
     preset_folder="$apppath/preset/default"
@@ -323,20 +326,22 @@ function craine_maker_proc() {
 function craine_maker() {
 
     echo "Generate Operating System Builder"
+    echo "name : $1"
+    echo "gits : $2"
+    echo "base : $3"
+    echo "conf : $4"
 
-	## OPTIONS PROC
-	while getopts ":n:b:g:c" opt; do
-		case $opt in
-			n) name="${OPTARG}"
-			;;
-			b) base="${OPTARG}"
-			;;
-			g) gitr="${OPTARG}"
-			;;
-            c) conf="${OPTARG}"
-			;;
-		esac
-	done
+    read -p "Build Operating System Development Kit : [Y/n] " buildosdevelkit
+
+    if [[ $buildosdevelkit != "Y" ]];then
+        echo "terminated build process"
+        exit 0
+    fi
+
+    name=$1
+    gitr=$2
+    base=$3
+    conf=$4
 
     preset_conf=$conf
     preset_gitr=$gitr
