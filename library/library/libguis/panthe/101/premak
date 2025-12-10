@@ -1,0 +1,5 @@
+
+function raptor_deskt_prep() {
+    sleep 2 && clear
+    echo "Desktop module installation"
+}

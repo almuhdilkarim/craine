@@ -11,8 +11,15 @@ function craine_module_deskto_loader() {
     if [[ $distro_destop == "cosmic" ]];then
         deskt_type="$dekst_dirs/cosmic"
     elif [[ $distro_destop == "budgie" ]];then
-
         deskt_type="$dekst_dirs/budgie"
+    elif [[ $distro_destop == "cutefish" ]];then
+        deskt_type="$dekst_dirs/cutefes"
+    elif [[ $distro_destop == "lxqt" ]];then
+        deskt_type="$dekst_dirs/winlxqt"
+    elif [[ $distro_destop == "pantheon" ]];then
+        deskt_type="$dekst_dirs/panthe"
+    elif [[ $distro_destop == "deepin" ]];then
+        deskt_type="$dekst_dirs/deepin"
     elif [[ $distro_destop == "gnome" ]];then
         deskt_type="$dekst_dirs/gnome"
     elif [[ $distro_destop == "hyperland" ]];then
