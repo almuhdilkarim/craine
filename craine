@@ -35,6 +35,8 @@ elif [[ $1 == "lab3" ]]; then
     craine_hackers make tester3 tester3 $prof
 elif [[ $1 == "lab4" ]]; then
     craine_hackers make tester4 tester4 $prof
+elif [[ $1 == "lab5" ]]; then
+    craine_hackers make tester5 tester5 $prof
 elif [[ -z $mode ]]&&[[ ! -z $name ]];then
     craine_hackers $mode $name $conf $prof
 else

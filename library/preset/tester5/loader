@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+function craine_module_distr_loader() {
+
+    ## ENVIRONMENTS
+    distr_path="$preset_folder/101"
+
+
+    ## LOAD MODULES
+    test -d "$distr_path/$protoc_distro" &&  distr_path="$distr_path/$protoc_distro"
+    test -e "$distr_path/module"   && cat "$distr_path/module" >>   "$raptor_packer"
+    test -e "$distr_path/config/"* && cp -fr "$distr_path/config/"* "$raptor_config"
+    echo "Distro environment loaded"
+}
+
+craine_module_distr_loader

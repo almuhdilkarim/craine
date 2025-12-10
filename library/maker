@@ -48,10 +48,12 @@ function craine_maker_repos() {
     local source_repos=$distro_gitrep
     test -n $preset_gitr && source_repos=$preset_gitr
 
+    echo $source_repos
+
     ## create distro directory
     if [[ $inetcon == true ]]; then
        
-        test -e "$raptor_rooter" && rm -fr "$raptor_rooter" && 
+        test -e "$raptor_rooter" && rm -fr "$raptor_rooter"
         git clone $source_repos $raptor_rooter
        
         if [ $? -eq 0 ]; then

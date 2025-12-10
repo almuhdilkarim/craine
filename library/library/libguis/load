@@ -16,6 +16,8 @@ function craine_module_deskto_loader() {
         deskt_type="$dekst_dirs/cutefes"
     elif [[ $distro_destop == "lxqt" ]];then
         deskt_type="$dekst_dirs/winlxqt"
+    elif [[ $distro_destop == "lxde" ]];then
+        deskt_type="$dekst_dirs/winlxde"
     elif [[ $distro_destop == "pantheon" ]];then
         deskt_type="$dekst_dirs/panthe"
     elif [[ $distro_destop == "deepin" ]];then

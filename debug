@@ -43,6 +43,8 @@ elif [[ $mode == "lab3" ]]; then
     craine_maker "tester3" git@github.com:yuros-learncamp/rogerlab3.git tester3 
 elif [[ $mode == "lab4" ]]; then
     craine_maker "tester4" git@github.com:yuros-learncamp/rogerlab4.git tester4 
+elif [[ $mode == "lab5" ]]; then
+    craine_maker "tester5" git@github.com:yuros-learncamp/rogerlab5.git tester5
 else
     echo "Craine error: Mode parameter not found"  
 fi
