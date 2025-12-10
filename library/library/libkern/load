@@ -13,7 +13,7 @@ function craine_module_kernel_loader() {
     elif [[ $distro_kernel == "lqx" ]];then
         kerns_type="$kerns_dirs/liquerix"
     elif [[ $distro_kernel == "lts" ]];then
-        kerns_type="$kerns_dirs/hardened"
+        kerns_type="$kerns_dirs/linuxlts"
     elif [[ $distro_kernel == "hardened" ]];then
         kerns_type="$kerns_dirs/harden"
     else
