@@ -1,5 +1,9 @@
 sddm
+sshfs
+dolphin
+konqueror
 kdeconnect
 plasma-meta
 qt5-declarative
+xdg-desktop-portal
 bluez
