@@ -35,6 +35,9 @@ elif [[ "$pack_ucodes" == "AuthenticAMD" ]]; then
 fi
 
 
+## bluetooth
+
+
 ## graphical
 
 
