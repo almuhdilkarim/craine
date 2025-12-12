@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 # YUROS BASH_EXTEND PACKAGES
 # copyright Al Muhdil Karim <karim@yuros.org>
 

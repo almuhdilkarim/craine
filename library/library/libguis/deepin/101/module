@@ -1,8 +1,7 @@
 lightdm
 xorg-server
+xdg-utils
 lightdm-deepin-greeter
-yakuake
 deepin
 deepin-kwin
-qt5-declarative
 bluez

@@ -23,8 +23,9 @@ lxqt-globalkeys
 lxqt-notificationd
 lxqt-openssh-askpass
 lxqt-powermanagement
+lxqt-wayland-session
 xdg-desktop-portal-lxqt
-sway
+niri
 slock
 bluez
 blueman
@@ -32,5 +33,4 @@ swaylock
 xorg-server
 breeze-icons
 qt5-declarative
-lxqt-wayland-session
 network-manager-applet
