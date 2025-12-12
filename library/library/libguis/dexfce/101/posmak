@@ -1,6 +1,6 @@
 
 function raptor_deskt_post_sess() {
-    rm -f /mnt/usr/share/wayland-session/labwc.desktop
+    rm -f /mnt/usr/share/wayland-sessions/labwc.desktop
 }
 
 function raptor_deskt_post_srvc() {

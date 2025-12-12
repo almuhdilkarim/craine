@@ -1,8 +1,8 @@
 
 
 function raptor_deskt_post_sess() {
-    rm -f /mnt/usr/share/wayland-session/gnome-wayland.desktop
-    rm -f /mnt/usr/share/wayland-session/gnome.desktop
+    rm -f /mnt/usr/share/wayland-sessions/gnome-wayland.desktop
+    rm -f /mnt/usr/share/wayland-sessions/gnome.desktop
 }
 
 function raptor_deskt_post_srvc() {
@@ -10,9 +10,14 @@ function raptor_deskt_post_srvc() {
     arch-chroot /mnt systemctl enable bluetooth.service
 }
 
+function raptor_deskt_post_pure() {
+    arch-chroot /mnt pacman -R pantheon-files --noconfirm
+}
+
 function raptor_deskt_post() {
     sleep 2 && clear
     echo "Desktop module configuration"
+    raptor_deskt_post_pure
     raptor_deskt_post_sess
     raptor_deskt_post_srvc
     echo "Desktop module configured"
