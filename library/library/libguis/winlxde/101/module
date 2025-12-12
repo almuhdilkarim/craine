@@ -1,16 +1,4 @@
-picview
-lxappearance	
-lxappearance-obconf	
-lxde-common
-lxde-icon-theme	
-lxdm	
-lxhotkey	
-lxinput	
-lxlauncher	
-lxpanel	
-lxrandr	
-lxsession	
-lxtask
+lxde
 maui
 icewm	
 slock
