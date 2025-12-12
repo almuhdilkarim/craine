@@ -1,0 +1,5 @@
+
+function raptor_neter_prep() {
+    sleep 2 && clear
+    echo "Network module installation"
+}

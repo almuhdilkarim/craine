@@ -11,6 +11,8 @@ function craine_module_neter_loader() {
 
     if [[ $distro_netter == "network-manager" ]];then
         neter_type="$neter_dirs/netman"
+    elif [[ $distro_netter == "conman" ]];then
+        neter_type="$neter_dirs/conman"
     else
         neter_type="$neter_dirs/sysdnet"
     fi

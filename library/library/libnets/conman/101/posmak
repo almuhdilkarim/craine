@@ -1,0 +1,12 @@
+
+function raptor_neter_post_srvc() {
+    arch-chroot /mnt systemctl enable sshd
+    arch-chroot /mnt systemctl enable connman.service
+    arch-chroot /mnt systemctl enable systemd-resolved.service
+}
+
+function raptor_neter_post() {
+    sleep 2 && clear
+    echo "Network module configuration"
+    raptor_neter_post_srvc
+}

@@ -11,6 +11,8 @@ function craine_module_deskto_loader() {
         deskt_type="$dekst_dirs/cosmic"
     elif [[ $distro_destop == "budgie" ]];then
         deskt_type="$dekst_dirs/budgie"
+    elif [[ $distro_destop == "ukui" ]];then
+        deskt_type="$dekst_dirs/deukue"
     elif [[ $distro_destop == "cutefish" ]];then
         deskt_type="$dekst_dirs/cutefes"
     elif [[ $distro_destop == "lxqt" ]];then
@@ -19,12 +21,16 @@ function craine_module_deskto_loader() {
         deskt_type="$dekst_dirs/bodhis"
     elif [[ $distro_destop == "lxde" ]];then
         deskt_type="$dekst_dirs/winlxde"
+     elif [[ $distro_destop == "blackbox" ]];then
+        deskt_type="$dekst_dirs/blacbo"
     elif [[ $distro_destop == "pantheon" ]];then
         deskt_type="$dekst_dirs/panthe"
     elif [[ $distro_destop == "deepin" ]];then
         deskt_type="$dekst_dirs/deepin"
     elif [[ $distro_destop == "gnome" ]];then
         deskt_type="$dekst_dirs/gnome"
+    elif [[ $distro_destop == "sugar" ]];then
+        deskt_type="$dekst_dirs/sugars"
     elif [[ $distro_destop == "hyperland" ]];then
         deskt_type="$dekst_dirs/hypers"
     elif [[ $distro_destop == "plasma" ]];then
