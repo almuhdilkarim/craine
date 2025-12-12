@@ -1,6 +1,5 @@
 lightdm
 xorg-server
-xdg-utils
 lightdm-deepin-greeter
 deepin
 deepin-kwin
