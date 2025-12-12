@@ -1,9 +1,10 @@
-sddm
 lxde
 guake
 picom
 blueman
 alacarte
 metacity
+lxappearance
+lxappearance-obconf
 network-manager-applet
 bluez
