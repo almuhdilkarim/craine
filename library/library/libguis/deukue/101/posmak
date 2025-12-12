@@ -1,6 +1,6 @@
 
 function raptor_deskt_post_serve() {
-    arch-chroot /mnt systemctl enable lxdm.service
+    arch-chroot /mnt systemctl enable sddm.service
     arch-chroot /mnt systemctl enable bluetooth.service
 }
 

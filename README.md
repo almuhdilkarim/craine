@@ -7,3 +7,8 @@ Operating System Studio Maker
 ```
 ./debug -m make -n creamy -g git@github.com:almuhdilkarim/rapdevs.git
 ```
+
+## abadoned
+### dekstop
+1. deepin
+2. UKUI
