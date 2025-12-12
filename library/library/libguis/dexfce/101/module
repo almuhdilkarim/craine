@@ -1,6 +1,7 @@
 sddm
 xfce4
 labwc
+firefox
 ristretto
 xorg-server
 xfce4-notifyd
@@ -15,6 +16,9 @@ thunar-archive-plugin
 xfce4-pulseaudio-plugin
 xfce4-whiskermenu-plugin
 thunar-media-tags-plugin
+secrets
+libsecret
+gnome-keyring
 networkmanager
 bluez
 blueman

@@ -39,5 +39,7 @@ firefox
 gcc-libs
 noto-fonts
 ttf-opensans
+secrets
+libsecret
 gnome-keyring
 switcheroo-control

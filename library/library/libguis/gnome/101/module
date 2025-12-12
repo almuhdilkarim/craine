@@ -1,12 +1,13 @@
 gdm
 bluez
 baobab
+secrets
 gnome-logs
 gnome-menus
 gnome-shell
+gnome-keyring
 gnome-session
 gnome-console
-gnome-keyring
 gnome-calendar
 gnome-software
 gnome-calculator
@@ -23,6 +24,7 @@ gvfs-gphoto2
 gvfs-mtp
 gvfs-nfs
 gvfs-onedrive
+libsecret
 sushi
 loupe
 papers

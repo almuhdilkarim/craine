@@ -5,7 +5,11 @@ slock
 bluez
 blueman
 mozo
+firefox
 metacity
 ttf-droid
 ttf-dejavu
+secrets
+libsecret
+gnome-keyring
 network-manager-applet

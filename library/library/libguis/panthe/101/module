@@ -2,7 +2,6 @@ lightdm
 pantheon
 xorg-server
 switchboard
-lightdm-gtk-greeter
 lightdm-pantheon-greeter
 sound-theme-elementary
 elementary-icon-theme
@@ -11,5 +10,4 @@ pantheon-applications-menu
 wingpanel-indicator-session
 wingpanel-indicator-datetime
 firefox
-nautilus
 bluez

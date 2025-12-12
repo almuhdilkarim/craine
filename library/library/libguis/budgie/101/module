@@ -6,6 +6,9 @@ papirus-icon-theme
 budgie-screensaver
 budgie-desktop-view
 budgie-control-center
+secrets
+libsecret
+gnome-keyring
 guake
 firefox
 nautilus

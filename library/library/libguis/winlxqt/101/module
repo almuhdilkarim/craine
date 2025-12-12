@@ -4,9 +4,11 @@ fiery
 labwc
 slock
 bluez
+kwallet
 blueman
 swaylock
 xorg-server
+ksshaskpass
 breeze-icons
 qt5-declarative
 network-manager-applet
