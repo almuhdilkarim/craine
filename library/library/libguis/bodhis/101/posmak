@@ -1,0 +1,12 @@
+
+function raptor_deskt_post_srvc() {
+    arch-chroot /mnt systemctl enable sddm.service
+    arch-chroot /mnt systemctl enable bluetooth.service
+}
+
+function raptor_deskt_post() {
+    sleep 2 && clear
+    echo "Desktop module configuration"
+    raptor_deskt_post_srvc
+    echo "Desktop module configured"
+}

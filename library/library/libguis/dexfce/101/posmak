@@ -1,0 +1,17 @@
+
+function raptor_deskt_post_sess() {
+    rm -f /mnt/usr/share/wayland-session/xfce-wayland.desktop
+}
+
+function raptor_deskt_post_srvc() {
+    arch-chroot /mnt systemctl enable sddm.service
+    arch-chroot /mnt systemctl enable bluetooth.service
+}
+
+function raptor_deskt_post() {
+    sleep 2 && clear
+    echo "Desktop module configuration"
+    raptor_deskt_post_srvc
+    raptor_deskt_post_sess
+    echo "Desktop module configured"
+}

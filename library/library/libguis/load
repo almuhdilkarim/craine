@@ -15,6 +15,8 @@ function craine_module_deskto_loader() {
         deskt_type="$dekst_dirs/cutefes"
     elif [[ $distro_destop == "lxqt" ]];then
         deskt_type="$dekst_dirs/winlxqt"
+    elif [[ $distro_destop == "bodhi" ]];then
+        deskt_type="$dekst_dirs/bodhis"
     elif [[ $distro_destop == "lxde" ]];then
         deskt_type="$dekst_dirs/winlxde"
     elif [[ $distro_destop == "pantheon" ]];then
@@ -27,6 +29,8 @@ function craine_module_deskto_loader() {
         deskt_type="$dekst_dirs/hypers"
     elif [[ $distro_destop == "plasma" ]];then
         deskt_type="$dekst_dirs/plasma"
+    elif [[ $distro_destop == "xfce4" ]];then
+        deskt_type="$dekst_dirs/dexfce"
     fi
 
     deskt_path="$deskt_type/101"
