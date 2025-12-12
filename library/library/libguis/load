@@ -2,7 +2,6 @@
 
 set -e
 
-
 function craine_module_deskto_loader() {
 
     ## ENVIRONMENTS
@@ -29,9 +28,9 @@ function craine_module_deskto_loader() {
     elif [[ $distro_destop == "plasma" ]];then
         deskt_type="$dekst_dirs/plasma"
     fi
-    deskt_path="$deskt_type/101"
 
-    
+    deskt_path="$deskt_type/101"
+   
     ## LOAD MODULES
     if [[ -n $deskt_type ]]; then
         test -d "$deskt_type/$protoc_destop" && deskt_path="$deskt_type/$protoc_destop"
