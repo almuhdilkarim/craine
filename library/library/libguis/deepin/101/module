@@ -1,10 +1,9 @@
-lightdm
 xorg-server
 secrets
 libsecret
 firefox
 gnome-keyring
-lightdm-deepin-greeter
 deepin
 deepin-kwin
+deepin-extra
 bluez
