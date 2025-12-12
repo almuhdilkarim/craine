@@ -1,9 +1,13 @@
 sddm
 lxqt
-yakuake
+sway
 slock
+blueman
+yakuake
+swaylock
 xorg-server
 oxygen-icons
 qt5-declarative
 lxqt-wayland-session
+network-manager-applet
 bluez
