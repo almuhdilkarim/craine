@@ -4,10 +4,7 @@ xorg-server
 switchboard
 elementary-wallpapers
 elementary-icon-theme
-sound-theme-elementary
 lightdm-pantheon-greeter
 pantheon-applications-menu
-wingpanel-indicator-session
-wingpanel-indicator-datetime
 firefox
 bluez

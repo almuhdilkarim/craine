@@ -3,6 +3,7 @@
 function raptor_deskt_post_sess() {
     rm -f /mnt/usr/share/wayland-sessions/gnome-wayland.desktop
     rm -f /mnt/usr/share/wayland-sessions/gnome.desktop
+    rm -fr /mnt/usr/share/sounds/speech-dispatcher/*
 }
 
 function raptor_deskt_post_srvc() {
