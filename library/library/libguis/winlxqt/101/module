@@ -1,6 +1,7 @@
 sddm
 lxqt
 yakuake
+xorg-server
 oxygen-icons
 qt5-declarative
 lxqt-wayland-session
