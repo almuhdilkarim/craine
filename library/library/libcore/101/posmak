@@ -41,6 +41,7 @@ function raptor_cores_post_user() {
 }
 
 function raptor_cores_post_srvc() {
+    arch-chroot /mnt systemctl enable systemd-timesyncd.service
     arch-chroot /mnt systemctl enable systemd-oomd
 }
 
