@@ -2,10 +2,10 @@ lightdm
 pantheon
 xorg-server
 switchboard
-lightdm-pantheon-greeter
-sound-theme-elementary
-elementary-icon-theme
 elementary-wallpapers
+elementary-icon-theme
+sound-theme-elementary
+lightdm-pantheon-greeter
 pantheon-applications-menu
 wingpanel-indicator-session
 wingpanel-indicator-datetime

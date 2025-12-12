@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Secure Session
-Comment=Pantheon on Wayland
-Exec=gnome-session --session=pantheon-wayland
-TryExec=io.elementary.wingpanel
-Icon=
-DesktopNames=Pantheon
-Type=Application
