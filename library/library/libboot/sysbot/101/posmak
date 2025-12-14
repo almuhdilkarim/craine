@@ -44,7 +44,7 @@ function raptor_boots_post_init() {
 
     if [[ $dualboot == true ]];then
         #bootctl --esp-path=/mnt/boot/efi --boot-path=/mnt/boot/ install
-        mv -f /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi.dualboot &&
+        mv -f /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi.bak &&
         cp /boot/efi/EFI/systemd/systemd-bootx64.efi /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
         bootctl --path=/mnt/boot/efi install
     else

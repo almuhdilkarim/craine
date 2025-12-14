@@ -1,10 +1,10 @@
 # YUROS MKINITCPIO PACKAGES
 # copyright Al Muhdil Karim <karim@yuros.org>
-# mkinitcpio preset file for the 'linux-lts' package
+# mkinitcpio preset file for the 'linux' package
 
 ALL_config="/etc/mkinitcpio.d/default.conf"
-ALL_kver="/boot/kernel/vmlinuz-linux-lts"
-ALL_kerneldest="/boot/kernel/vmlinuz-linux-lts"
+ALL_kver="/boot/kernel/vmlinuz-linux"
+ALL_kerneldest="/boot/kernel/vmlinuz-linux"
 
 PRESETS=('default')
 #PRESETS=('default' 'fallback')
