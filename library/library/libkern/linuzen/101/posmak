@@ -1,6 +1,7 @@
 
 function raptor_kerns_post_conf() {
-    if [[ $duaboot == true ]];then
+    
+    if [[ $dualboot == true ]];then
         echo "prepare dual boot kernel preset"
         mv /mnt/etc/mkinitcpio.d/linux-zen-dual.preset /mnt/etc/mkinitcpio.d/linux-zen.preset
         rm /mnt/etc/mkinitcpio.d/linux-zen-mono.preset
