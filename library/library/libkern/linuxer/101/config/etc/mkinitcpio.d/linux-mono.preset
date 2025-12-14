@@ -1,0 +1,20 @@
+# YUROS MKINITCPIO PACKAGES
+# copyright Al Muhdil Karim <karim@yuros.org>
+# mkinitcpio preset file for the 'linux' package
+
+ALL_config="/etc/mkinitcpio.d/default.conf"
+ALL_kver="/boot/kernel/vmlinuz-linux"
+ALL_kerneldest="/boot/kernel/vmlinuz-linux"
+
+PRESETS=('default')
+#PRESETS=('default' 'fallback')
+
+#default_config="/etc/mkinitcpio.conf"
+#default_image="/boot/initramfs-linux-linux.img"
+default_uki="/boot/efi/linux/yuros-linux.efi"
+#default_options="--splash /usr/share/systemd/bootctl/splash.bmp"
+
+#fallback_config="/etc/mkinitcpio.conf"
+#fallback_image="/boot/initramfs-yuros-linux-fallback.img"
+#fallback_uki="/efi/EFI/Linux/yuros-linux-fallback.efi"
+#fallback_options="-S autodetect"

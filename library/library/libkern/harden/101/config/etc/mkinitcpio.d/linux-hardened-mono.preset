@@ -10,11 +10,11 @@ PRESETS=('default')
 #PRESETS=('default' 'fallback')
 
 #default_config="/etc/mkinitcpio.conf"
-#default_image="/boot/initramfs-linux-linuxhardened.img"
-default_uki="/boot/efi/linux/yuros-linuxhardened.efi"
+#default_image="/boot/initramfs-linux-hardened.img"
+default_uki="/boot/efi/linux/yuros-hardened.efi"
 #default_options="--splash /usr/share/systemd/bootctl/splash.bmp"
 
 #fallback_config="/etc/mkinitcpio.conf"
-#fallback_image="/boot/initramfs-yuros-linuxhardened-fallback.img"
-#fallback_uki="/efi/EFI/Linux/yuros-linuxhardened-fallback.efi"
+#fallback_image="/boot/initramfs-yuros-hardened-fallback.img"
+#fallback_uki="/efi/EFI/Linux/yuros-hardened-fallback.efi"
 #fallback_options="-S autodetect"

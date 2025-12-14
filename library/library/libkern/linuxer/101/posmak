@@ -1,5 +1,19 @@
 
+function raptor_kerns_post_conf() {
+    
+    if [[ $dualboot == true ]];then
+        echo "prepare dual boot kernel preset"
+        mv /mnt/etc/mkinitcpio.d/linux-dual.preset /mnt/etc/mkinitcpio.d/linux.preset
+        rm /mnt/etc/mkinitcpio.d/linux-mono.preset
+    else
+        echo "prepare single boot kernel preset"
+        mv /mnt/etc/mkinitcpio.d/linux-mono.preset /mnt/etc/mkinitcpio.d/linux.preset
+        rm /mnt/etc/mkinitcpio.d/linux-dual.preset
+    fi
+}
+
 function raptor_kerns_post() {
     sleep 2 && clear
     echo "Kernel module configuration"
+    raptor_kerns_post_conf
 }
