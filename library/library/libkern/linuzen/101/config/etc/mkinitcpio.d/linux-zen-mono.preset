@@ -10,11 +10,11 @@ PRESETS=('default')
 #PRESETS=('default' 'fallback')
 
 #default_config="/etc/mkinitcpio.conf"
-#default_image="/boot/initramfs-linux-linuxzen.img"
-default_uki="/boot/efi/linux/yuros-linuxzen.efi"
+#default_image="/boot/initramfs-linux-zenkernel.img"
+default_uki="/boot/efi/linux/yuros-zenkernel.efi"
 #default_options="--splash /usr/share/systemd/bootctl/splash.bmp"
 
 #fallback_config="/etc/mkinitcpio.conf"
-#fallback_image="/boot/initramfs-yuros-linuxzen-fallback.img"
-#fallback_uki="/efi/EFI/Linux/yuros-linuxzen-fallback.efi"
+#fallback_image="/boot/initramfs-yuros-zenkernel-fallback.img"
+#fallback_uki="/efi/EFI/Linux/yuros-zenkernel-fallback.efi"
 #fallback_options="-S autodetect"
