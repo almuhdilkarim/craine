@@ -12,6 +12,13 @@ buildprof="$buildauxe/profile"
 ## DISTVARS
 test -e "$builddata/raptors.conf" && source "$builddata/raptors.conf"
 
+## USERVARS
+if [[ -e "$buildprof/$deprofile" ]];then
+    source "$buildprof/$deprofile"
+else
+    source "$buildprof/default"
+fi
+
 
 ## FUNCTION
 test -e "$buildauxe/makes" && source "$buildauxe/makes"

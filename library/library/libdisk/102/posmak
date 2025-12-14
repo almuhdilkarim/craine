@@ -1,0 +1,5 @@
+
+function raptor_disks_post() {
+    sleep 2 && clear
+    echo "Partition configuration"
+}

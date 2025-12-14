@@ -11,14 +11,14 @@ function craine_maker_paths() {
 
     # raptor target installation
     raptor_rooter="$initdir/$preset_name"
+    raptor_auxele="$initdir/$preset_name/auxel"
     raptor_makers="$initdir/$preset_name/auxel/makes"
     raptor_resete="$initdir/$preset_name/auxel/resete"
     raptor_config="$initdir/$preset_name/auxel/config"
     raptor_packer="$initdir/$preset_name/auxel/packer/pacmir"
     raptor_packco="$initdir/$preset_name/auxel/packer/packco"
     raptor_packfa="$initdir/$preset_name/auxel/packer/packfa"
-    raptor_userde="$initdir/$preset_name/auxel/profile/default"
-
+    
 
     ## prepare folder information   
     preset_folder="$apppath/preset/default"
@@ -28,9 +28,9 @@ function craine_maker_paths() {
 
 
     ## preaprea default configure
+    test -d "$preset_folder/profile" && preset_userde="$preset_folder/profile"
     test -e "$preset_folder/distro.conf" && preset_distro="$preset_folder/distro.conf"
     test -e "$preset_folder/librep.conf" && preset_gitrep="$preset_folder/librep.conf"
-    test -e "$preset_folder/instal.conf" && preset_userde="$preset_folder/instal.conf"
     test -e "$preset_folder/readme.conf" && preset_readme="$preset_folder/readme.conf"
     test -e "$preset_folder/licens.conf" && preset_licens="$preset_folder/readme.conf"
     test -e "$preset_folder/protos.conf" && source "$preset_folder/protos.conf"
@@ -97,7 +97,7 @@ function craine_maker_cores() {
     cp $preset_licens $raptor_rooter/LICENSE
 
     # default installation profile
-    cp -f $preset_userde $raptor_userde
+    cp -fr $preset_userde $raptor_auxele
 }
 
 

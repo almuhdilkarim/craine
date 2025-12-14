@@ -1,0 +1,9 @@
+hostname=tester1
+username=dzaky
+password=1511
+timezone=Asia/Jakarta
+loadpath=/dev/nvme0n1
+uefipath=/dev/nvme0n1p1
+rootpath=/dev/nvme0n1p5
+swappath=/dev/nvme0n1p6
+homepath=/dev/nvme0n1p7

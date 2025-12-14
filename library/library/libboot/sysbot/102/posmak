@@ -35,7 +35,6 @@ function raptor_boots_post_prep() {
     test -e /mnt/boot/initramfs*  && rm -f /mnt/boot/initramfs*
 }
 
-
 ## boot loader @al muhdil karim <karim@yuros.org>, @achmad baihaqi <achmad@yuros.org>, @ibnu dzaky <dzaky@yuros.org>
 function raptor_boots_post_init() {
     echo "kernel parameter boot configuration"
@@ -44,44 +43,20 @@ function raptor_boots_post_init() {
 
     if [[ $dualboot == true ]];then
         #bootctl --esp-path=/mnt/boot/efi --boot-path=/mnt/boot/ install
-        mv -f /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi.dualboot &&
-        cp /boot/efi/EFI/systemd/systemd-bootx64.efi /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
-        bootctl --path=/mnt/boot/efi install
+        bootctl --path=/mnt/boot/ install
     else
-        rm -fr /boot/efi/loader &&
-        bootctl --path=/mnt/boot install
+        bootctl --path=/mnt/boot/ install
     fi
+   
 }
-
 
 ## secure boot @al muhdil karim <karim@yuros.org>, @muhmmad haydar kamil <kamil@yuros.org>, @sultan fajar ramadhan <sultan@yuros.org>
 function raptor_boots_post_secs_dual () {
     echo "setup secure boot for dual boot"
-    sbctl create-keys &&
-    sbctl sign --save /boot/efi/EFI/Boot/bootx64.efi &&
-    sbctl sign --save /boot/efi/EFI/systemd/systemd-bootx64.efi &&
-    for efi in /boot/efi/EFI/linux/*; do
-        sbctl sign --save /boot/efi/EFI/linux/$efi
-    done
-
-    for vml in /boot/kernel/vmlinuz*; do
-        sbctl sign --save /boot/kernel/$vml
-    done
-    sbctl enroll-keys -m -i &&
-    sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 }
 
 function raptor_boots_post_secs_mono () {
     echo "setup secure boot for mono boot"
-    sbctl create-keys &&
-    sbctl sign --save /boot/efi/boot/bootx64.efi &&
-    sbctl sign --save /boot/efi/systemd/systemd-bootx64.efi &&
-    for efi in /boot/efi/linux/*; do
-        sbctl sign --save /boot/efi/EFI/linux/$efi
-    done
-    for vml in /boot/kernel/vmlinuz*; do
-        sbctl sign --save /boot/kernel/$vml
-    done
 }
 
 function raptor_boots_post_secs() {

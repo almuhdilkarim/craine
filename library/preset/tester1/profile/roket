@@ -1,0 +1,9 @@
+hostname=tester1
+username=roket
+password=1511
+timezone=Asia/Jakarta
+loadpath=/dev/sda
+uefipath=/dev/sda1
+rootpath=/dev/sda2
+swappath=/dev/sda3
+homepath=/dev/sda4
