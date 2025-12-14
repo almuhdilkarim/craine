@@ -11,91 +11,117 @@ function raptor_boots_post_prep() {
         mv /mnt/boot/intel-ucode.img /mnt/boot/kernel/ 
     fi
 
+    if [[ -e /mnt/boot/vmlinuz-linux ]]; then
+        echo "clean vmlinuz"
+        kernel_type="vmlinuz-linux"
+        mv /mnt/boot/vmlinuz-linux  /mnt/boot/kernel/ 
+    fi
+
     if [[ -e /mnt/boot/vmlinuz-linux-zen ]]; then
         echo "clean vmlinuz"
+        kernel_type="vmlinuz-linux-zen"
         mv /mnt/boot/vmlinuz-linux-zen  /mnt/boot/kernel/ 
     fi
 
     if [[ -e /mnt/boot/vmlinuz-linux-hardened ]]; then
         echo "clean vmlinuz"
+        kernel_type="vmlinuz-linux-hardened"
         mv /mnt/boot/vmlinuz-linux-hardened  /mnt/boot/kernel/ 
     fi
 
     if [[ -e /mnt/boot/vmlinuz-linux-lqx ]]; then
         echo "clean vmlinuz"
+        kernel_type="vmlinuz-linux-lqx"
         mv /mnt/boot/vmlinuz-linux-lqx  /mnt/boot/kernel/ 
     fi
 
     if [[ -e /mnt/boot/vmlinuz-linux-lts ]]; then
         echo "clean vmlinuz"
+        kernel_type="vmlinuz-linux-lts"
         mv /mnt/boot/vmlinuz-linux-lts  /mnt/boot/kernel/ 
     fi
 
     echo "clean initramfs"
     test -e /mnt/boot/initramfs*  && rm -f /mnt/boot/initramfs*
+
+    arch-chroot /mnt mkinitcpio -P
 }
 
+## secure boot @al muhdil karim <karim@yuros.org>, @muhmmad haydar kamil <kamil@yuros.org>, @sultan fajar ramadhan <sultan@yuros.org>
+function raptor_boots_post_secs() {
+
+    echo "setup secure boot"
+    arch-chroot /mnt sbctl create-keys &&
+    arch-chroot /mnt sbctl enroll-keys -m -i -f &&
+    arch-chroot /mnt sbctl sign -s -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+
+    #if [[ $dualboot == true ]];then
+    #    local_kernpath="sbctl sign -s -o /boot/efi/EFI/linux/$kernel_type"
+    #else
+    #    local_kernpath="sbctl sign -s -o /boot/efi/linux/$kernel_type"
+    #fi
+
+    #arch-chroot /mnt $local_kernpath 
+}
 
 ## boot loader @al muhdil karim <karim@yuros.org>, @achmad baihaqi <achmad@yuros.org>, @ibnu dzaky <dzaky@yuros.org>
-function raptor_boots_post_init() {
+function raptor_boots_post_boot() {
     echo "kernel parameter boot configuration"
     echo "root=$rootpath" > /mnt/etc/cmdline.d/01-boot.conf && 
     echo "installation systemd boot"
 
     if [[ $dualboot == true ]];then
-        #bootctl --esp-path=/mnt/boot/efi --boot-path=/mnt/boot/ install
-        mv -f /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi.bak &&
-        cp /boot/efi/EFI/systemd/systemd-bootx64.efi /boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
         bootctl --path=/mnt/boot/efi install
+        mv -f /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi.bak
+        cp /mnt/boot/efi/EFI/systemd/systemd-bootx64.efi /mnt/boot/efi/EFI/Microsoft/Boot/bootmgfw.efi
+        arch-chroot /mnt sbctl verify | sed -E 's|^.* (/.+) is not signed$| arch-chroot /mnt sbctl sign -s "\1"|e'
     else
         rm -fr /boot/efi/loader &&
         bootctl --path=/mnt/boot install
     fi
 }
 
-
-## secure boot @al muhdil karim <karim@yuros.org>, @muhmmad haydar kamil <kamil@yuros.org>, @sultan fajar ramadhan <sultan@yuros.org>
 function raptor_boots_post_secs_dual () {
-    echo "setup secure boot for dual boot"
-    sbctl create-keys &&
-    sbctl sign --save /boot/efi/EFI/Boot/bootx64.efi &&
-    sbctl sign --save /boot/efi/EFI/systemd/systemd-bootx64.efi &&
-    for efi in /boot/efi/EFI/linux/*; do
-        sbctl sign --save /boot/efi/EFI/linux/$efi
+    arch-chroot /mnt sbctl sign --save /boot/efi/EFI/Boot/bootx64.efi &&
+    arch-chroot /mnt sbctl sign --save /boot/efi/EFI/systemd/systemd-bootx64.efi &&
+    for efi in /mnt/boot/efi/EFI/linux/*; do
+        arch-chroot /mnt sbctl sign --save /boot/efi/EFI/linux/$efi
     done
-
-    for vml in /boot/kernel/vmlinuz*; do
-        sbctl sign --save /boot/kernel/$vml
-    done
-    sbctl enroll-keys -m -i &&
-    sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 }
 
 function raptor_boots_post_secs_mono () {
-    echo "setup secure boot for mono boot"
-    sbctl create-keys &&
-    sbctl sign --save /boot/efi/boot/bootx64.efi &&
-    sbctl sign --save /boot/efi/systemd/systemd-bootx64.efi &&
-    for efi in /boot/efi/linux/*; do
-        sbctl sign --save /boot/efi/EFI/linux/$efi
-    done
-    for vml in /boot/kernel/vmlinuz*; do
-        sbctl sign --save /boot/kernel/$vml
+
+    arch-chroot /mnt sbctl sign --save /boot/efi/boot/bootx64.efi &&
+    arch-chroot /mnt sbctl sign --save /boot/efi/systemd/systemd-bootx64.efi &&
+    for efi in /mnt/boot/efi/linux/*; do
+        echo $efi > /mnt/sign
+        arch-chroot /mnt sbctl sign --save /boot/efi/linux/$( cat /mnt/sign )
     done
 }
 
-function raptor_boots_post_secs() {
+function raptor_boots_post_secs_old() {
+
+    echo "setup secure boot"
+    arch-chroot /mnt sbctl create-keys &&
+    arch-chroot /mnt sbctl enroll-keys -m -i -f &&
+
     if [[ $dualboot == true ]];then
         raptor_boots_post_secs_dual
     else
         raptor_boots_post_secs_mono
     fi
+
+    for vml in $($(ls /mnt/boot/kernel/ | grep vmlinuz )); do
+        arch-chroot /mnt sbctl sign --save /boot/kernel/$vml
+    done
+
+    arch-chroot /mnt sbctl verify | sed -E 's|^.* (/.+) is not signed$|sbctl sign -s "\1"|e'
 }
 
 function raptor_boots_post() {
     sleep 2 && clear
     echo "Booting module configuration"
     raptor_boots_post_prep
-    raptor_boots_post_init
     raptor_boots_post_secs
+    raptor_boots_post_boot
 }
