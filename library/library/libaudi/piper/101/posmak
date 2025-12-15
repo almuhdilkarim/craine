@@ -1,12 +1,12 @@
 
-function raptor_audio_post_serve() {
+function raptor_audio_post_srvc() {
     arch-chroot /mnt systemctl enable --global pipewire-pulse.service
 }
 
 function raptor_audio_post() {
     sleep 2 && clear
     echo "Audio module configuration"
-    raptor_audio_post_serve 
+    raptor_audio_post_srvc 
     echo "Audio module configured"
 }
 

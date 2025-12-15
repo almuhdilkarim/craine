@@ -51,7 +51,5 @@ function raptor_cores_post() {
     raptor_cores_post_time
     raptor_cores_post_user
     raptor_cores_post_srvc
-
     echo "Base module configured"
-
 }

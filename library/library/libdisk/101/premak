@@ -7,31 +7,10 @@ function raptor_disks_init_pure() {
     fi
 }
 
-## dualboot validator team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
-function raptor_disks_init_dual() {
-    
-    dualboot=false
-    efipaths=($(lsblk -o path,fstype | grep vfat | awk '{print $1}'))
-
-    for item_efipath in "${efipaths[@]}"; do
-
-        echo "check efi partition at $item_efipath" 
-        sudo mount $item_efipath /srv && sleep 2 && 
-
-        if [[ -d "/srv/EFI/Microsoft" ]]; then
-            dualboot=true &&
-            uefipath="$item_efipath" && 
-            echo "windows efi partition : $item_efipath"
-        fi
-        sleep 1 && sudo umount -R /srv && sleep 2
-
-    done
-}
-
 function raptor_disks_init_swip() {
 
-    if [[ -n $uefipath ]];then
-        local pathuefi=$( lsblk -o path,label | grep $uefipath )
+    if [[ -n $bootpath ]];then
+        local pathboot=$( lsblk -o path,label | grep $bootpath )
     fi
 
     if [[ -n $rootpath ]];then
@@ -46,7 +25,7 @@ function raptor_disks_init_swip() {
         local pathhome=$( lsblk -o path,label | grep $homepath )
     fi
 
-    if [[ $dualboot == false ]]&&[[ -z $pathuefi ]]&&[[ -z $pathroot ]]&&[[ -z $pathswap ]]&&[[ -z $pathhome ]];then
+    if [[ $dualboot == false ]]&&[[ -z $pathboot ]]&&[[ -z $pathroot ]]&&[[ -z $pathswap ]]&&[[ -z $pathhome ]];then
 
         read -p "Do yout want swipe partition table : [y/N] " swipe_partition_table
 
@@ -60,35 +39,45 @@ function raptor_disks_init_swip() {
 
 function raptor_disks_init() {
     raptor_disks_init_pure
-    raptor_disks_init_dual
     raptor_disks_init_swip
 }
 
-
 ## MAKE PARTITION
-function raptor_disks_make_uefi() {
-
-    if [[ $dualboot == true ]];then
-        return
-    fi 
+function raptor_disks_make_boot() {
 
     local label=$( lsblk -o label | grep "BOOT" | awk '{print $1}' )
-    local paths=$( lsblk -o path  | grep $uefipath )
-    local sizes=$distro_uefisize
+    local paths=$( lsblk -o path  | grep $bootpath )
+    local sizes=$distro_bootsize
 
-    echo "prepare uefi partition"
+    echo "prepare boot partition"
 
     if [[ -z $label ]]&&[[ -z $paths ]]; then
         echo -e "n\np\n\n\n+$sizes\nt\n\n1\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 2
-        uefipath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        bootpath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
     elif [[ -n $paths ]];then
-        uefipath=$paths
+        bootpath=$paths
     elif [[ -n $label ]];then
-        uefipath=$label
+        bootpath=$label
     else
-        echo "error uefi partition not found"
+        echo "error boot partition not found"
         exit 1
     fi
+}
+
+## dualboot validator team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
+function raptor_disks_make_uefi() {
+
+    efipaths=($(lsblk -o path,fstype | grep vfat | awk '{print $1}'))
+
+    for path in "${efipaths[@]}"; do
+        sudo mount $path /srv && sleep 2 && 
+
+        if [[ -d "/srv/EFI/Microsoft" ]]; then
+            uefipath="$path" && 
+            echo "found efi : $path"
+        fi
+        sleep 1 && sudo umount -R /srv && sleep 2
+    done
 }
 
 function raptor_disks_make_root() {
@@ -157,6 +146,7 @@ function raptor_disks_make_home() {
 
 function raptor_disks_make() {
     echo "starting auto partitioning"
+    raptor_disks_make_boot &&
     raptor_disks_make_uefi &&
     raptor_disks_make_root &&
     raptor_disks_make_swap &&
@@ -183,13 +173,9 @@ function raptor_disks_prev() {
 } 
 
 ## FORM PARTITION
-function raptor_disks_form_uefi() {
-
-    echo " duaboot status : "$dualboot
-    if [[ $dualboot == false ]];then
-        echo "format boot partition"
-        mkfs.vfat -F32 -S 4096 -n "BOOT" $uefipath
-    fi
+function raptor_disks_form_boot() {
+    echo "format boot partition"
+    mkfs.vfat -F32 -S 4096 -n "BOOT" $bootpath
 }
 
 function raptor_disks_form_root() {
@@ -212,7 +198,7 @@ function raptor_disks_form_home() {
 }
 
 function raptor_disks_form() {
-    raptor_disks_form_uefi &&
+    raptor_disks_form_boot &&
     raptor_disks_form_root &&
     raptor_disks_form_swap &&
     raptor_disks_form_home
@@ -225,16 +211,18 @@ function raptor_disks_mont_root() {
     mkdir -p /mnt/{home,boot}
 }
 
+function raptor_disks_mont_boot() {
+    mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
+    mkdir -p /mnt/boot/{efi,kernel,loader}
+    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+}
+
 function raptor_disks_mont_uefi() {
 
-    if [[ $dualboot == true ]];then
-        mkdir -p /mnt/boot/{efi,kernel}
-        mount -o uid=0,gid=0,dmask=007,fmask=007 $uefipath /mnt/boot/efi
-        mkdir -p /mnt/boot/efi/EFI/{linux,systemd}
-    else
-        mount -o uid=0,gid=0,dmask=007,fmask=007 $uefipath /mnt/boot
-        mkdir -p /mnt/boot/{efi,kernel,loader}
-        mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+    if [[ -n $uefipath ]];then
+        mount $uefipath /srv
+        sudo cp -r /srv/EFI/Microsoft /boot/efi/
+        umount -R /srv
     fi
 }
 
@@ -251,6 +239,7 @@ function raptor_disks_mont_swap() {
 function raptor_disks_mont() {
     raptor_disks_mont_root &&
     raptor_disks_mont_uefi &&
+    raptor_disks_mont_boot &&
     raptor_disks_mont_home &&
     raptor_disks_mont_swap
 }
@@ -262,5 +251,6 @@ function raptor_disks_prep() {
     raptor_disks_prev &&
     raptor_disks_form &&
     raptor_disks_mont &&
-     echo "configration done"
+    echo "configration done"
+    exit
 }

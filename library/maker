@@ -233,9 +233,9 @@ function craine_maker_based() {
 ## PREPSYSBASE 
 function craine_maker_preps() {
     craine_write_prepmake $disks_path
+    craine_write_prepmake $boots_path
     craine_write_prepmake $cores_path
     craine_write_prepmake $kerns_path
-    craine_write_prepmake $boots_path
     craine_write_prepmake $neter_path
     craine_write_prepmake $audio_path
     craine_write_prepmake $deskt_path
