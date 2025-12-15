@@ -7,7 +7,6 @@ function craine_module_distr_loader() {
     ## ENVIRONMENTS
     distr_path="$preset_folder/101"
 
-
     ## LOAD MODULES
     test -d "$distr_path/$protoc_distro" &&  distr_path="$distr_path/$protoc_distro"
     test -e "$distr_path/module"   && cat "$distr_path/module" >>   "$raptor_packer"
