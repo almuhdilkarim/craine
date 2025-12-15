@@ -5,6 +5,6 @@ timezone=Asia/Jakarta
 loadpath=/dev/nvme0n1
 uefipath=/dev/nvme0n1p1
 bootpath=/dev/nvme0n1p5
-rootpath=/dev/nvme0n1p6
+procpath=/dev/nvme0n1p6
 swappath=/dev/nvme0n1p7
 homepath=/dev/nvme0n1p8

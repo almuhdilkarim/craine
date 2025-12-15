@@ -1,0 +1,28 @@
+
+
+function raptor_firms_post_grap() {
+
+    if [[ $nvidia_driver != true ]];then
+        rm -f "/mnt/etc/modprobe.d/nvidia.conf"
+    fi
+
+    if [[ $nvidia_driver == true ]];then
+        rm -f "/mnt/etc/mkinitcpio.d/radeon.conf"
+        rm -f "/mnt/etc/mkinitcpio.d/default.conf"
+        mv -f "/mnt/etc/mkinitcpio.d/nvidia.conf" "/mnt/etc/mkinitcpio.d/default.conf"
+    
+    elif [[ $radeon_driver == true ]];then
+        rm -f "/mnt/etc/mkinitcpio.d/nvidia.conf"
+        rm -f "/mnt/etc/mkinitcpio.d/default.conf"
+        mv -f "/mnt/etc/mkinitcpio.d/radeon.conf" "/mnt/etc/mkinitcpio.d/default.conf"
+
+    else
+        rm -f "/mnt/etc/mkinitcpio.d/nvidia.conf"
+        rm -f "/mnt/etc/mkinitcpio.d/radeon.conf"
+    fi
+}
+
+function raptor_firms_post() {
+    echo "firmware post"
+    raptor_firms_post_grap
+}

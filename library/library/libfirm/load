@@ -1,0 +1,17 @@
+#!/bin/env bash
+
+set -e
+
+function craine_module_firms_loader() {
+
+    ## ENVIRONMENTS
+    local firms_dirs="$applibs/libfirm"
+    firms_path="$firms_dirs/base"
+
+    ## LOAD MODULES    
+    test -e "$firms_path/module" && cat "$firms_path/module" >>   "$raptor_packer"
+    test -e "$firms_path/config" && cp -fr "$firms_path/config/"* "$raptor_config"
+    echo "Mitigation environment loaded"
+}
+
+craine_module_firms_loader

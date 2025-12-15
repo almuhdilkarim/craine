@@ -13,8 +13,8 @@ function raptor_disks_init_swip() {
         local pathboot=$( lsblk -o path,label | grep $bootpath )
     fi
 
-    if [[ -n $rootpath ]];then
-        local pathroot=$( lsblk -o path,label | grep $rootpath )
+    if [[ -n $procpath ]];then
+        local pathroot=$( lsblk -o path,label | grep $procpath )
     fi
 
     if [[ -n $swappath ]];then
@@ -45,15 +45,14 @@ function raptor_disks_init() {
 ## MAKE PARTITION
 function raptor_disks_make_boot() {
 
-    local label=$( lsblk -o label | grep "BOOT" | awk '{print $1}' )
-    local paths=$( lsblk -o path  | grep $bootpath )
+    local label=$( lsblk -o path,label | grep "BOOT" | awk '{print $1}' )
+    local paths=$( lsblk -o path | grep "$bootpath" )
     local sizes=$distro_bootsize
 
-    echo "prepare boot partition"
-
     if [[ -z $label ]]&&[[ -z $paths ]]; then
-        echo -e "n\np\n\n\n+$sizes\nt\n\n1\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 2
+        echo -e "n\np\n\n\n+$sizes\nt\n\n1\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
         bootpath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
     elif [[ -n $paths ]];then
         bootpath=$paths
     elif [[ -n $label ]];then
@@ -62,55 +61,42 @@ function raptor_disks_make_boot() {
         echo "error boot partition not found"
         exit 1
     fi
+
+    echo "boot path : $bootpath"
 }
 
-## dualboot validator team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
-function raptor_disks_make_uefi() {
-
-    efipaths=($(lsblk -o path,fstype | grep vfat | awk '{print $1}'))
-
-    for path in "${efipaths[@]}"; do
-        sudo mount $path /srv && sleep 2 && 
-
-        if [[ -d "/srv/EFI/Microsoft" ]]; then
-            uefipath="$path" && 
-            echo "found efi : $path"
-        fi
-        sleep 1 && sudo umount -R /srv && sleep 2
-    done
-}
-
-function raptor_disks_make_root() {
+function raptor_disks_make_proc() {
     
-    local label=$( lsblk -o label | grep "ROOT" | awk '{print $1}' )
-    local paths=$( lsblk -o path | grep $rootpath )
+    local label=$( lsblk -o path,label | grep "ROOT" | awk '{print $1}' )
+    local paths=$( lsblk -o path | grep "$procpath" )
     local sizes=$distro_procsize
 
-    echo "create root partition"
     if [[ -z $label ]]&&[[ -z $paths ]]; then
-        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 2
-        rootpath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
+        procpath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
     elif [[ -n $paths ]];then
-        rootpath=$paths
+        procpath=$paths
     elif [[ -n $label ]];then
-        rootpath=$label
+        procpath=$label
     else
         echo "error root partition not found"
         exit 1
     fi
+
+    echo "proc path : $procpath"  
 }
 
 function raptor_disks_make_swap() {
 
-    local label=$( lsblk -o label | grep "swap" | awk '{print $1}' )
+    local label=$( lsblk -o path,label | grep "swap" | awk '{print $1}' )
     local paths=$( lsblk -o path | grep $swappath )
     local sizes=$distro_swapsize
 
-    echo "create swap partition"
-
     if [[ -z $label ]]&&[[ -z $paths ]]; then
-        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 2
+        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
         swappath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
     elif [[ -n $paths ]];then
         swappath=$paths
     elif [[ -n $label ]];then
@@ -119,21 +105,24 @@ function raptor_disks_make_swap() {
         echo "error swap partition not found"
         exit 1
     fi
+
+    echo "swap path : $swappath"
 }
 
 function raptor_disks_make_home() {
 
-    local label=$( lsblk -o label | grep "HOME" | awk '{print $1}' )
+    local label=$( lsblk -o path,label | grep "HOME" | awk '{print $1}' )
     local paths=$( lsblk -o path | grep $homepath )
     local sizes=$distro_homesize
 
-    echo "create home partition"
     if [[ -z $label ]]&&[[ -z $paths ]]&&[[ $sizes == "all" ]]; then
-        echo -e "n\np\n\n\n\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 2
+        echo -e "n\np\n\n\n\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
         homepath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
     elif [[ -z $label ]]&&[[ -z $paths ]]&&[[ $sizes != "all" ]]; then
-        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 2
+        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
         homepath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
     elif [[ -n $paths ]];then
         homepath=$paths
     elif [[ -n $label ]];then
@@ -142,35 +131,41 @@ function raptor_disks_make_home() {
         echo "error home partition not found"
         exit 1
     fi
+
+    echo "home path : $homepath"
+}
+
+## dualboot validator team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
+function raptor_disks_make_uefi() {
+
+    local efipaths=($(lsblk -o path,fstype | grep vfat | awk '{print $1}'))
+
+    for path in "${efipaths[@]}"; do
+        sudo mount $path /srv && sleep 2 && 
+
+        if [[ -d "/srv/EFI/Microsoft" ]]; then
+            uefipath="$path" && echo "uefi path : $uefipath"
+        fi
+        sleep 1 && sudo umount -R /srv && sleep 2
+    done
 }
 
 function raptor_disks_make() {
-    echo "starting auto partitioning"
-    raptor_disks_make_boot &&
+    clear &&
+    echo "STORAGE INFORMATION"
+    echo "--------------------------------"
     raptor_disks_make_uefi &&
-    raptor_disks_make_root &&
+    raptor_disks_make_boot &&
+    raptor_disks_make_proc &&
     raptor_disks_make_swap &&
     raptor_disks_make_home
-}
-
-## PREV PARTITION
-function raptor_disks_prev() {
-    
-    clear &&
-    echo "Storage Information preview"
-    echo "--------------------------------"
-    echo "boot path : $uefipath"
-    echo "root path : $rootpath"
-    echo "swap path : $swappath"
-    echo "home path : $homepath"
     echo "--------------------------------"
     read -p 'Type "YES" on capital letter to continue or "NO" to abort installation : ' confirmdiskpartition
-
     if [[ $confirmdiskpartition != "YES" ]];then
         echo "Proccess cancelation by user"
         exit 1
     fi
-} 
+}
 
 ## FORM PARTITION
 function raptor_disks_form_boot() {
@@ -178,9 +173,9 @@ function raptor_disks_form_boot() {
     mkfs.vfat -F32 -S 4096 -n "BOOT" $bootpath
 }
 
-function raptor_disks_form_root() {
+function raptor_disks_form_proc() {
     echo "format root partition"
-    mkfs.ext4 -F -q -b 4096 -L "ROOT" $rootpath
+    mkfs.ext4 -F -q -b 4096 -L "ROOT" $procpath
 }
 
 function raptor_disks_form_swap() {
@@ -198,31 +193,33 @@ function raptor_disks_form_home() {
 }
 
 function raptor_disks_form() {
+    clear &&
+    echo "FORMATING STORAGE"
+    echo "--------------------------------"
     raptor_disks_form_boot &&
-    raptor_disks_form_root &&
+    raptor_disks_form_proc &&
     raptor_disks_form_swap &&
     raptor_disks_form_home
 }
 
 ## MONT PARTITION
-function raptor_disks_mont_root() {
+function raptor_disks_mont_proc() {
     echo "mount root partition"
-    mount $rootpath /mnt
+    mount $procpath /mnt
     mkdir -p /mnt/{home,boot}
 }
 
 function raptor_disks_mont_boot() {
     mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
     mkdir -p /mnt/boot/{efi,kernel,loader}
-    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
+    mkdir -p /mnt/boot/efi/{linux,systemd}
 }
 
 function raptor_disks_mont_uefi() {
-
     if [[ -n $uefipath ]];then
-        mount $uefipath /srv
-        sudo cp -r /srv/EFI/Microsoft /boot/efi/
-        umount -R /srv
+        mount $uefipath /srv && sleep 1
+        sudo cp -r /srv/EFI/Microsoft /mnt/boot/efi/ && sleep 1
+        umount -R /srv && sleep 1
     fi
 }
 
@@ -237,20 +234,21 @@ function raptor_disks_mont_swap() {
 }
 
 function raptor_disks_mont() {
-    raptor_disks_mont_root &&
-    raptor_disks_mont_uefi &&
+    clear &&
+    echo "MOUNTING FILE SYSTEM"
+    echo "--------------------------------"
+    raptor_disks_mont_proc &&
     raptor_disks_mont_boot &&
     raptor_disks_mont_home &&
-    raptor_disks_mont_swap
+    raptor_disks_mont_swap &&
+    raptor_disks_mont_uefi 
 }
 
 function raptor_disks_prep() {
     clear && echo "Partition configuration"
     raptor_disks_init &&
     raptor_disks_make &&
-    raptor_disks_prev &&
     raptor_disks_form &&
     raptor_disks_mont &&
-    echo "configration done"
-    exit
+    echo "storage configured"
 }

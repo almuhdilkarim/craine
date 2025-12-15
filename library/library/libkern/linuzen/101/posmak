@@ -1,15 +1,9 @@
 
-function raptor_kerns_post_conf() {
-    
-    echo "dualboot : $dualboot"
-    if [[ $dualboot == true ]];then
-        echo "prepare dual boot kernel preset"
-        mv /mnt/etc/mkinitcpio.d/linux-zen-dual.preset /mnt/etc/mkinitcpio.d/linux-zen.preset
-        rm /mnt/etc/mkinitcpio.d/linux-zen-mono.preset
-    else
-        echo "prepare single boot kernel preset"
-        mv /mnt/etc/mkinitcpio.d/linux-zen-mono.preset /mnt/etc/mkinitcpio.d/linux-zen.preset
-        rm /mnt/etc/mkinitcpio.d/linux-zen-dual.preset
+function raptor_kerns_post_grap() {
+
+    if [[ $gpudriver == "nvidia" ]];then
+        sed -i 's/^MODULES=(\([^)]*\))/MODULES=(\1 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "/etc/mkinitcpio.d/default.conf" &&
+        sudo sed -i 's/\bkms \b//g' "/etc/mkinitcpio.d/default.conf"
     fi
 }
 
@@ -17,5 +11,5 @@ function raptor_kerns_post_conf() {
 function raptor_kerns_post() {
     sleep 2 && clear
     echo "Kernel module configuration"
-    raptor_kerns_post_conf
+    raptor_kerns_post_grap
 }

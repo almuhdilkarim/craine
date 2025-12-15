@@ -1,11 +1,6 @@
 
-function raptor_kerns_prep_make() {
-    arch-chroot /mnt /bin/bash -c "curl -s 'https://liquorix.net/install-liquorix.sh' | bash"
-}
-
 function raptor_kerns_prep() {
     
     sleep 2 && clear
     echo "Kernel module installation"
-    raptor_kerns_prep_make
 }

@@ -1,0 +1,8 @@
+#!/bin/env bash
+
+if [[ -z $( cat $pack_pacmir | grep "networkmanager" ) ]]&&[[ -z $( cat $pack_pacmir | grep "connman" ) ]];then
+
+    if [[ -n $( rfkill | grep wireless ) ]];then
+        echo "iwd" > "$pack_pacman"
+    fi
+fi

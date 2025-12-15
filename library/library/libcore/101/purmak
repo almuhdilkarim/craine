@@ -1,5 +1,6 @@
 
 function raptor_prep_install() {
+    raptor_firms_prep
     raptor_disks_prep
     raptor_cores_prep
     raptor_kerns_prep
@@ -13,6 +14,7 @@ function raptor_prep_install() {
 }
 
 function raptor_post_install() {
+    raptor_firms_post
     raptor_cores_post
     raptor_disks_post
     raptor_kerns_post

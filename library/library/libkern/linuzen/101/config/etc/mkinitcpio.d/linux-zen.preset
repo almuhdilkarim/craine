@@ -16,5 +16,5 @@ default_uki="/boot/efi/linux/yuros-zenkernel.efi"
 
 #fallback_config="/etc/mkinitcpio.conf"
 #fallback_image="/boot/initramfs-yuros-zenkernel-fallback.img"
-#fallback_uki="/efi/EFI/Linux/yuros-zenkernel-fallback.efi"
+#fallback_uki="/efi/linux/yuros-zenkernel-fallback.efi"
 #fallback_options="-S autodetect"

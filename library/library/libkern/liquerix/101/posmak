@@ -1,5 +1,11 @@
 
+function raptor_kerns_post_make() {
+    arch-chroot /mnt /bin/bash -c "curl -s 'https://liquorix.net/install-liquorix.sh' | bash"
+    arch-chroot /mnt pacman -S linux-lqx-headers
+}
+
 function raptor_kerns_post() {
     sleep 2 && clear
     echo "Kernel module configuration"
+    raptor_kerns_post_make
 }

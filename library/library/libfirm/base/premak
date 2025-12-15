@@ -1,0 +1,244 @@
+
+function raptor_firms_prep_bluez() {
+    if [[ -n $( rfkill | grep bluetooth ) ]];then
+        echo "bluez" >> "$raptor_packer"
+        echo "bluetooh module loaded"
+    fi
+}
+
+function raptor_firms_prep_ucode() {
+    pack_ucodes=$(grep "vendor_id" /proc/cpuinfo | head -n 1 | awk '{print $3}')
+
+    if [[ "$pack_ucodes" == "GenuineIntel" ]]; then
+        echo "intel-ucode" >> "$raptor_packer"
+        echo "intel ucode loaded"
+    elif [[ "$pack_ucodes" == "AuthenticAMD" ]]; then
+        echo "amd-ucode"   >> "$raptor_packer"
+        echo "amd ucode loaded"
+    fi
+}
+
+function raptor_firms_prep_iwctl() {
+
+    if [[ -z $( cat $raptor_packer | grep "networkmanager" ) ]]&&[[ -z $( cat $raptor_packer | grep "connman" ) ]];then
+        if [[ -n $( rfkill | grep wireless ) ]];then
+            echo "iwd" >> "$raptor_packer"
+            echo "iwd module loaded"
+        fi
+    fi
+}
+
+function raptor_firms_prep_firms() {
+
+    if [[ ! -z $( lspci | grep 'AMD\|Amd') ]];then
+        echo "linux-firmware-amdgpu" >> "$raptor_packer"
+        echo "amd firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'Atheros\|ATHEROS') ]];then
+        echo "linux-firmware-atheros" >> "$raptor_packer"
+        echo "atheros firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'Broadcom\|BROADCOM\|Cypress') ]];then
+        echo "linux-firmware-broadcom" >> "$raptor_packer"
+        echo "broadcom firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'Cirrus\|CIRRUS') ]];then
+        echo "linux-firmware-cirrus" >> "$raptor_packer"
+        echo "cirrus firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'Intel\|INTEL') ]];then
+        echo "linux-firmware-intel" >> "$raptor_packer"
+        echo "intel firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'MediaTek\|Ralink') ]];then
+        echo "linux-firmware-mediatek" >> "$raptor_packer"
+        echo "mediatek firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'NVIDIA\|Nvidia') ]];then
+        echo "linux-firmware-nvidia" >> "$raptor_packer"
+        echo "nvidia firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'ATI\|Radeon') ]];then
+        echo "linux-firmware-radeon" >> "$raptor_packer"
+        echo "radeon firmware loaded"
+    fi
+
+    if [[ ! -z $( lspci | grep 'Realtek') ]];then
+        echo "linux-firmware-realtek" >> "$raptor_packer"
+        echo "realtek firmware loaded"
+    fi
+
+    echo "linux-firmware-other" >> "$raptor_packer"
+    echo "other firmware loaded"
+     
+}
+
+function raptor_firms_prep_nvidi_vali() {
+
+    # Default values
+    nvidia_gpu_gens="Unknown"
+    nvidia_gpu_firm="Unknown"
+
+    gpuInfo=$(lspci -nn | grep -i 'VGA.*NVIDIA')
+    gpuName=$(echo "${gpuInfo}" | sed -E 's/.*NVIDIA Corporation //; s/ \[.*//')
+
+    case "${gpuName}" in
+    *"GB10"* | *"GB20"*)
+        nvidia_gpu_gens="Blackwell"
+        nvidia_gpu_firm="manual"
+        ;;
+    *"GH10"*)
+        nvidia_gpu_gens="Hopper"
+        nvidia_gpu_firm="manual"
+        ;;
+    *"AD10"*)
+        nvidia_gpu_gens="Ada Lovelace"
+        nvidia_gpu_firm="manual"
+        ;;
+    *"GA10"*)
+        nvidia_gpu_gens="Ampere"
+        nvidia_gpu_firm="manual"
+        ;;
+    *"TU10"* | *"TU11"*)
+        nvidia_gpu_gens="Turing"
+        nvidia_gpu_firm="manual"
+        ;;
+    *"GV10"*)
+        nvidia_gpu_gens="Volta"
+        nvidia_gpu_firm="nvidia-dkms"
+        ;;
+    *"GP10"*)
+        nvidia_gpu_gens="Pascal"
+        nvidia_gpu_firm="nvidia-dkms"
+        ;;
+    *"GM10"* | *"GM20"*)
+        nvidia_gpu_gens="Maxwell"
+        nvidia_gpu_firm="nvidia-dkms"
+        ;;
+    *"EXK107"* | *"GK10"* | *"GK11"* | *"GK18"* | *"GK20"* | *"GK21"*)
+        nvidia_gpu_gens="Kepler"
+        nvidia_gpu_firm="nvidia-470xx-dkms"
+        ;;
+    *"EXMF1"* | *"GF10"* | *"GF11"*)
+        nvidia_gpu_gens="Fermi"
+        nvidia_gpu_firm="nvidia-390xx-dkms"
+        ;;
+    *"Kal-El"* | *"Tegra 2"* | *"Wayne"*)
+        nvidia_gpu_gens="VLIW Vec4"
+        nvidia_gpu_firm="nvidia-390xx-dkms"
+        ;;
+    *"C77"* | *"C78"* | *"C79"* | *"C7A"* | *"G80"* | *"G84"* | *"G86"* | *"G92"* | *"G94"* | *"G96"* | *"G98"* | *"ION"* | *"C87"* | *"C89"* | *"GT20"* | *"GT21"*)
+        # C7A-ION, NVIDIA ION
+        nvidia_gpu_gens="Tesla"
+        nvidia_gpu_firm="nvidia-340xx-dkms"
+        ;;
+    *"C51"* | *"C61"* | *"C67"* | *"C68"* | *"C73"* | *"G70"* | *"G71"* | *"G72"* | *"G73"* | *"NV40"* | *"NV41"* | *"NV42"* | *"NV43"* | *"NV44"* | *"NV45"* | *"NV48"* | *"RSX"*)
+        nvidia_gpu_gens="Curie"
+        nvidia_gpu_firm="unsupported"
+        ;;
+    *"NV30"* | *"NV31"* | *"NV34"* | *"NV35"* | *"NV36"* | *"NV37"* | *"NV38"* | *"NV39"*)
+        nvidia_gpu_gens="Rankine"
+        nvidia_gpu_firm="unsupported"
+        ;;
+    *"NV20"* | *"NV25"* | *"NV28"* | *"NV2A"*)
+        nvidia_gpu_gens="Kelvin"
+        nvidia_gpu_firm="unsupported"
+        ;;
+    *"Crush1"* | *"NV10"* | *"NV11"* | *"NV15"* | *"NV17"* | *"NV18"*)
+        nvidia_gpu_gens="Celsius"
+        nvidia_gpu_firm="unsupported"
+        ;;
+    *"NV4"* | *"NV5"*)
+        nvidia_gpu_gens="Fahrenheit"
+        nvidia_gpu_firm="unsupported"
+        ;;
+    *)
+        nvidia_gpu_gens="Unknown"
+        nvidia_gpu_firm="unidentified"
+        ;;
+    esac
+
+ 
+}
+
+function raptor_firms_prep_nvidi_open() {
+
+    if [[ $nvidia_gpu_firm != "manual" ]];then
+        return
+    fi
+
+    echo "nvidia-open-dkms nvidia-utils opencl-nvidia nvidia-settings libglvnd" >> "$raptor_packer"
+
+    if [[ -n $distro_libs32 ]]&&[[ $distro_libs32 == true ]];then
+        echo "lib32-nvidia-utils lib32-opencl-nvidia" >> "$raptor_packer"
+    fi
+}
+
+function raptor_firms_prep_nvidi_dkms() {
+
+    if [[ $nvidia_gpu_firm != "nvidia-dkms" ]];then
+        return
+    fi
+
+    echo "nvidia-dkms nvidia-utils opencl-nvidia nvidia-settings libglvnd" >> "$raptor_packer"
+
+    if [[ -n $distro_libs32 ]]&&[[ $distro_libs32 == true ]];then
+        echo "lib32-nvidia-utils lib32-opencl-nvidia" >> "$raptor_packer"
+    fi
+}
+
+function raptor_firms_prep_nvidi() {
+
+    if [[ -z $(lspci | grep '3d\|NVIDIA') ]];then
+        return
+    fi
+
+    raptor_firms_prep_nvidi_vali &&
+    raptor_firms_prep_nvidi_open &&
+    raptor_firms_prep_nvidi_dkms
+    nvidia_driver=true
+
+    echo "nvidia module: $nvidia_driver"
+    echo "nvidia driver: $nvidia_gpu_firm"
+    echo "Nvidia family: $nvidia_gpu_gens"
+}
+
+function raptor_firms_prep_radeo() {
+
+    if [[ -z $(lspci | grep '3d\|ATI\|RADEON') ]];then
+       return
+    fi
+
+    echo "vulkan-radeon" >> "$raptor_packer"
+    gpudriver="radeon"
+}
+
+function raptor_firms_prep_intel() {
+
+    if [[ -z $( lspci | grep 'VGA' | grep 'Intel Corporation') ]];then
+        return
+    fi
+
+    echo "vulkan-intel" >> "$raptor_packer"
+}
+
+function raptor_firms_prep() {
+    clear &&
+    echo "FIRMWARE LOAD"
+    echo "--------------------------------"
+    raptor_firms_prep_bluez &&
+    raptor_firms_prep_ucode &&
+    raptor_firms_prep_iwctl &&
+    raptor_firms_prep_firms && 
+    raptor_firms_prep_intel &&
+    raptor_firms_prep_radeo &&
+    raptor_firms_prep_nvidi
+    sleep 2
+}

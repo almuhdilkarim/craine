@@ -12,7 +12,7 @@ function raptor_cores_prep_mulibs() {
 }
 
 function raptor_cores_prep_pacmir() {
-    test -e $pack_pacman && pacstrap /mnt - < $pack_pacman
+    test -e $raptor_packer && pacstrap /mnt - < $raptor_packer
     if [ $? -ne 0 ]; then
         echo "Error: raptor package installation failed." >&2
         exit 1

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [[ -n $( rfkill | grep bluetooth ) ]];then
+    echo "bluez" > "$pack_pacman"
+fi
+
+
