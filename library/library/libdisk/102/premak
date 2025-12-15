@@ -7,145 +7,149 @@ function raptor_disks_init_pure() {
     fi
 }
 
-## dualboot validator team # @Al Muhdil Karim <karim@yuros.org> @Fawaz Rifqi Frasetia <fras@yuros.org>
-function raptor_disks_init_dual() {
-
-    take_efipath=($(lsblk -o path,fstype | grep vfat | awk '{print $1}'))
-
-    for item_efipath in "${take_efipath[@]}"; do
-
-        echo "check efi partition at $item_efipath" 
-        sudo mount $item_efipath /srv && sleep 2 && 
-       
-        if [[ -d "/srv/EFI/Microsoft" ]]; then
-            winefipath="$item_efipath" && mkdir -p "$item_efipath/Linux" &&
-            echo "check windows efi partition found at $item_efipath"
-            dualboot=true
-        fi
-
-        sleep 1 && sudo umount -R /srv && sleep 2
-
-    done
-}
-
 function raptor_disks_init_swip() {
 
-    if [[ $dualboot == false ]];then
+    if [[ -n $bootpath ]];then
+        local pathboot=$( lsblk -o path,label | grep $bootpath )
+    fi
+
+    if [[ -n $procpath ]];then
+        local pathroot=$( lsblk -o path,label | grep $procpath )
+    fi
+
+    if [[ -n $swappath ]];then
+        local pathswap=$( lsblk -o path,label | grep $swappath )
+    fi
+
+    if [[ -n $homepath ]];then
+        local pathhome=$( lsblk -o path,label | grep $homepath )
+    fi
+
+    if [[ $dualboot == false ]]&&[[ -z $pathboot ]]&&[[ -z $pathroot ]]&&[[ -z $pathswap ]]&&[[ -z $pathhome ]];then
 
         read -p "Do yout want swipe partition table : [y/N] " swipe_partition_table
 
         if [[ $swipe_partition_table == "Y" ]]||[[ $swipe_partition_table == "y" ]];then
-            sudo parted -s $drivpath mklabel gpt
+            sudo parted -s $loadpath mklabel gpt
+        else
+            echo "continue installation"
         fi
     fi
 }
 
 function raptor_disks_init() {
     raptor_disks_init_pure
-    raptor_disks_init_dual
     raptor_disks_init_swip
 }
 
 ## MAKE PARTITION
-function raptor_disks_make_boot_dual() {
-    if [[ $dualboot == true ]];then
-        echo "create boot"
-        echo -e "n\np\n\n\n+1G\nt\n\n1\nw" | fdisk "$drivpath" > /dev/null 2>&1
-        sleep 2
-        bootpath=$(lsblk -o path | grep "$drivpath" | tail -n 1)
-        sleep 1
-    fi
-}
-
-function raptor_disks_make_boot_mono() {
-    if [[ $dualboot != true ]];then
-        echo "create boot"
-        echo -e "n\np\n\n\n+2G\nt\n\n1\nw" | fdisk "$drivpath" > /dev/null 2>&1
-        sleep 2
-        bootpath=$(lsblk -o path | grep "$drivpath" | tail -n 1)
-        sleep 1
-    fi
-}
-
 function raptor_disks_make_boot() {
 
-    if [[ -z $( lsblk -o label | grep "BOOT" ) ]]; then
-        raptor_disks_make_boot_dual
-        raptor_disks_make_boot_mono
+    local label=$( lsblk -o path,label | grep "BOOT" | awk '{print $1}' )
+    local paths=$( lsblk -o path | grep "$bootpath" )
+    local sizes=$distro_bootsize
+
+    if [[ -z $label ]]&&[[ -z $paths ]]; then
+        echo -e "n\np\n\n\n+$sizes\nt\n\n1\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
+        bootpath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
+    elif [[ -n $paths ]];then
+        bootpath=$paths
+    elif [[ -n $label ]];then
+        bootpath=$label
     else
-        echo "prepare boot"
-        bootpath=$(lsblk -o path,label | grep "BOOT" | awk '{print $1}')
+        echo "error boot partition not found"
+        exit 1
     fi
+
+    echo "boot path : $bootpath"
 }
 
-function raptor_disks_make_root() {
+function raptor_disks_make_proc() {
     
-    if [[ -z $( lsblk -o label | grep "ROOT" ) ]]; then
-        echo "create root"
-        echo -e "n\np\n\n\n+27G\nw" | fdisk "$drivpath" > /dev/null 2>&1
-        sleep 2
-        rootpath=$(lsblk -o path | grep "$drivpath" | tail -n 1)
-        sleep 1
-    else
-        echo "prepare root"
-        rootpath=$(lsblk -o path,label | grep "ROOT" | awk '{print $1}')
-    fi
-}
+    local label=$( lsblk -o path,label | grep "ROOT" | awk '{print $1}' )
+    local paths=$( lsblk -o path | grep "$procpath" )
+    local sizes=$distro_procsize
 
-function raptor_disks_make_swap() {
-    
-    if [[ -z $( lsblk -o path,fstype | grep "swap" ) ]]; then
-        echo "create swap"
-        echo -e "n\np\n\n\n+4G\nw" | fdisk "$drivpath" > /dev/null 2>&1
-        sleep 2
-        swappath=$(lsblk -o path | grep "$drivpath" | tail -n 1)
-        sleep 1
+    if [[ -z $label ]]&&[[ -z $paths ]]; then
+        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
+        procpath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
+    elif [[ -n $paths ]];then
+        procpath=$paths
+    elif [[ -n $label ]];then
+        procpath=$label
     else
-        echo "prepare swap"
-        swappath=$(lsblk -o path,fstype | grep swap | awk '{print $1}' )
+        echo "error root partition not found"
+        exit 1
     fi
+
+    echo "proc path : $procpath"  
 }
 
 function raptor_disks_make_home() {
-    
-    if [[ -z $( lsblk -o label | grep "HOME" ) ]]; then
-        echo "create home"
-        echo -e "n\np\n\n\n\nw" | fdisk "$drivpath" > /dev/null 2>&1
-        sleep 2
-        homepath=$(lsblk -o path | grep "$drivpath" | tail -n 1 )
-        sleep 1
+
+    local label=$( lsblk -o path,label | grep "HOME" | awk '{print $1}' )
+    local paths=$( lsblk -o path | grep $homepath )
+    local sizes=$distro_homesize
+
+    if [[ -z $label ]]&&[[ -z $paths ]]&&[[ $sizes == "all" ]]; then
+        echo -e "n\np\n\n\n\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
+        homepath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
+    elif [[ -z $label ]]&&[[ -z $paths ]]&&[[ $sizes != "all" ]]; then
+        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
+        homepath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
+    elif [[ -n $paths ]];then
+        homepath=$paths
+    elif [[ -n $label ]];then
+        homepath=$label
     else
-        echo "prepare home"
-        homepath=$(lsblk -o path,label | grep "HOME" | awk '{print $1}')
+        echo "error home partition not found"
+        exit 1
     fi
+
+    echo "home path : $homepath"
+}
+
+function raptor_disks_make_swap() {
+
+    local label=$( lsblk -o path,label | grep "swap" | awk '{print $1}' )
+    local paths=$( lsblk -o path | grep $swappath )
+    local sizes=$distro_swapsize
+
+    if [[ -z $label ]]&&[[ -z $paths ]]; then
+        echo -e "n\np\n\n\n+$sizes\nw" | fdisk "$loadpath" > /dev/null 2>&1 && sleep 1
+        swappath=$(lsblk -o path | grep "$loadpath" | tail -n 1) && sleep 1
+        partprobe "$loadpath" && hdparm "$loadpath" > /dev/null 2>&1
+    elif [[ -n $paths ]];then
+        swappath=$paths
+    elif [[ -n $label ]];then
+        swappath=$label
+    else
+        echo "error swap partition not found"
+        exit 1
+    fi
+
+    echo "swap path : $swappath"
 }
 
 function raptor_disks_make() {
-    echo "starting auto partitioning"
-    raptor_disks_make_boot &&
-    raptor_disks_make_root &&
-    raptor_disks_make_swap &&
-    raptor_disks_make_home
-}
-
-## PREV PARTITION
-function raptor_disks_prev() {
-    
     clear &&
-    echo "Storage Information preview"
+    echo "STORAGE INFORMATION"
     echo "--------------------------------"
-    echo "boot path : $bootpath"
-    echo "root path : $rootpath"
-    echo "swap path : $swappath"
-    echo "home path : $homepath"
+    raptor_disks_make_boot &&
+    raptor_disks_make_proc &&
+    raptor_disks_make_home &&
+    raptor_disks_make_swap &&
     echo "--------------------------------"
     read -p 'Type "YES" on capital letter to continue or "NO" to abort installation : ' confirmdiskpartition
-
     if [[ $confirmdiskpartition != "YES" ]];then
         echo "Proccess cancelation by user"
         exit 1
     fi
-} 
+}
 
 ## FORM PARTITION
 function raptor_disks_form_boot() {
@@ -153,14 +157,9 @@ function raptor_disks_form_boot() {
     mkfs.vfat -F32 -S 4096 -n "BOOT" $bootpath
 }
 
-function raptor_disks_form_root() {
+function raptor_disks_form_proc() {
     echo "format root partition"
-    mkfs.ext4 -F -q -b 4096 -L "ROOT" $rootpath
-}
-
-function raptor_disks_form_swap() {
-    echo "format swap partition"
-    mkswap $swappath
+    mkfs.ext4 -F -q -b 4096 -L "ROOT" $procpath
 }
 
 function raptor_disks_form_home() {
@@ -170,43 +169,35 @@ function raptor_disks_form_home() {
     fi
 }
 
-function raptor_disks_form() {
-    raptor_disks_form_boot
-    raptor_disks_form_root
-    raptor_disks_form_swap
-    raptor_disks_form_home
-}
-
-## MONT PARTITION
-function raptor_disks_mont_boot_dual() {
-    mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
-    mkdir -p /mnt/boot/{efi,kernel,loader}
-    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
-}
-
-function raptor_disks_mont_boot_mono() {
-    mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
-    mkdir -p /mnt/boot/{efi,kernel,loader}
-    mkdir -p /mnt/boot/efi/{boot,linux,systemd}
-}
-
-function raptor_disks_mont_boot() {
-    if [[ $dualboot == true ]];then
-        raptor_disks_mont_boot_dual
-    else
-        raptor_disks_mont_boot_mono
+function raptor_disks_form_swap() {
+    if [[ -n $swappath ]];then
+        echo "format swap partition"
+        mkswap $swappath
     fi
 }
 
-function raptor_disks_mont_root() {
+
+function raptor_disks_form() {
+    clear &&
+    echo "FORMATING STORAGE"
+    echo "--------------------------------"
+    raptor_disks_form_boot &&
+    raptor_disks_form_proc &&
+    raptor_disks_form_home &&
+    raptor_disks_form_swap 
+}
+
+## MONT PARTITION
+function raptor_disks_mont_proc() {
     echo "mount root partition"
-    mount $rootpath /mnt
+    mount $procpath /mnt
     mkdir -p /mnt/{home,boot}
 }
 
-function raptor_disks_mont_swap() {
-    echo "mount swap partition"
-    swapon $swappath
+function raptor_disks_mont_boot() {
+    mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
+    mkdir -p /mnt/boot/{efi,kernel,loader}
+    mkdir -p /mnt/boot/efi/{linux,systemd}
 }
 
 function raptor_disks_mont_home() {
@@ -214,19 +205,26 @@ function raptor_disks_mont_home() {
     mount $homepath /mnt/home
 }
 
+function raptor_disks_mont_swap() {
+    echo "mount swap partition"
+    swapon $swappath
+}
+
 function raptor_disks_mont() {
-    raptor_disks_mont_root &&
+    clear &&
+    echo "MOUNTING FILE SYSTEM"
+    echo "--------------------------------"
+    raptor_disks_mont_proc &&
     raptor_disks_mont_boot &&
-    raptor_disks_mont_swap &&
-    raptor_disks_mont_home
+    raptor_disks_mont_home &&
+    raptor_disks_mont_swap
 }
 
 function raptor_disks_prep() {
     clear && echo "Partition configuration"
     raptor_disks_init &&
     raptor_disks_make &&
-    raptor_disks_prev &&
     raptor_disks_form &&
     raptor_disks_mont &&
-    echo "configration done"
+    echo "storage configured done"
 }
