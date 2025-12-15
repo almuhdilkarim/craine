@@ -211,7 +211,7 @@ function raptor_disks_mont_proc() {
 
 function raptor_disks_mont_boot() {
     mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
-    mkdir -p /mnt/boot/{efi,kernel,loader,guest}
+    mkdir -p /mnt/boot/{efi,kernel,loader}
     mkdir -p /mnt/boot/efi/{linux,systemd}
 }
 
