@@ -213,8 +213,8 @@ function raptor_firms_prep_nvidi() {
     raptor_firms_prep_nvidi_vali &&
     raptor_firms_prep_nvidi_open &&
     raptor_firms_prep_nvidi_dkms
+   
     nvidia_driver=true
-
     echo "nvidia module: $nvidia_driver"
     echo "nvidia driver: $nvidia_gpu_firm"
     echo "Nvidia family: $nvidia_gpu_gens"
