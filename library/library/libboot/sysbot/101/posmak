@@ -47,31 +47,29 @@ function raptor_boots_post_prep() {
     sleep 1
 }
 
-## secure boot @al muhdil karim <karim@yuros.org>, @muhmmad haydar kamil <kamil@yuros.org>, @sultan fajar ramadhan <sultan@yuros.org>
-function raptor_boots_post_secu() {
+function raptor_boots_post_boot() {
+    echo "setup systemd boot"
 
-    echo "create secure boot keys"
-    arch-chroot /mnt sbctl create-keys &&
-   
+    source /mnt/usr/lib/os-release
+    echo "root=$procpath" > /mnt/etc/cmdline.d/01-boot.conf && 
+
+    # prepare secure boot
     if [[ -n $uefipath ]];then
-        arch-chroot /mnt sbctl enroll-keys -m -i
+        arch-chroot /mnt sbctl create-keys &&
+        arch-chroot /mnt sbctl enroll-keys -m -i &&
+        arch-chroot /mnt sbctl verify | sed -E 's|^.* (/.+) is not signed$| arch-chroot /mnt sbctl sign -s "\1"|e' &&
         echo "enroll oem boot keys" && sleep 1
     else
+        arch-chroot /mnt sbctl create-keys &&
         arch-chroot /mnt sbctl enroll-keys -f
         echo "enroll device boot keys" && sleep 1
     fi
 
+    # create systemd boot
     arch-chroot /mnt sbctl sign -s -o /usr/lib/systemd/boot/efi/systemd-bootx64.efi.signed /usr/lib/systemd/boot/efi/systemd-bootx64.efi &&
-    arch-chroot /mnt sbctl verify | sed -E 's|^.* (/.+) is not signed$| arch-chroot /mnt sbctl sign -s "\1"|e' &&
-    echo "signing systemd-boot efi file" && sleep 2
-}
-
-## boot loader @al muhdil karim <karim@yuros.org>, @achmad baihaqi <achmad@yuros.org>, @ibnu dzaky <dzaky@yuros.org>
-function raptor_boots_post_boot() {
-    echo "setup systemd boot"
-    source /mnt/usr/lib/os-release
-    echo "root=$procpath" > /mnt/etc/cmdline.d/01-boot.conf && 
     bootctl --path=/mnt/boot/ --efi-boot-option-description=$ID install
+   
+
     echo "installation systemd boot"
     sleep 2
 }
@@ -86,7 +84,6 @@ function raptor_boots_post() {
     sleep 2 && clear
     echo "Booting module configuration"
     raptor_boots_post_prep &&
-    raptor_boots_post_secu &&
     raptor_boots_post_boot && 
     raptor_boots_post_srvc
 }

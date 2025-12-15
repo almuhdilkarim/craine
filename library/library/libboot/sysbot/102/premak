@@ -1,5 +1,0 @@
-
-function raptor_boots_prep() {
-    sleep 2 && clear
-    echo "Booting module installation"
-}
