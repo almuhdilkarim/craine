@@ -20,11 +20,9 @@ function raptor_firms_prep_ucode() {
 
 function raptor_firms_prep_iwctl() {
 
-    if [[ -z $( cat $raptor_packer | grep "networkmanager" ) ]]&&[[ -z $( cat $raptor_packer | grep "connman" ) ]];then
-        if [[ -n $( rfkill | grep wireless ) ]];then
-            echo "iwd" >> "$raptor_packer"
-            echo "iwd module loaded"
-        fi
+    if [[ -z $( cat $raptor_packer | grep "networkmanager" ) ]]&&[[ -z $( cat $raptor_packer | grep "connman" ) ]]&&[[ -n $( rfkill | grep wireless ) ]];then
+        echo "iwd" >> "$raptor_packer"
+        echo "iwd module loaded"
     fi
 }
 
@@ -82,7 +80,7 @@ function raptor_firms_prep_firms() {
 
 function raptor_firms_prep_nvidi_vali() {
 
-    # Default values
+    # default values
     nvidia_gpu_gens="Unknown"
     nvidia_gpu_firm="Unknown"
 
@@ -164,8 +162,6 @@ function raptor_firms_prep_nvidi_vali() {
         nvidia_gpu_firm="unidentified"
         ;;
     esac
-
- 
 }
 
 function raptor_firms_prep_nvidi_open() {
@@ -226,8 +222,15 @@ function raptor_firms_prep_radeo() {
        return
     fi
 
+    radeon_driver=true
+    echo "mesa" >> "$raptor_packer"
     echo "vulkan-radeon" >> "$raptor_packer"
-    gpudriver="radeon"
+    echo "xf86-video-amdgpu" >> "$raptor_packer"
+
+    if [[ -n $distro_libs32 ]]&&[[ $distro_libs32 == true ]];then
+        echo "lib32-mesa" >> "$raptor_packer"
+        echo "lib32-vulkan-radeon" >> "$raptor_packer"
+    fi
 }
 
 function raptor_firms_prep_intel() {
@@ -236,7 +239,18 @@ function raptor_firms_prep_intel() {
         return
     fi
 
+    intels_driver=true
+
+    if [[ -z $( cat $raptor_packer | grep mesa ) ]];then
+        echo "mesa" >> "$raptor_packer"
+    fi
+    
     echo "vulkan-intel" >> "$raptor_packer"
+
+    if [[ -n $distro_libs32 ]]&&[[ $distro_libs32 == true ]];then
+        echo "lib32-mesa" >> "$raptor_packer"
+        echo "lib32-vulkan-intel" >> "$raptor_packer"
+    fi
 }
 
 function raptor_firms_prep() {

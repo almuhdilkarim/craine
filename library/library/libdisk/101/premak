@@ -211,16 +211,17 @@ function raptor_disks_mont_proc() {
 
 function raptor_disks_mont_boot() {
     mount -o uid=0,gid=0,dmask=007,fmask=007 $bootpath /mnt/boot
-    mkdir -p /mnt/boot/{efi,kernel,loader}
+    mkdir -p /mnt/boot/{efi,kernel,loader,guest}
     mkdir -p /mnt/boot/efi/{linux,systemd}
 }
 
 function raptor_disks_mont_uefi() {
-    if [[ -n $uefipath ]];then
-        mount $uefipath /srv && sleep 1
-        sudo cp -r /srv/EFI/Microsoft /mnt/boot/efi/ && sleep 1
-        umount -R /srv && sleep 1
-    fi
+    #if [[ -n $uefipath ]];then
+    #    mount $uefipath /srv && sleep 1
+    #    sudo cp -r /srv/EFI/Microsoft /mnt/boot/efi/ && sleep 1
+    #    umount -R /srv && sleep 1
+    #fi
+    echo "not stable yet"
 }
 
 function raptor_disks_mont_home() {
@@ -250,5 +251,5 @@ function raptor_disks_prep() {
     raptor_disks_make &&
     raptor_disks_form &&
     raptor_disks_mont &&
-    echo "storage configured"
+    echo "storage configured done"
 }
