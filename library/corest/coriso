@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+function craine_geniso() {
+    echo "craine labors"
+}

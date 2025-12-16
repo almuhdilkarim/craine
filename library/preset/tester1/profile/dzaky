@@ -1,5 +1,5 @@
-hostname=tester1
-username=dzaky
+hostname=alphatest
+username=null
 password=1511
 timezone=Asia/Jakarta
 loadpath=/dev/nvme0n1

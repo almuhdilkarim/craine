@@ -1,0 +1,48 @@
+## DISTRO OVERVIEW 
+distro_name="DefaultOS"
+distro_uniq=default
+distro_logo=""
+distro_wall=""
+distro_base=""
+
+
+## ALPA GITREPO
+alpha_github=""
+alpha_gitlab=""
+alpha_gitloc=""
+
+## BETA GITREPO
+beta_github=""
+beta_gitlab=""
+beta_gitloc=""
+
+## PROD GITREPO
+prod_github=""
+prod_gitlab=""
+prod_gitloc=""
+
+
+## PROTOCOL RULE
+protocol_scope="public"
+protocol_level="001"
+
+
+## DISTRO SITES 
+distro_site_main=""
+distro_site_docs=""
+distro_site_talk=""
+distro_site_bugs=""
+distro_site_priv=""
+
+
+## DEVELOPER INFO
+distro_developer=""
+distro_maintener=""
+distro_licensing=""
+
+
+## SYSTEM CONFIGS
+support_multilib=0
+storage_bootsize=2G
+storage_procsize=2G
+storage_homesize=2G  

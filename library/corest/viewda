@@ -1,0 +1,6 @@
+#!/bin/env bash
+# DIALOG BASE MODE
+
+function craine_diamode() {
+    echo "craine dialog mode"
+}

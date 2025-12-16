@@ -1,0 +1,7 @@
+#!/bin/env bash
+
+set -e 
+
+function craine_editors() {
+    echo "dimos"
+}

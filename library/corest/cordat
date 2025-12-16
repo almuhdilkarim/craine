@@ -1,0 +1,119 @@
+#!/bin/env bash
+
+set -e
+
+function craine_autopu() {
+    echo "craine auto update"
+}
+
+
+## UPDATE
+function craine_updates_protoc() {
+    echo "update protocol"
+}
+
+function craine_updates_profil() {
+    echo "update profil"
+}
+
+
+function craine_updates() {
+    echo "craine update package"
+}
+
+
+## GETDATA
+function craine_getprot() {
+    echo "craine get protoc"
+}
+
+function craine_preset_pather() {
+    local target_preset="$craine_preset/$craine_base/$craine_name"
+    test -d $craine_base && target_preset="$craine_preset/$craine_name/default"
+    echo $target_preset
+}
+
+function craine_preset_update() {
+
+    ## target
+    local target_preset=$(craine_preset_pather)
+    test -d $target_preset && rm -fr $target_preset
+
+    ## source
+    local preset_link="https://github.com/yuros-packprotoc/presets.git"
+    local github_base=$( craine_gitcek "https://github.com/linux-$craine_base/presets" )
+    local locals_base=$( craine_gitcek "https://rogers.git/linux-$craine_base/presets" )
+    local github_name=$( craine_gitcek "https://github.com/linux-$craine_name/presets" )
+    local locals_name=$( craine_gitcek "https://rogers.git/linux-$craine_name/presets" )
+
+    ## valids
+    if [[ $locals_base == true ]];then
+        preset_link="https://rogers.git/linux-$craine_base/presets"
+    elif [[ $locals_name == true ]];then
+        preset_link="https://rogers.git/linux-$craine_name/presets"
+    elif [[ $github_base == true ]];then
+        preset_link="https://github.com/linux-$craine_base/presets"
+    elif [[ $github_name == true ]];then
+        preset_link="https://github.com/linux-$craine_name/presets"
+    fi
+
+    ## clones
+    git clone $preset_link $target_preset
+}
+
+function craine_getprof() {
+    echo "craine get profile"
+}
+
+function craine_getuser() {
+    echo "craine get profile"
+}
+
+## LISTDATA
+function craine_listprot() {
+    echo "craine get protoc"
+}
+
+function craine_listpres() {
+    echo "craine get preset"
+}
+
+function craine_listprof() {
+    echo "craine get profile"
+}
+
+function craine_listuser() {
+    echo "craine get profile"
+}
+
+
+## EDITORS
+function craine_editprot() {
+    echo "craine get protoc"
+}
+
+function craine_editpres() {
+    echo "craine get preset"
+}
+
+function craine_editprof() {
+    echo "craine get profile"
+}
+
+function craine_edituser() {
+    echo "craine get profile"
+}
+
+
+## DELETING
+function craine_delprot() {
+    echo "craine delete protoc"
+}
+
+function craine_delpres() {
+    echo "craine delete preset"
+}
+
+function craine_delprof() {
+    echo "craine delete profile"
+}

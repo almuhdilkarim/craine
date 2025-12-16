@@ -1,0 +1,44 @@
+#!/bin/env bash
+
+set -e
+
+
+## CRAINE ENVI
+craine_corest="$craine_libs/corest"
+craine_protoc="$craine_libs/protoc"
+craine_preset="$craine_libs/preset"
+craine_proset="$craine_libs/proset"
+craine_config="$craine_libs/config"
+craine_worker="$HOME/.local/craine"
+
+
+## CRAINE LIBS
+source "$craine_corest/auxele"
+source "$craine_corest/cordat"
+source "$craine_corest/coredi"
+source "$craine_corest/corins"
+source "$craine_corest/coriso"
+source "$craine_corest/corlab"
+source "$craine_corest/viewde"
+source "$craine_corest/viewda"
+
+
+## CRAINE PREP
+mkdir -p $craine_protoc
+mkdir -p $craine_proset
+mkdir -p $craine_proset
+mkdir -p $craine_proset
+mkdir -p $craine_worker
+
+
+## CONFIG PATH
+craine_banner="$craine_config/banner"
+
+
+## CONFIG LIBS
+source "$craine_config/master"
+source "$craine_config/codexs"
+
+
+## LOADER LIBS
+craine_preset_update
