@@ -1,0 +1,5 @@
+
+function raptor_disto_main() {
+    sleep 2 && clear
+    echo "Distro module configuration"
+}

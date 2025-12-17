@@ -5,7 +5,7 @@ set -e
 
 
 ## TAKE OPTIONS
-while getopts "o:n:b:m:" opt; do
+while getopts "o:n:b:m:a:l:" opt; do
     case $opt in
         o) proc="${OPTARG}"
         ;;
@@ -15,6 +15,10 @@ while getopts "o:n:b:m:" opt; do
         ;;
         m) mode="${OPTARG}"
         ;;
+        a) adds="${OPTARG}"
+        ;;
+        l) link="${OPTARG}"
+        ;;
     esac
 done
 
@@ -23,6 +27,7 @@ done
 craine_base=$base
 craine_name=$name
 craine_mode=$mode
+craine_link=$link
 craine_devs=true
 craine_libs="/var/lib/craine" 
 test -n $crdevs_stat && craine_libs=$(pwd)/library
@@ -30,18 +35,32 @@ source "$craine_libs/corest/loader"
 
 
 ## CRAINE MAIN
-if [[ $proc == "desktop" ]];then
-    craine_guimode
-elif [[ $proc == "guides" ]];then
-    craine_diamode
-elif [[ $proc == "tester" ]];then
-    craine_testers
-elif [[ $proc == "update" ]];then
-    craine_updates
-elif [[ $proc == "editor" ]];then
-    craine_editors
-elif [[ $proc == "create" ]];then
-    craine_builder
-else
-    notifer_error 'Command parameter not found'
+
+if [[ -n $proc ]];then
+    if [[ $proc == "desktop" ]];then
+        craine_guimode
+    elif [[ $proc == "guides" ]];then
+        craine_diamode
+    elif [[ $proc == "tester" ]];then
+        craine_testers
+    elif [[ $proc == "update" ]];then
+        craine_updates
+    elif [[ $proc == "editor" ]];then
+        craine_editors
+    elif [[ $proc == "create" ]];then
+        craine_builder
+    else
+        notifer_error 'Main process command parameter not found'
+    fi
+fi
+
+## PRESET PROC
+
+if [[ -n $adds ]];then
+
+    if [[ $adds == "preset" ]]&&[[ -n $craine_name ]]&&[[ -n $craine_link ]];then
+        craine_preset -a  
+    else 
+        notifer_error 'Command parameter not found'
+    fi
 fi

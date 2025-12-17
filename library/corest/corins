@@ -7,5 +7,7 @@ set -e
 
 function craine_builder() {
 
-    echo craine_makers
+    ## LOADER LIBS
+    craine_preset_clone
+    echo starting build distro
 }

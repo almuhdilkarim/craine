@@ -39,15 +39,27 @@ function notifer_error() {
 }
 
 function notifer_warner() {
-    test -n "$1" && echo -e "\t${red} Warning ─> $1${reset}"
+    test -n "$1" && echo -e "\t${red} [WRN] ─> $1${reset}"
 }
 
 function notifer_cheks() {
-    test -n "$1" && echo -e "\t${green} Check $1 ─> passed ${reset}"
+    test -n "$1" && echo -e "\t${blue} [CHK] ─> $1 passed ${reset}"
+}
+
+function notifer_inform() {
+    test -n "$1" && echo -e "\t${green} [INF] ─> $1${reset}"
 }
 
 function banner_raptor() {
     cat "${srcpath}/banner" && echo ""
+}
+
+
+function craine_isname_exist() {
+
+    if [[ -z $craine_name ]];then
+        notifer_error "Missing distro name parameter"   
+    fi
 }
 
 

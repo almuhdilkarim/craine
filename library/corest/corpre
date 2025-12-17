@@ -1,0 +1,135 @@
+#!/bin/env bash
+
+set -e
+
+## GLOBAL FUNCTION
+function craine_preset_gitrep_check() {
+
+    git ls-remote --exit-code $1 > /dev/null 2>&1 
+    if [ $? -eq 0 ]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+function craine_preset_remote_check() {
+
+    ## source
+    local preset_link=""
+
+    ## option
+    local custom_base=$( craine_preset_gitrep_check $craine_link ) 
+    local github_base=$( craine_preset_gitrep_check "https://github.com/linux-$craine_base/presets" )
+    local locals_base=$( craine_preset_gitrep_check "https://rogers.git/linux-$craine_base/presets" )
+    local github_name=$( craine_preset_gitrep_check "https://github.com/linux-$craine_name/presets" )
+    local locals_name=$( craine_preset_gitrep_check "https://rogers.git/linux-$craine_name/presets" )
+
+    ## valids
+    if [[ $custom_base == true ]];then
+        preset_link=$craine_link
+    elif [[ $locals_base == true ]];then
+        preset_link="https://rogers.git/linux-$craine_base/presets"
+    elif [[ $locals_name == true ]];then
+        preset_link="https://rogers.git/linux-$craine_name/presets"
+    elif [[ $github_base == true ]];then
+        preset_link="https://github.com/linux-$craine_base/presets"
+    elif [[ $github_name == true ]];then
+        preset_link="https://github.com/linux-$craine_name/presets"
+    fi
+
+    echo "$preset_link"
+}
+
+function craine_preset_locals_check() {
+
+    local path_status="$craine_preset/$craine_name/default"
+    local path_spiner=$( ls "$craine_preset" )
+
+    if [[ -d "$craine_preset/$craine_name" ]];then
+        path_status="$craine_preset/$craine_name" 
+    else
+        for allbase in $path_spiner; do
+            test -d "$craine_preset/$allbase/$craine_name" && path_status="$craine_preset/$allbase/$craine_name" 
+        done
+    fi
+   
+    echo $path_status
+}
+
+
+## UPDATE FUNCTION
+function craine_preset_updat() {
+
+    ## target
+    local source_preset=$(craine_preset_remote_check)
+    local target_preset=$(craine_preset_locals_check)
+
+    if [[ -d $target_preset ]]&&[[ -n $source_preset ]]; then
+        cd $target_preset && git pull
+        notifer_cheks "update $craine_name preset"
+    elif [[ -d $target_preset ]]&&[[ -n $source_preset ]]; then
+        git clone $preset_link $target_preset
+        notifer_cheks "create $craine_name preset"
+    elif [[ -z $target_preset ]]; then
+        notifer_error "Git clone target preset not available"
+    else
+        notifer_error "Git clone source preset not available"
+    fi
+}
+
+
+## CREATE FUNCTION
+function craine_preset_maker() {
+
+    craine_isname_exist
+
+    notifer_inform "check your remote resource"
+    local preset_core="https://github.com/yuros-packprotoc/presets.git"
+    local source_preset=$(craine_preset_remote_check)
+    local target_preset=$(craine_preset_locals_check)
+    local target_dialog=$(notifer_inform "Do yout want override your local preset : [y/N] ")
+    local repurl_dialog=$(notifer_inform "Do yout want replace with default preset : [y/N] ")
+
+    ## prepare remote source
+    if [[ -z $source_preset ]];then
+        notifer_warner "Your remote resource preset does not exist"
+        read -p "${repurl_dialog}" defaultpresetremote
+    fi
+
+    if [[ -n $defaultpresetremote ]]&&[[ $defaultpresetremote == "Y" ]]||[[ $defaultpresetremote == "y" ]];then
+        notifer_cheks "using craine default preset"
+        source_preset=$preset_core
+    elif [[ -n $defaultpresetremote ]];then
+        notifer_warner "preset build canceled" && exit 0
+    fi
+
+    ## validate local source
+    if [[ -d $target_preset ]];then
+        notifer_warner "Local preset with name $craine_name already exist."
+        read -p "${target_dialog} " presetoverride
+    fi
+
+    if [[ -n $presetoverride ]]&&[[ $presetoverride == "Y" ]]||[[ $presetoverride == "y" ]];then
+        notifer_inform "overwrite existing preset"
+    elif  [[ -n $presetoverride ]];then
+        notifer_warner "preset build canceled" && exit 0
+    fi
+
+    if [[ -d $target_preset ]]&&[[ -n $source_preset ]]; then
+        rm -fr $target_preset
+    fi
+
+    git clone $source_preset $target_preset > /dev/null 2>&1 &&
+    notifer_inform "$craine_name preset installed"
+    
+}
+
+
+function craine_preset() {
+    if [[ $1 == "-a" ]];then
+        craine_preset_maker
+    fi
+}
+
+

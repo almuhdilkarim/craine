@@ -19,6 +19,7 @@ source "$craine_corest/coredi"
 source "$craine_corest/corins"
 source "$craine_corest/coriso"
 source "$craine_corest/corlab"
+source "$craine_corest/corpre"
 source "$craine_corest/viewde"
 source "$craine_corest/viewda"
 
@@ -38,7 +39,3 @@ craine_banner="$craine_config/banner"
 ## CONFIG LIBS
 source "$craine_config/master"
 source "$craine_config/codexs"
-
-
-## LOADER LIBS
-craine_preset_update

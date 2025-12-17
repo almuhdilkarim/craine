@@ -1,0 +1,5 @@
+
+function raptor_disto_envi() {
+    sleep 2 && clear
+    echo "Distro module installation"
+}
