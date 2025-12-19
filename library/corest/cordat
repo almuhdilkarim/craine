@@ -3,7 +3,7 @@
 set -e
 
 
-## COREST
+## HELPER
 function craine_reposi_checks() {
 
     git ls-remote --exit-code $1 > /dev/null 2>&1 
@@ -16,8 +16,24 @@ function craine_reposi_checks() {
 
 function craine_naming_checks() {
     if [[ -z $craine_name ]];then
-        notifer_error "Missing distro name parameter"   
+        notifer_error "missing distro name parameter"   
     fi
+}
+
+function craine_linker_checks() {
+
+    notifer_inform "check remote parameters"
+    if [[ -z $craine_link ]];then
+        notifer_error "missing gitrepo link parameter"   
+    fi
+
+    notifer_inform "check remote repository"
+    if [[ $( craine_reposi_checks $craine_link ) == false ]];then
+        notifer_error "gitrepo not exist or private access"
+    else
+        notifer_inform "gitrepo ready to cloned"
+    fi
+
 }
 
 ## PRESET 
@@ -106,6 +122,10 @@ function craine_preset_locals() {
 }
 
 function craine_preset_create() {
+    echo "preset create"
+}
+
+function craine_preset_clones() {
 
     craine_naming_checks
     craine_preset_locals
@@ -201,11 +221,14 @@ function craine_preset_upgrad() {
     done
 }
 
-
 function craine_preset() {
 
     if [[ -z $craine_mode ]];then
         notifer_error "Missing operation mode params"   
+    fi
+
+    if [[ $craine_mode == "clone" ]];then
+        craine_preset_clones
     fi
 
     if [[ $craine_mode == "create" ]];then
@@ -214,6 +237,10 @@ function craine_preset() {
 
     if [[ $craine_mode == "update" ]];then
         craine_preset_update
+    fi
+
+    if [[ $craine_mode == "delete" ]];then
+        craine_preset_delete
     fi
 
     if [[ $craine_mode == "upgrade" ]];then
@@ -230,6 +257,14 @@ function craine_proset_basics() {
         git clone https://github.com/almuhdilkarim/proset.git $craine_proset
     fi
     notifer_inform "proset repository is ready"
+}
+
+function craine_proset_create() {
+    echo "proset create"
+}
+
+function craine_proset_clones() {
+    echo "proset clones"
 }
 
 function craine_proset_delete() {
@@ -253,9 +288,30 @@ function craine_proset_update() {
 
 }
 
+function craine_proset_upgrad() {
+    echo "proset create"
+}
+
 function craine_proset() {
+
+    if [[ $1 == "clone" ]];then
+        craine_proset_clones
+    fi
+
+    if [[ $1 == "create" ]];then
+        craine_proset_create
+    fi
+
     if [[ $1 == "update" ]];then
         craine_proset_update
+    fi
+
+    if [[ $1 == "delete" ]];then
+        craine_proset_delete
+    fi
+
+    if [[ $1 == "upgrade" ]];then
+        craine_proset_upgrad
     fi
 }
 
@@ -275,14 +331,6 @@ function craine_protos_basics() {
     fi
 }
 
-function craine_protos_remote() {
-    echo "remote protocol"
-}
-
-function craine_protos_locals() {
-    echo "local protocol"
-}
-
 function craine_protos_delete() {
 
     craine_naming_checks
@@ -292,24 +340,69 @@ function craine_protos_delete() {
 
 function craine_protos_update() {
 
-    craine_naming_checks
+    local custom_protos="$craine_protos/$craine_name/$craine_pitc"
 
-    echo "update protocol"
+    if [[ -d $custom_protos ]];then
+        notifer_inform "prepare update $craine_name level $craine_pitc"
+        cd $custom_protos && git pull > /dev/null 2>&1 
+        notifer_inform "$craine_name level $craine_pitc already update"
+    else
+        notifer_error "protos does not exist"
+    fi
 }
 
 function craine_protos_create() {
-    echo "create protocol"
+    echo "protos create"
+}
+
+function craine_protos_clones() {
+    
+    craine_linker_checks
+    
+    local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
+    local target_random="$craine_protos/$random_number"
+    local protos_dialog=$(notifer_inform "Do yout want replace existing protos : [y/N] ")
+
+    notifer_inform "prepare protos installation"
+    git clone $craine_link $target_random > /dev/null 2>&1 
+    notifer_inform "protos install successfully"
+
+
+    notifer_inform "checking protos metadata"
+    local groups=$(cat "$target_random/envi" | grep "protocol_groups" | grep -o '"[^"]*"' | sed 's/"//g')
+    local levels=$(cat "$target_random/envi" | grep "protocol_levels" | grep -o '"[^"]*"' | sed 's/"//g')
+    local target="$craine_protos/$groups/$levels"
+
+
+    if [[ -d $target ]];then
+        notifer_warner "Local protos with name $groups already exist."
+        read -p "${protos_dialog} " local_options
+    fi
+
+    if [[ -n $local_options ]]&&[[ $local_options == "Y" ]]||[[ $local_options == "y" ]]; then
+        rm -fr $target &&
+        notifer_inform "clean local protos directory"
+    elif [[ -n $local_options ]]; then
+        notifer_error "protos $groups level $levels is already exist"
+    fi
+
+    notifer_inform "installing $groups protos"
+    mkdir -p $craine_protos/$groups &&
+    mv -f $target_random $target &&
+    notifer_inform "$groups protos installed"
 }
 
 function craine_protos_upgrad() {
 
-    for protos in $craine_protos/*; do 
-        if [[ -d $protos ]];then
-            local protosname=$(basename "$protos")
-            notifer_inform "prepare update $protosname"
-            cd $protos && git pull > /dev/null 2>&1 
-            notifer_inform "$protosname already update"
-        fi
+    for groups in $craine_protos/*; do 
+        for levels in $craine_protos/$groups/*; do 
+            if [[ -d $levels ]];then
+                local protosname=$(basename "$levels")
+                notifer_inform "prepare update $groups level $protosname"
+                cd $protos && git pull > /dev/null 2>&1 
+                notifer_inform "$groups level $protosname already update"
+            fi
+        done
     done
 }
 
@@ -319,12 +412,16 @@ function craine_protos() {
         notifer_error "missing operation mode params"   
     fi
 
-    if [[ $craine_mode == "delete" ]];then
-        craine_protos_delete
+    if [[ $craine_mode == "clone" ]];then
+        craine_protos_clones
     fi
 
     if [[ $craine_mode == "create" ]];then
         craine_protos_create
+    fi
+
+    if [[ $craine_mode == "delete" ]];then
+        craine_protos_delete
     fi
 
     if [[ $craine_mode == "update" ]];then

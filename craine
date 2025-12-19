@@ -5,7 +5,7 @@ set -e
 
 
 ## TAKE OPTIONS
-while getopts "o:n:b:m:a:l:" opt; do
+while getopts "o:n:b:m:a:l:p:" opt; do
     case $opt in
         o) proc="${OPTARG}"
         ;;
@@ -19,6 +19,8 @@ while getopts "o:n:b:m:a:l:" opt; do
         ;;
         l) link="${OPTARG}"
         ;;
+        p) pitc="${OPTARG}"
+        ;;
     esac
 done
 
@@ -28,6 +30,7 @@ craine_base=$base
 craine_name=$name
 craine_mode=$mode
 craine_link=$link
+craine_pitc=$pitc
 craine_devs=true
 craine_libs="/var/lib/craine" 
 test -n $crdevs_stat && craine_libs=$(pwd)/library
