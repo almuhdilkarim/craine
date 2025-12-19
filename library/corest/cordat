@@ -14,8 +14,27 @@ function craine_reposi_checks() {
     fi
 }
 
+function craine_naming_checks() {
+    if [[ -z $craine_name ]];then
+        notifer_error "Missing distro name parameter"   
+    fi
+}
 
 ## PRESET 
+function craine_preset_basics() {
+
+    local target_preset="$craine_preset/default"
+    local remote_preset="https://github.com/almuhdilkarim/presets.git"
+
+    if [[ ! -d $target_preset ]]&&[[ $( craine_netter ) ]];then
+        notifer_inform "check default preset directory"
+        git clone $remote_preset $target_preset > /dev/null 2>&1 
+        notifer_inform "default preset directory ready"
+    elif [[ ! -d $target_preset ]]; then
+        notifer_error "Connection error, please connect network for the first session"
+    fi
+}
+
 function craine_preset_remote() {
 
     if [[ $(craine_netter) == false ]];then
@@ -88,6 +107,7 @@ function craine_preset_locals() {
 
 function craine_preset_create() {
 
+    craine_naming_checks
     craine_preset_locals
     craine_preset_remote
     local target_preset="$craine_preset/default"
@@ -110,6 +130,8 @@ function craine_preset_create() {
 }
 
 function craine_preset_update() {
+
+    craine_naming_checks
 
     ## target
     local target_preset="$craine_preset/$craine_name"
@@ -159,29 +181,28 @@ function craine_preset_update() {
 
 }
 
-function craine_preset_unrepo() {
+function craine_preset_delete() {
 
-    local target_preset="$craine_preset/default"
-    local remote_preset="https://github.com/almuhdilkarim/presets.git"
+    craine_naming_checks
 
-    if [[ ! -d $target_preset ]]&&[[ $( craine_netter ) ]];then
-        notifer_inform "check default preset directory"
-        git clone $remote_preset $target_preset > /dev/null 2>&1 
-        notifer_inform "default preset directory ready"
-    elif [[ ! -d $target_preset ]]; then
-        notifer_error "Connection error, please connect network for the first session"
-    fi
+    echo "preset delete"
 }
 
 function craine_preset_upgrad() {
-    echo "preset upgrade"
+
+    for preset in $craine_preset/*; do
+        if [[ -d $preset ]];then
+
+            local presetname=$(basename "$preset")
+            notifer_inform "prepare update $presetname preset"
+            cd $preset && git pull > /dev/null 2>&1 
+            notifer_inform "$presetname preset already update"
+        fi
+    done
 }
 
-function craine_preset() {
 
-    if [[ -z $craine_name ]];then
-        notifer_error "Missing distro name parameter"   
-    fi
+function craine_preset() {
 
     if [[ -z $craine_mode ]];then
         notifer_error "Missing operation mode params"   
@@ -202,6 +223,19 @@ function craine_preset() {
 
 
 ## PROSET 
+function craine_proset_basics() {
+
+    notifer_inform "checking proset repository"
+    if [[ ! -d $craine_proset ]];then
+        git clone https://github.com/almuhdilkarim/proset.git $craine_proset
+    fi
+    notifer_inform "proset repository is ready"
+}
+
+function craine_proset_delete() {
+    echo "proset delete"
+}
+
 function craine_proset_update() {
 
     if [[ $(craine_netter) == false ]];then
@@ -219,15 +253,6 @@ function craine_proset_update() {
 
 }
 
-function craine_proset_unrepo() {
-
-    notifer_inform "checking proset repository"
-    if [[ ! -d $craine_proset ]];then
-        git clone https://github.com/almuhdilkarim/proset.git $craine_proset
-    fi
-    notifer_inform "proset repository is ready"
-}
-
 function craine_proset() {
     if [[ $1 == "update" ]];then
         craine_proset_update
@@ -235,7 +260,78 @@ function craine_proset() {
 }
 
 
-## PROSET 
-function craine_protoc() {
-    echo "Ready protocol"
+## PROTOS
+function craine_protos_basics() {
+
+    local target_preset="$craine_protos/default"
+    local remote_preset="https://github.com/almuhdilkarim/protos.git"
+
+    if [[ ! -d $target_preset ]]&&[[ $( craine_netter ) ]];then
+        notifer_inform "check default protos directory"
+        git clone $remote_preset $target_preset > /dev/null 2>&1 
+        notifer_inform "default protos directory ready"
+    elif [[ ! -d $target_preset ]]; then
+        notifer_error "Connection error, please connect network for the first session"
+    fi
+}
+
+function craine_protos_remote() {
+    echo "remote protocol"
+}
+
+function craine_protos_locals() {
+    echo "local protocol"
+}
+
+function craine_protos_delete() {
+
+    craine_naming_checks
+
+    echo "delete protocol"
+}
+
+function craine_protos_update() {
+
+    craine_naming_checks
+
+    echo "update protocol"
+}
+
+function craine_protos_create() {
+    echo "create protocol"
+}
+
+function craine_protos_upgrad() {
+
+    for protos in $craine_protos/*; do 
+        if [[ -d $protos ]];then
+            local protosname=$(basename "$protos")
+            notifer_inform "prepare update $protosname"
+            cd $protos && git pull > /dev/null 2>&1 
+            notifer_inform "$protosname already update"
+        fi
+    done
+}
+
+function craine_protos() {
+
+    if [[ -z $craine_mode ]];then
+        notifer_error "missing operation mode params"   
+    fi
+
+    if [[ $craine_mode == "delete" ]];then
+        craine_protos_delete
+    fi
+
+    if [[ $craine_mode == "create" ]];then
+        craine_protos_create
+    fi
+
+    if [[ $craine_mode == "update" ]];then
+        craine_protos_update
+    fi
+
+    if [[ $craine_mode == "upgrade" ]];then
+        craine_protos_upgrad
+    fi
 }

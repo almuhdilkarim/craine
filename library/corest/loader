@@ -10,7 +10,7 @@ craine_worker="$HOME/.local/craine"
 
 
 ## CRAINE USER
-craine_protoc="$craine_worker/protoc"
+craine_protos="$craine_worker/protos"
 craine_preset="$craine_worker/preset"
 craine_proset="$craine_worker/proset"
 craine_prolab="$craine_worker/prolab"
@@ -30,7 +30,8 @@ source "$craine_corest/viewda"
 
 ## CRAINE PREP
 mkdir -p $craine_worker
-mkdir -p $craine_protoc
+mkdir -p $craine_preset
+mkdir -p $craine_protos
 mkdir -p $craine_prolab
 mkdir -p $craine_preloc
 
@@ -45,5 +46,6 @@ source "$craine_config/codexs"
 
 
 ## LOADER DEFS
-craine_preset_unrepo
-craine_proset_unrepo
+craine_preset_basics
+craine_proset_basics
+craine_protos_basics

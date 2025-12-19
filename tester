@@ -40,5 +40,5 @@ elif [[ $1 == "lab5" ]]; then
 elif [[ -z $mode ]]&&[[ ! -z $name ]];then
     craine_hackers $mode $name $conf $prof
 else
-    echo "Craine error: Mode not found"  
+    echo " Mode not found"  
 fi

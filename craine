@@ -46,25 +46,27 @@ if [[ -n $proc ]];then
         craine_proset $craine_mode
     elif [[ $proc == "preset" ]];then
         craine_preset $craine_mode
+    elif [[ $proc == "protos" ]];then
+        craine_protos $craine_mode
     elif [[ $proc == "editor" ]];then
         craine_editors
     elif [[ $proc == "create" ]];then
         craine_builder
     else
-        notifer_error 'Main process command parameter not found'
+        notifer_error 'Operation parameter not found'
     fi
 fi
 
 
 ## PRESET PROC
-if [[ -n $adds ]];then
-
-    if [[ $adds == "preset" ]]&&[[ -n $craine_name ]]&&[[ -n $craine_link ]];then
-        craine_preset -a  
-    else 
-        notifer_error 'Command parameter not found'
-    fi
-fi
+##if [[ -n $adds ]];then
+#
+#    if [[ $adds == "preset" ]]&&[[ -n $craine_name ]]&&[[ -n $craine_link ]];then
+#        craine_preset -a  
+#    else 
+#        notifer_error 'Command parameter not found'
+#    fi
+#fi
 
 
 ## PRESET PROC
