@@ -2,85 +2,240 @@
 
 set -e
 
-function craine_autopu() {
-    echo "craine auto update"
+
+## COREST
+function craine_reposi_checks() {
+
+    git ls-remote --exit-code $1 > /dev/null 2>&1 
+    if [ $? -eq 0 ]; then
+        echo true
+    else
+        echo false
+    fi
 }
 
 
-## UPDATE
-function craine_updates_protoc() {
-    echo "update protocol"
+## PRESET 
+function craine_preset_remote() {
+
+    if [[ $(craine_netter) == false ]];then
+        notifer_warner "network connection fail" && exit 0
+    fi
+
+    ## notify
+    notifer_inform "check preset remote resource"
+
+
+    ## source
+    local remote_dialog=$(notifer_inform "Do yout want replace with default preset : [y/N] ")
+    local remote_source="https://github.com/almuhdilkarim/presets.git" 
+    preset_remot_source=""
+
+
+    ## option
+    local custom_base=$( craine_reposi_checks $craine_link ) 
+    local github_base=$( craine_reposi_checks "https://github.com/linux-$craine_base/presets" )
+    local locals_base=$( craine_reposi_checks "https://rogers.git/linux-$craine_base/presets" )
+    local github_name=$( craine_reposi_checks "https://github.com/linux-$craine_name/presets" )
+    local locals_name=$( craine_reposi_checks "https://rogers.git/linux-$craine_name/presets" )
+
+
+    ## valids
+    if [[ $custom_base == true ]];then
+        preset_remote_source=$craine_link
+    elif [[ $locals_base == true ]];then
+        preset_remote_source="https://rogers.git/linux-$craine_base/presets"
+    elif [[ $locals_name == true ]];then
+        preset_remote_source="https://rogers.git/linux-$craine_name/presets"
+    elif [[ $github_base == true ]];then
+        preset_remote_source="https://github.com/linux-$craine_base/presets"
+    elif [[ $github_name == true ]];then
+        preset_remote_source="https://github.com/linux-$craine_name/presets"
+    fi
+
+    ## default
+    if [[ -z $preset_remote_source ]];then
+        notifer_warner "Your remote resource preset does not exist"
+        read -p "${remote_dialog}" remote_presets
+    fi
+
+    if [[ -n $remote_presets ]]&&[[ $remote_presets == "Y" ]]||[[ $remote_presets == "y" ]];then
+        preset_remote_source=$remote_source &&
+        notifer_inform "using default preset config"
+    elif [[ -n $remote_presets ]];then
+        notifer_warner "preset build canceled" && exit 0
+    fi
 }
 
-function craine_updates_profil() {
-    echo "update profil"
+function craine_preset_locals() {
+
+    local local_options=""
+    preset_local_folder="$craine_preset/$craine_name"
+    local local_dialogs=$(notifer_inform "Do you want override local presets : [y/N] ")
+
+    if [[ -d "$preset_local_folder" ]]; then
+        notifer_warner "Local preset with name $craine_name already exist."
+        read -p "${local_dialogs} " local_options
+    fi
+
+    if [[ -n $local_options ]]&&[[ $local_options == "Y" ]]||[[ $local_options == "y" ]]; then
+        rm -fr $preset_local_folder &&
+        notifer_inform "clean local preset directory"
+    elif [[ -n $local_options ]]; then
+        notifer_warner "preset install cancel" && exit 0
+    fi
+}
+
+function craine_preset_create() {
+
+    craine_preset_locals
+    craine_preset_remote
+    local target_preset="$craine_preset/default"
+
+    # clone information
+    notifer_inform "remote repo: $preset_remot_source"
+    notifer_inform "locals repo: $preset_local_folder"
+
+    if [[ $(craine_netter) == true ]];then
+        git clone $preset_remote_source $preset_local_folder > /dev/null 2>&1 
+       
+    elif [[ -d $target_preset ]];then
+        cp -fr $target_preset $preset_local_folder
+
+    else
+        notifer_warner "default preset not existed" && exit 0
+    fi
+    
+    notifer_inform "$craine_name preset installed"
+}
+
+function craine_preset_update() {
+
+    ## target
+    local target_preset="$craine_preset/$craine_name"
+
+ 
+    if [[ -d $target_preset ]]; then
+
+        notifer_inform "checking github resource"
+        local github=$(cat "$target_preset/envi" | grep "gitrepo_github" | grep -o '"[^"]*"' | sed 's/"//g')
+        notifer_inform "checking gitlab resource"
+        local gitlab=$(cat "$target_preset/envi" | grep "gitrepo_gitlab" | grep -o '"[^"]*"' | sed 's/"//g')
+        notifer_inform "checking custom resource"
+        local gitloc=$(cat "$target_preset/envi" | grep "gitrepo_gitloc" | grep -o '"[^"]*"' | sed 's/"//g')
+
+    else
+        notifer_error "Update preset failed, preset does not exist"
+    fi
+
+
+    if [[ $( craine_reposi_checks $github ) ]];then
+
+        notifer_inform "cleaning locals resource"
+        rm -fr $target_preset &&
+        notifer_inform "updating github resource"
+        git clone $github $target_preset > /dev/null 2>&1 
+        notifer_inform "preset is already update"
+
+    elif [[ $( craine_reposi_checks $gitlab ) ]];then
+
+        notifer_inform "cleaning locals resource"
+        rm -fr $target_preset &&
+        notifer_inform "updating gitlab resource"
+        git clone $gitlab $target_preset > /dev/null 2>&1
+        notifer_inform "preset is already update"
+
+    elif [[ $( craine_reposi_checks $gitloc ) ]];then
+
+        notifer_inform "cleaning locals resource"
+        rm -fr $target_preset &&
+        notifer_inform "updating custom resource"
+        git clone $gitloc $target_preset > /dev/null 2>&1
+        notifer_inform "preset is already update"
+
+    else
+        notifer_error "This preset is local, fail download from resource"
+    fi
+
+}
+
+function craine_preset_unrepo() {
+
+    local target_preset="$craine_preset/default"
+    local remote_preset="https://github.com/almuhdilkarim/presets.git"
+
+    if [[ ! -d $target_preset ]]&&[[ $( craine_netter ) ]];then
+        notifer_inform "check default preset directory"
+        git clone $remote_preset $target_preset > /dev/null 2>&1 
+        notifer_inform "default preset directory ready"
+    elif [[ ! -d $target_preset ]]; then
+        notifer_error "Connection error, please connect network for the first session"
+    fi
+}
+
+function craine_preset_upgrad() {
+    echo "preset upgrade"
+}
+
+function craine_preset() {
+
+    if [[ -z $craine_name ]];then
+        notifer_error "Missing distro name parameter"   
+    fi
+
+    if [[ -z $craine_mode ]];then
+        notifer_error "Missing operation mode params"   
+    fi
+
+    if [[ $craine_mode == "create" ]];then
+        craine_preset_create
+    fi
+
+    if [[ $craine_mode == "update" ]];then
+        craine_preset_update
+    fi
+
+    if [[ $craine_mode == "upgrade" ]];then
+        craine_preset_upgrad
+    fi
 }
 
 
-function craine_updates() {
-    echo "craine update package"
+## PROSET 
+function craine_proset_update() {
+
+    if [[ $(craine_netter) == false ]];then
+        notifer_warner "network connection fail" && exit 0
+    fi
+
+    if [[ -d $craine_proset ]];then
+        rm -fr $craine_proset &&
+        notifer_inform "cleaning proset repository"
+    fi
+
+    notifer_inform "updating proset repository"
+    git clone https://github.com/almuhdilkarim/proset.git $craine_proset > /dev/null 2>&1 
+    notifer_inform "proset directory is update"
+
+}
+
+function craine_proset_unrepo() {
+
+    notifer_inform "checking proset repository"
+    if [[ ! -d $craine_proset ]];then
+        git clone https://github.com/almuhdilkarim/proset.git $craine_proset
+    fi
+    notifer_inform "proset repository is ready"
+}
+
+function craine_proset() {
+    if [[ $1 == "update" ]];then
+        craine_proset_update
+    fi
 }
 
 
-## GETDATA
-function craine_getprot() {
-    echo "craine get protoc"
-}
-
-
-function craine_getprof() {
-    echo "craine get profile"
-}
-
-function craine_getuser() {
-    echo "craine get profile"
-}
-
-## LISTDATA
-function craine_listprot() {
-    echo "craine get protoc"
-}
-
-function craine_listpres() {
-    echo "craine get preset"
-}
-
-function craine_listprof() {
-    echo "craine get profile"
-}
-
-function craine_listuser() {
-    echo "craine get profile"
-}
-
-
-## EDITORS
-function craine_editprot() {
-    echo "craine get protoc"
-}
-
-function craine_editpres() {
-    echo "craine get preset"
-}
-
-function craine_editprof() {
-    echo "craine get profile"
-}
-
-function craine_edituser() {
-    echo "craine get profile"
-}
-
-
-## DELETING
-function craine_delprot() {
-    echo "craine delete protoc"
-}
-
-function craine_delpres() {
-    echo "craine delete preset"
-}
-
-function craine_delprof() {
-    echo "craine delete profile"
+## PROSET 
+function craine_protoc() {
+    echo "Ready protocol"
 }

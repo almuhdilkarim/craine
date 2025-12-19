@@ -5,27 +5,10 @@ distro_logo=""
 distro_wall=""
 distro_base=""
 
-
-## ALPA GITREPO
-alpha_github=""
-alpha_gitlab=""
-alpha_gitloc=""
-
-## BETA GITREPO
-beta_github=""
-beta_gitlab=""
-beta_gitloc=""
-
 ## PROD GITREPO
-prod_github=""
-prod_gitlab=""
-prod_gitloc=""
-
-
-## PROTOCOL RULE
-protocol_scope="public"
-protocol_level="001"
-
+gitrepo_github="https://github.com/almuhdilkarim/preset.git"
+gitrepo_gitlab=""
+gitrepo_gitloc=""
 
 ## DISTRO SITES 
 distro_site_main=""

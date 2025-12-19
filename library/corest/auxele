@@ -56,7 +56,6 @@ function banner_raptor() {
 
 
 function craine_isname_exist() {
-
     if [[ -z $craine_name ]];then
         notifer_error "Missing distro name parameter"   
     fi
@@ -98,3 +97,13 @@ function craine_gitcek() {
         echo false
     fi
 }
+
+
+function craine_netter() {
+
+    if ping -c 1 "8.8.8.8" > /dev/null; then
+        echo true
+    else
+        echo false
+    fi
+} 

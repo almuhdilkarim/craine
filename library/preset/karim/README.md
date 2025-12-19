@@ -1,2 +1,2 @@
-# default os template
-Default os template boilerplate
+# craineos distro preset
+Default operating system boilerplate

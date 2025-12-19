@@ -35,7 +35,6 @@ source "$craine_libs/corest/loader"
 
 
 ## CRAINE MAIN
-
 if [[ -n $proc ]];then
     if [[ $proc == "desktop" ]];then
         craine_guimode
@@ -43,8 +42,10 @@ if [[ -n $proc ]];then
         craine_diamode
     elif [[ $proc == "tester" ]];then
         craine_testers
-    elif [[ $proc == "update" ]];then
-        craine_updates
+    elif [[ $proc == "proset" ]];then
+        craine_proset $craine_mode
+    elif [[ $proc == "preset" ]];then
+        craine_preset $craine_mode
     elif [[ $proc == "editor" ]];then
         craine_editors
     elif [[ $proc == "create" ]];then
@@ -54,8 +55,8 @@ if [[ -n $proc ]];then
     fi
 fi
 
-## PRESET PROC
 
+## PRESET PROC
 if [[ -n $adds ]];then
 
     if [[ $adds == "preset" ]]&&[[ -n $craine_name ]]&&[[ -n $craine_link ]];then
@@ -64,3 +65,6 @@ if [[ -n $adds ]];then
         notifer_error 'Command parameter not found'
     fi
 fi
+
+
+## PRESET PROC
