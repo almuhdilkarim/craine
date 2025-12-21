@@ -143,6 +143,7 @@ function craine_preset_create() {
         craine_gitrepo_clone $craine_link $target_source &&
 
         notifer_inform "prepare sources for preset data" &&
+        rm -fr $target_source/*
         cp -fr $locals_source/* $target_source
 
         notifer_inform "synchronizing local preset data" &&
@@ -768,10 +769,6 @@ function craine_protos_resets() {
     local locals_source="$craine_protos/default"
     local target_source="$craine_protos/$craine_base/$craine_name"
 
-    
-    craine_vardirs_exist $target_source
-
-
     for protos_target in $target_source/*; do 
     
         if [[ -d $protos_target ]];then
@@ -819,8 +816,8 @@ function craine_protos_delete() {
             test -d $protos_target && rm -fr $protos_target
         done
 
-        test -d $target_source/envi && rm $target_source/envi
-        test -d $target_source/load && rm $target_source/load 
+        test -e $target_source/envi && rm $target_source/envi
+        test -e $target_source/load && rm $target_source/load 
 
         notifer_inform "removing protos data at remote" &&
         craine_gitrepo_pushs $target_source
