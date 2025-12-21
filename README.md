@@ -18,7 +18,7 @@ craine -o preset -m create -n [name]
 ```
 clone preset
 ```
-craine -o preset -m clone -n [name] -l [git repo link]
+craine -o preset -m clone -l [git repo link]
 ```
 
 
