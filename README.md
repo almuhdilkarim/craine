@@ -5,7 +5,7 @@ Operating System Studio Maker
 
 ## preset
 
-create preset preset with gitrepo
+create remote preset
 ```
 ./craine -o preset -m create -n [name] -l [gitrepo link]
 ```
@@ -15,9 +15,14 @@ create local preset
 ./craine -o preset -m create -n [name]
 ```
 
-updating preset
+push preset
 ```
-craine -o preset -m update -n [name]
+craine -o preset -m push -n [name]
+```
+
+pull preset
+```
+craine -o preset -m pull -n [name]
 ```
 
 upgrade preset
@@ -35,10 +40,51 @@ reset preset
 craine -o preset -m reset -n [name]
 ```
 
-
 delete preset
 ```
 craine -o preset -m delete -n [name]
+```
+
+## proset
+
+create remote proset
+```
+./craine -o proset -m create -n [name] -l [gitrepo link]
+```
+
+create local proset 
+```
+./craine -o proset -m create -n [name]
+```
+
+push proset
+```
+craine -o proset -m push -n [name]
+```
+
+pull proset
+```
+craine -o proset -m pull -n [name]
+```
+
+upgrade proset
+```
+craine -o proset -m upgrade
+```
+
+clone proset
+```
+craine -o proset -m clone -l [gitrepo link]
+```
+
+reset proset
+```
+craine -o proset -m reset -n [name]
+```
+
+delete proset
+```
+craine -o proset -m delete -n [name]
 ```
 
 
@@ -64,9 +110,14 @@ reset protos
 ./craine -o protos -m reset -b [group] -n [name]
 ```
 
-update protos
+pull protos
 ```
-./craine -o protos -m update -b [group] -n [name]
+./craine -o protos -m pull -b [group] -n [name]
+```
+
+push protos
+```
+./craine -o protos -m push -b [group] -n [name]
 ```
 
 upgrade protos
@@ -78,6 +129,8 @@ delete protos
 ```
 ./craine -o protos -m delete -b [group] -n [name]
 ```
+
+
 
 
 ## debuging
