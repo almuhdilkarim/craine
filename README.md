@@ -14,11 +14,11 @@ craine -o preset -m upgrade
 ```
 create preset
 ```
-craine -o preset -m create -n [name] -l [git repo link]
+craine -o preset -m create -n [name] 
 ```
 clone preset
 ```
-craine -o preset -m clone -n [name]
+craine -o preset -m clone -n [name] -l [git repo link]
 ```
 
 
