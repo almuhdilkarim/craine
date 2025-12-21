@@ -55,11 +55,112 @@ function banner_raptor() {
 }
 
 
-function craine_isname_exist() {
-    if [[ -z $craine_name ]];then
-        notifer_error "Missing distro name parameter"   
+## 
+
+function craine_varauth_noval() {
+    if [[ -z $craine_auth ]];then
+        notifer_error "Missing author parameter"   
     fi
 }
+
+function craine_varbase_noval() {
+    if [[ -z $craine_base ]];then
+        notifer_error "Missing group parameter"   
+    fi
+}
+
+function craine_varname_noval() {
+    if [[ -z $craine_name ]];then
+        notifer_error "Missing name parameter"   
+    fi
+}
+
+function craine_varlink_noval() {
+    if [[ -z $craine_link ]];then
+        notifer_error "Missing link parameter"   
+    fi
+}
+
+function craine_varpitc_noval() {
+    if [[ -z $craine_pitc ]];then
+        notifer_error "Missing level parameter"   
+    fi
+}
+
+function craine_vardirs_noval() {
+
+    if [[ ! -d $1 ]]; then
+        notifer_error "target directory does not exist"   
+    fi
+}
+
+function craine_varrepo_exist() {
+
+    craine_varlink_noval &&
+    git ls-remote --exit-code $craine_link > /dev/null 2>&1 &&
+
+    if [ $? -eq 0 ]; then
+        echo true
+    else
+        echo $?
+    fi
+}
+
+function craine_vardirs_exist() {
+
+    if [[ -d $1 ]]; then
+        notifer_error "installation directory is exist"   
+    fi
+}
+
+function craine_varinet_exist() {
+
+    git ls-remote --exit-code $1 > /dev/null 2>&1 &&
+    if [ $? -eq 0 ]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+
+##
+function craine_gitrepo_clone() {
+    
+    git clone $1 $2 > /dev/null 2>&1 &&
+
+    if [ $? -eq 0 ]; then
+        notifer_inform "clone remote repository success"
+    else
+        notifer_error "failed to cloned remote repository"
+    fi
+}
+
+function craine_gitrepo_pushs() {
+
+    notifer_inform "populate data from local source" &&
+    cd $1 && git add . > /dev/null 2>&1  && 
+
+    notifer_inform "commited data from local source" &&
+    git commit -m "first commit" > /dev/null 2>&1 && 
+
+    notifer_inform "updating remote repository data" &&
+    git push > /dev/null 2>&1 
+
+    unset $1
+}
+
+function craine_gitrepo_pulls() {
+
+    notifer_inform "populate data from local source" &&
+    cd $1 
+
+    notifer_inform "cloned data from remote sources" &&
+    git pull > /dev/null 2>&1 && 
+
+    unset $1
+}
+
 
 
 ## 
