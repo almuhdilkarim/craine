@@ -14,7 +14,7 @@ craine -o preset -m upgrade
 ```
 create preset
 ```
-craine -o preset -m create -n [name]
+craine -o preset -m create -n [name] -l [git repo link]
 ```
 clone preset
 ```
