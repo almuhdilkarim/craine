@@ -9,28 +9,23 @@ while getopts "o:n:b:m:a:l:p:" opt; do
     case $opt in
         o) proc="${OPTARG}"
         ;;
-        n) name="${OPTARG}"
+        n) craine_name="${OPTARG}"
         ;;
-        b) base="${OPTARG}"
+        b) craine_base="${OPTARG}"
         ;;
-        m) mode="${OPTARG}"
+        m) craine_mode="${OPTARG}"
         ;;
-        a) adds="${OPTARG}"
+        a) craine_auth="${OPTARG}"
         ;;
-        l) link="${OPTARG}"
+        l) craine_link="${OPTARG}"
         ;;
-        p) pitc="${OPTARG}"
+        p) craine_pitc="${OPTARG}"
         ;;
     esac
 done
 
 
 ## CRAINE ENVI
-craine_base=$base
-craine_name=$name
-craine_mode=$mode
-craine_link=$link
-craine_pitc=$pitc
 craine_devs=true
 craine_libs="/var/lib/craine" 
 test -n $crdevs_stat && craine_libs=$(pwd)/library
@@ -61,15 +56,11 @@ if [[ -n $proc ]];then
 fi
 
 
-## PRESET PROC
-##if [[ -n $adds ]];then
-#
-#    if [[ $adds == "preset" ]]&&[[ -n $craine_name ]]&&[[ -n $craine_link ]];then
-#        craine_preset -a  
-#    else 
-#        notifer_error 'Command parameter not found'
-#    fi
-#fi
-
-
-## PRESET PROC
+unset craine_auth
+unset craine_base
+unset craine_name
+unset craine_mode
+unset craine_link
+unset craine_pitc
+unset craine_devs
+unset craine_libs
