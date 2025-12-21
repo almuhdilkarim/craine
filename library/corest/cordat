@@ -66,10 +66,10 @@ function craine_preset_puller() {
 
         notifer_inform "checking remote preset resource"
         craine_gitrepo_pulls $target_preset 
-        notifer_inform "locals protos is already update"
+        notifer_inform "locals preset is already update"
 
     else
-        notifer_error "Update preset failed, protos does not exist"
+        notifer_error "Update preset failed, preset does not exist"
     fi
 
     unset target_preset
@@ -86,10 +86,10 @@ function craine_preset_pusher() {
 
         notifer_inform "checking remote preset resource"
         craine_gitrepo_pushs $target_preset 
-        notifer_inform "remote protos is already update"
+        notifer_inform "remote preset is already update"
 
     else
-        notifer_error "Update preset failed, remote protos does not exist"
+        notifer_error "Update preset failed, remote preset does not exist"
     fi
 
     unset target_preset
@@ -360,19 +360,19 @@ function craine_proset_puller() {
 
     craine_varname_noval
 
-    local target_preset="$craine_proset/$craine_name"
+    local target_proset="$craine_proset/$craine_name"
 
-    if [[ -d $target_preset ]];then
+    if [[ -d $target_proset ]];then
 
         notifer_inform "checking remote proset resource"
-        craine_gitrepo_pulls $target_preset 
+        craine_gitrepo_pulls $target_proset 
         notifer_inform "locals proset is already update"
 
     else
-        notifer_error "Update preset failed, proset does not exist"
+        notifer_error "Update proset failed, proset does not exist"
     fi
 
-    unset target_preset
+    unset target_proset
 }
 
 function craine_proset_pusher() {
@@ -381,20 +381,20 @@ function craine_proset_pusher() {
     craine_varname_noval
 
 
-    local target_preset="$craine_proset/$craine_name"
+    local target_proset="$craine_proset/$craine_name"
 
 
-    if [[ -d $target_preset ]];then
+    if [[ -d $target_proset ]];then
 
         notifer_inform "checking remote proset resource"
-        craine_gitrepo_pushs $target_preset 
+        craine_gitrepo_pushs $target_proset 
         notifer_inform "remote proset is already update"
 
     else
-        notifer_error "Update preset failed, remote proset does not exist"
+        notifer_error "Update proset failed, remote proset does not exist"
     fi
 
-    unset target_preset
+    unset target_proset
 }
 
 function craine_proset_syncro() {
@@ -536,9 +536,9 @@ function craine_proset_upgrad() {
         if [[ -d $proset_target ]];then
 
             local proset_naming=$(basename "$proset_target")
-            notifer_inform "prepare update $proset_naming preset"
+            notifer_inform "prepare update $proset_naming proset"
             craine_gitrepo_pulls $proset_target
-            notifer_inform "$proset_naming preset already update"
+            notifer_inform "$proset_naming proset already update"
         fi
     done
 
@@ -585,8 +585,10 @@ function craine_proset() {
 ## PROTOS
 function craine_protos_basics() {
 
+
     local target_protos="$craine_protos/default"
     local remote_protos="https://github.com/almuhdilkarim/protos.git"
+
 
     if [[ ! -d $target_protos ]]&&[[ $( craine_varinet_exist ) == true ]];then
         notifer_inform "check default protos directory"
@@ -644,19 +646,19 @@ function craine_protos_puller() {
     craine_varname_noval
     craine_varbase_noval
 
-    local target_preset="$craine_protos/$craine_base/$craine_name"
+    local target_protos="$craine_protos/$craine_base/$craine_name"
 
-    if [[ -d $target_preset ]];then
+    if [[ -d $target_protos ]];then
 
         notifer_inform "checking remote protos resource"
-        craine_gitrepo_pulls $target_preset 
+        craine_gitrepo_pulls $target_protos 
         notifer_inform "locals protos is already update"
 
     else
         notifer_error "Update protos failed, protos does not exist"
     fi
 
-    unset target_preset
+    unset target_protos
 }
 
 function craine_protos_pusher() {
@@ -664,19 +666,19 @@ function craine_protos_pusher() {
     craine_varname_noval
     craine_varbase_noval
 
-    local target_preset="$craine_protos/$craine_base/$craine_name"
+    local target_protos="$craine_protos/$craine_base/$craine_name"
 
-    if [[ -d $target_preset ]];then
+    if [[ -d $target_protos ]];then
 
         notifer_inform "checking remote protos resource"
-        craine_gitrepo_pushs $target_preset
+        craine_gitrepo_pushs $target_protos
         notifer_inform "remote protos is already update"
 
     else
         notifer_error "Update protos failed, protos does not exist"
     fi
 
-    unset target_preset
+    unset target_protos
 }
 
 function craine_protos_syncro() {
