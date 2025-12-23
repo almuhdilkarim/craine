@@ -1,0 +1,9 @@
+#!/bin/env bash
+# Banner and assets
+set -e
+
+
+## RAPTOR BANNER
+function craine_baner_raptors() {
+    cat "${srcpath}/banner" && echo ""
+}

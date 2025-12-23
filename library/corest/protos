@@ -1,0 +1,314 @@
+#!/bin/env bash
+
+set -e
+
+
+## PROTOS
+function craine_protos_basics() {
+
+    craine_varinet_noval
+
+    local locals_source="$craine_protos/default"
+    local remote_source="$craine_core_gitprotos"
+
+    if [[ ! -d $locals_source ]];then
+        craine_gitrepo_clone $remote_source $locals_source
+    fi
+
+    unset locals_source
+    unset remote_source
+}
+
+function craine_protos_clones() {
+    
+    craine_varrepo_noval
+    
+
+    local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
+    local target_random="$craine_protos/$random_number"
+
+
+    notifer_inform "download remote repository data" &&
+    craine_gitrepo_clone $craine_link $target_random &&
+    notifer_inform "remote repoisitory is installed" && 
+
+
+    notifer_inform "parsing current protos metadata"
+    local protos_groups=$(cat "$target_random/envi" | grep "protos_base" | grep -o '"[^"]*"' | sed 's/"//g')
+    local protos_naming=$(cat "$target_random/envi" | grep "protos_name" | grep -o '"[^"]*"' | sed 's/"//g')
+    local locals_target="$craine_protos/$groups/$naming"
+
+
+    if [[ ! -d $locals_target ]];then
+        mkdir -p "$craine_protos/$groups"
+        mv -f $target_random $locals_target
+        notifer_inform "protos installation successfull"
+    else
+        rm -fr $target_random &&
+        notifer_error "protos $groups with name $naming existed"
+    fi
+
+
+    unset protos_groups
+    unset protos_naming
+    unset locals_target
+    unset random_number
+    unset target_random
+}
+
+function craine_protos_puller() {
+
+    craine_varname_noval
+    craine_varbase_noval
+
+    local target_protos="$craine_protos/$craine_base/$craine_name"
+
+    if [[ -d $target_protos ]];then
+
+        notifer_inform "checking remote protos resource"
+        craine_gitrepo_pulls $target_protos 
+        notifer_inform "locals protos is already update"
+
+    else
+        notifer_error "Update protos failed, protos does not exist"
+    fi
+
+    unset target_protos
+}
+
+function craine_protos_pusher() {
+
+    craine_varname_noval
+    craine_varbase_noval
+
+    local target_protos="$craine_protos/$craine_base/$craine_name"
+
+    if [[ -d $target_protos ]];then
+
+        notifer_inform "checking remote protos resource"
+        craine_gitrepo_pushs $target_protos
+        notifer_inform "remote protos is already update"
+
+    else
+        notifer_error "Update protos failed, protos does not exist"
+    fi
+
+    unset target_protos
+}
+
+function craine_protos_syncro() {
+    
+    local config_source=$1/envi
+    local protos_source=$craine_link
+    local protos_author=${craine_auth,,}
+    local protos_groups=${craine_base,,}
+    local protos_naming=${craine_name,,}
+
+    echo 'protos_auth="'$protos_author'"' >  $config_source &&
+    echo 'protos_base="'$protos_groups'"' >> $config_source &&
+    echo 'protos_name="'$protos_naming'"' >> $config_source &&
+    echo 'protos_repo="'$protos_source'"' >> $config_source &&
+
+    unset config_source
+    unset protos_source
+    unset protos_naming
+    unset protos_groups
+    unset protos_naming
+}
+
+function craine_protos_create() {
+
+    craine_varauth_noval
+    craine_varbase_noval
+    craine_varname_noval
+
+
+    local protos_source=$craine_link
+    local protos_author=${craine_auth,,}
+    local protos_groups=${craine_base,,}
+    local protos_naming=${craine_name,,}
+    local locals_source="$craine_protos/default"
+    local target_source="$craine_protos/$protos_groups/$protos_naming"
+
+
+    craine_vardirs_exist $target_source
+
+
+    if [[ $(craine_varinet_exist) == true ]]&&[[ $(craine_varrepo_exist) == true ]] ;then
+
+        notifer_inform "cloning source from remote data" &&
+        craine_gitrepo_clone $protos_source $target_source &&
+
+        notifer_inform "prepare sources for protos data" &&
+        cp -fr $locals_source/* $target_source
+
+        notifer_inform "synchronizing local protos data" &&
+        craine_protos_syncro $target_source &&
+
+        notifer_inform "synchronizing protos to remotes" 
+        craine_gitrepo_pushs $target_source
+
+    elif [[ -d $locals_source ]];then
+
+        notifer_inform "creating local protos directory" &&
+        cp -fr $locals_source $target_source &&
+
+        notifer_inform "synchronizing local protos data" &&
+        craine_protos_syncro $target_source &&
+
+        notifer_inform "pure remote data configurations" &&
+        rm -fr $target_source/.git
+    
+    else
+
+        notifer_error "default protos not existed"
+    fi
+
+
+    unset protos_source
+    unset protos_author
+    unset protos_groups
+    unset protos_naming
+    unset locals_source
+    unset target_source
+
+    notifer_inform "distro protos build succesfully" 
+}
+
+function craine_protos_resets() {
+    
+    craine_varbase_noval
+    craine_varname_noval
+
+    local locals_source="$craine_protos/default"
+    local target_source="$craine_protos/$craine_base/$craine_name"
+
+    for protos_target in $target_source/*; do 
+    
+        if [[ -d $protos_target ]];then
+
+            local protos_naming=$(basename "$protos_target")
+
+            notifer_inform "removed group $craine_base name $protos_naming"
+            rm -fr $protos_target
+
+            notifer_inform "install group $craine_base name $protos_naming"
+            cp -fr $locals_source/$protos_naming $protos_target
+        fi
+    done
+
+    notifer_inform "checking remote protos resource"
+    craine_gitrepo_pushs $target_source &&
+    notifer_inform "locals protos is already update"
+
+    unset protos_naming
+    unset protos_target
+    unset locals_source
+    unset target_source
+}
+
+function craine_protos_delete() {
+
+    craine_varbase_noval
+    craine_varname_noval
+
+    local protos_groups=${craine_base,,}
+    local protos_naming=${craine_name,,}
+    local target_source="$craine_protos/$protos_groups/$protos_naming"
+
+
+    craine_vardirs_noval $target_source
+
+
+    local remote_source=$(cat "$target_source/envi" | grep "protos_repo" | grep -o '"[^"]*"' | sed 's/"//g')
+
+
+    if [[ -n $remote_source ]];then
+
+        notifer_inform "removing protos data on locals" &&
+        for protos_target in $target_source/*; do
+            test -d $protos_target && rm -fr $protos_target
+        done
+
+        test -e $target_source/envi && rm $target_source/envi
+        test -e $target_source/load && rm $target_source/load 
+
+        notifer_inform "removing protos data at remote" &&
+        craine_gitrepo_pushs $target_source
+    fi
+    
+    test -d $target_source && rm -fr $target_source
+
+    unset protos_target
+    unset protos_groups
+    unset protos_naming
+    unset target_source
+    unset remote_source
+}
+
+function craine_protos_upgrad() {
+
+    for groups in $craine_protos/*; do 
+
+        local protos_groups=$(basename "$groups")
+
+        if [[ $protos_groups == "default" ]];then
+            notifer_inform "prepare update $protos_groups baserepo"
+            craine_gitrepo_pulls $groups && 
+            notifer_inform "$protos_groups baserepo already update"
+        fi
+
+        if [[ $protos_groups != "default" ]];then
+            for naming in $craine_protos/$protos_groups/*; do 
+                if [[ -d $naming ]];then
+                    local protos_naming=$(basename "$naming")
+                    notifer_inform "prepare update $protos_groups level $protos_naming"
+                    craine_gitrepo_pulls $naming && 
+                    notifer_inform "$protos_groups level $protos_naming already update"
+                fi
+            done
+        fi
+
+    done
+    
+    unset groups
+    unset naming
+    unset protos_groups
+    unset protos_naming
+
+}
+
+function craine_protos() {
+
+    if [[ -z $craine_mode ]];then
+        notifer_error "missing operation mode params"   
+    fi
+
+    if [[ $craine_mode == "pull" ]];then
+        craine_protos_puller
+    fi
+
+    if [[ $craine_mode == "push" ]];then
+        craine_protos_pusher
+    fi
+
+    if [[ $craine_mode == "clone" ]];then
+        craine_protos_clones
+    fi
+
+    if [[ $craine_mode == "reset" ]];then
+        craine_protos_resets
+    fi
+
+    if [[ $craine_mode == "create" ]];then
+        craine_protos_create
+    fi
+
+    if [[ $craine_mode == "delete" ]];then
+        craine_protos_delete
+    fi
+
+    if [[ $craine_mode == "upgrade" ]];then
+        craine_protos_upgrad
+    fi
+}

@@ -1,0 +1,40 @@
+#!/bin/env bash
+# logs and notification
+
+set -e
+
+
+## LOGGER DATA
+function craine_loging_errors() {
+    echo -e "\t${red}┌─────────────────────────────────────────────────────┐"${reset}
+    echo -e "\t${red}│    / \                                              │"${reset}
+    echo -e "\t${red}│   / | \     CRAINE ERROR                            │"${reset}
+    echo -e "\t${red}│  /  #  \    Something goes wrong, process aborted ! │"${reset}
+    echo -e "\t${red}│ /_______\                                           │"${reset}
+    echo -e "\t${red}└─────────────────────────────────────────────────────┘"${reset}
+    test -n "$1" && echo -e "\t${red} Error ─> $1${reset}"
+    exit 1
+}
+
+function craine_loging_fatals() {
+    echo -e "\t${red}┌─────────────────────────────────────────────────────┐"${reset}
+    echo -e "\t${red}│    / \                                              │"${reset}
+    echo -e "\t${red}│   / | \     CRAINE ERROR                            │"${reset}
+    echo -e "\t${red}│  /  #  \    Something goes wrong, process aborted ! │"${reset}
+    echo -e "\t${red}│ /_______\                                           │"${reset}
+    echo -e "\t${red}└─────────────────────────────────────────────────────┘"${reset}
+    test -n "$1" && echo -e "\t${red} Error ─> $1${reset}"
+    exit 1 
+}
+
+function craine_loging_warner() {
+    test -n "$1" && echo -e "\t${red} [WRN] ─> $1${reset}"
+}
+
+function craine_loging_checks() {
+    test -n "$1" && echo -e "\t${blue} [CHK] ─> $1 passed ${reset}"
+}
+
+function craine_loging_inform() {
+    test -n "$1" && echo -e "\t${green} [INF] ─> $1${reset}"
+}

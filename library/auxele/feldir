@@ -1,0 +1,13 @@
+#!/bin/env bash
+
+set -e
+
+## FILE MANIPULATION
+function craine_merger_folder() {
+    echo "directory for to merge"
+}
+
+function craine_merger_filers() {
+    echo "files force to merge"
+}
+

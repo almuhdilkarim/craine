@@ -1,0 +1,65 @@
+#!/bin/bash
+
+set -e
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 
+function craine_enviro() {
+    if [[ -e "$1/posmak" ]]; then
+        echo "" >> $raptor_makers  &&  cat "$1/posmak" >> $raptor_makers
+    fi 
+}
+
+function craine_posted() {
+    if [[ -e "$1/posmak" ]]; then
+        echo "" >> $raptor_makers  &&  cat "$1/posmak" >> $raptor_makers
+    fi 
+}
+
+function craine_mainer() {
+    if [[ -e "$1/posmak" ]]; then
+        echo "" >> $raptor_makers  &&  cat "$1/premak" >> $raptor_makers
+    fi 
+}
+
+function craine_finish() {
+    if [[ -e "$1/purmak" ]]; then
+        echo "" >> $raptor_makers  &&  cat "$1/purmak" >> $raptor_makers
+    fi 
+}
+
+## 
+function craine_gitcek() {
+
+    git ls-remote --exit-code $1 > /dev/null 2>&1 
+    if [ $? -eq 0 ]; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+function craine_netter() {
+
+    if ping -c 1 "8.8.8.8" > /dev/null; then
+        echo true
+    else
+        echo false
+    fi
+} 

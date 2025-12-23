@@ -1,0 +1,17 @@
+#!/bin/env bash
+# Configuration data 
+ 
+set -e
+
+## CONFIG GETDATA
+function craine_prescon_geter() {
+    echo "preset config getter"
+}
+
+function craine_proscon_geter() {
+    echo "proset config getter"
+}
+
+function craine_protcon_geter() {
+    echo "protos config getter"
+}

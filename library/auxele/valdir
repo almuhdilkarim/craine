@@ -1,0 +1,91 @@
+#!/bin/env bash
+
+
+set -e
+
+
+
+## VALIDATION
+
+function craine_varauth_noval() {
+    if [[ -z $craine_auth ]];then
+        notifer_error "Missing author parameter"   
+    fi
+}
+
+function craine_varbase_noval() {
+    if [[ -z $craine_base ]];then
+        notifer_error "Missing group parameter"   
+    finstall
+}
+
+function craine_varname_noval() {
+    if [[ -z $craine_name ]];then
+        notifer_error "Missing name parameter"   
+    fi
+}
+
+function craine_varlink_noval() {
+    if [[ -z $craine_link ]];then
+        notifer_error "Missing link parameter"   
+    fi
+}
+
+function craine_varpitc_noval() {
+    if [[ -z $craine_pitc ]];then
+        notifer_error "Missing level parameter"   
+    fi
+}
+
+function craine_vardirs_noval() {
+
+    if [[ ! -d $1 ]]; then
+        notifer_error "target directory does not exist"   
+    fi
+}
+
+function craine_varrepo_noval() {
+    git ls-remote --exit-code $craine_link > /dev/null 2>&1 &&
+
+    if [[ $? != 0 ]]; then
+        notifer_error "remote source does not existed"
+    fi
+}
+
+function craine_varinet_noval() {
+
+    if ping -c 1 "8.8.8.8" > /dev/null; then
+        echo true
+    else
+        notifer_error "connection error, please check internet connection"
+    fi
+
+}
+
+function craine_varrepo_exist() {
+
+    craine_varlink_noval &&
+    git ls-remote --exit-code $craine_link > /dev/null 2>&1 &&
+
+    if [ $? -eq 0 ]; then
+        echo true
+    else
+        echo $?
+    fi
+}
+
+function craine_vardirs_exist() {
+
+    if [[ -d $1 ]]; then
+        notifer_error "installation directory is exist"   
+    fi
+}
+
+function craine_varinet_exist() {
+
+    if ping -c 1 "8.8.8.8" > /dev/null; then
+        echo true
+    else
+        echo false
+    fi
+}

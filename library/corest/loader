@@ -1,15 +1,23 @@
 #!/bin/env bash
+# Craine skeleton loader
 
 set -e
 
-
-## CRAINE ENVI
+## LIBRARY PATHVARS
+craine_assets="$craine_libs/assets"
 craine_corest="$craine_libs/corest"
 craine_config="$craine_libs/config"
+craine_operat="$craine_libs/operat"
+craine_helper="$craine_libs/auxele"
 craine_worker="$HOME/.local/craine"
 
 
-## CRAINE USER
+## ASSET DIRECTORY
+craine_banner="$craine_assets/banner.txt"
+craine_banner="$craine_assets/brands.png"
+
+
+## WORKS DIRECTORY
 craine_protos="$craine_worker/protos"
 craine_preset="$craine_worker/preset"
 craine_proset="$craine_worker/proset"
@@ -17,18 +25,29 @@ craine_prolab="$craine_worker/prolab"
 craine_preloc="$craine_worker/preloc"
 
 
-## CRAINE LIBS
-source "$craine_corest/auxele"
-source "$craine_corest/cordat"
-source "$craine_corest/coredi"
-source "$craine_corest/corins"
-source "$craine_corest/coriso"
-source "$craine_corest/corlab"
-source "$craine_corest/viewde"
-source "$craine_corest/viewda"
+## AUXELE LIBRARY
+source "$craine_helper/clodir"
+source "$craine_helper/colirs"
+source "$craine_helper/cratei"
+source "$craine_helper/dilmir"
+source "$craine_helper/logdir"
+source "$craine_helper/strder"
+source "$craine_helper/valdir"
 
 
-## CRAINE PREP
+## COREST LIBRARY
+source "$craine_corest/preset"
+source "$craine_corest/proset"
+source "$craine_corest/protos"
+
+
+## OPERATION MODE
+source "$craine_operat/graphi"
+source "$craine_operat/termin"
+
+
+
+## USER DIRECTORY
 mkdir -p $craine_worker
 mkdir -p $craine_preset
 mkdir -p $craine_protos
@@ -36,16 +55,13 @@ mkdir -p $craine_prolab
 mkdir -p $craine_preloc
 
 
-## CONFIG PATH
-craine_banner="$craine_config/banner"
+## CONFIG LIBRARY
+source "$craine_config/labrom"
+source "$craine_config/corest"
 
 
-## CONFIG LIBS
-#source "$craine_config/master"
-source "$craine_config/codexs"
 
-
-## LOADER DEFS
+## DEFAULT LOADER  
 craine_preset_basics &&
 craine_proset_basics &&
 craine_protos_basics

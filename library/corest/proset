@@ -1,0 +1,282 @@
+#!/bin/env bash
+
+set -e
+
+
+
+## PROSET 
+function craine_proset_basics() {
+
+    craine_varinet_noval
+
+    local locals_source="$craine_proset/default"
+    local remote_source="$craine_core_gitproset"
+
+    if [[ ! -d $locals_source ]];then
+        craine_gitrepo_clone $remote_source $locals_source
+    fi
+
+    unset locals_source
+    unset locals_source
+}
+
+function craine_proset_clones() {
+
+
+    if [[ $(craine_varrepo_exist) != true ]] ;then
+        notifer_error "remote proset does not existed"
+    fi
+
+
+    local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
+    local target_random="$craine_proset/$random_number"
+
+    notifer_inform "download remote repository data" &&
+    craine_gitrepo_clone $craine_link $target_random &&
+    notifer_inform "remote repoisitory is installed" && 
+
+
+    notifer_inform "parsing current proset metadata"
+    local proset_naming=$(cat "$target_random/envi" | grep "proset_name" | grep -o '"[^"]*"' | sed 's/"//g')
+    local proset_target="$craine_proset/$proset_naming"
+
+
+    if [[ ! -d $proset_target ]];then
+        mv -f $target_random $proset_target
+        notifer_inform "proset installation successfull"
+    else
+        rm -fr $target_random &&
+        notifer_error "$craine_name proset existed"
+    fi
+
+
+    unset proset_naming
+    unset proset_target
+    unset random_number
+    unset target_random
+}
+
+function craine_proset_puller() {
+
+    craine_varname_noval
+
+    local target_proset="$craine_proset/$craine_name"
+
+    if [[ -d $target_proset ]];then
+
+        notifer_inform "checking remote proset resource"
+        craine_gitrepo_pulls $target_proset 
+        notifer_inform "locals proset is already update"
+
+    else
+        notifer_error "Update proset failed, proset does not exist"
+    fi
+
+    unset target_proset
+}
+
+function craine_proset_pusher() {
+
+
+    craine_varname_noval
+
+
+    local target_proset="$craine_proset/$craine_name"
+
+
+    if [[ -d $target_proset ]];then
+
+        notifer_inform "checking remote proset resource"
+        craine_gitrepo_pushs $target_proset 
+        notifer_inform "remote proset is already update"
+
+    else
+        notifer_error "Update proset failed, remote proset does not exist"
+    fi
+
+    unset target_proset
+}
+
+function craine_proset_syncro() {
+
+    local config_source=$1/envi
+    local proset_source=$craine_link
+    local proset_author=${craine_auth,,}
+    local protos_naming=${craine_name,,}
+
+
+    echo 'proset_auth="'$proset_author'"' >  $config_source &&
+    echo 'proset_name="'$protos_naming'"' >> $config_source &&
+    echo 'proset_repo="'$proset_source'"' >> $config_source &&
+
+
+    unset config_source
+    unset proset_source
+    unset proset_author
+    unset protos_naming
+}
+
+function craine_proset_create() {
+
+    craine_varauth_noval
+    craine_varname_noval
+    
+
+    local proset_naming=${craine_name,,}
+    local locals_source="$craine_proset/default"
+    local target_source="$craine_proset/$proset_naming"
+    local remote_source=$craine_link
+
+    craine_vardirs_exist $target_source
+
+
+    if [[ $(craine_varinet_exist) == true ]]&&[[ $(craine_varrepo_exist) == true ]] ;then
+
+
+        notifer_inform "cloning source from remote data" &&
+        craine_gitrepo_clone $craine_link $target_source &&
+
+        notifer_inform "prepare sources for proset data" &&
+        rm -fr $target_source/*
+        cp -fr $locals_source/* $target_source
+
+        notifer_inform "synchronizing local proset data" &&
+        craine_proset_syncro $target_source &&
+
+        notifer_inform "synchronizing proset to remotes" &&
+        craine_gitrepo_pushs $target_source
+        notifer_inform "remote proset build succesfully" 
+
+
+    elif [[ -d $locals_source ]];then
+
+
+        notifer_inform "creating local proset directory" &&
+        cp -fr $locals_source $target_source &&
+
+        notifer_inform "synchronizing local proset data" &&
+        craine_proset_syncro $target_source &&
+
+        notifer_inform "pure remote data configurations" &&
+        rm -fr $target_source/.git
+        notifer_inform "locals proset build succesfully" 
+    
+
+    else
+
+        notifer_error "default proset not existed"
+
+    fi
+
+
+    unset proset_naming
+    unset locals_source
+    unset target_source    
+}
+
+function craine_proset_resets() {
+
+    craine_varname_noval
+
+    local locals_source="$craine_proset/default/config"
+    local target_source="$craine_proset/$craine_name"
+
+
+    rm -fr $target_source/config
+    cp -fr $locals_source $target_source
+
+    notifer_inform "checking remote proset resource"
+    craine_gitrepo_pushs $target_source &&
+    notifer_inform "proset module reset succesfully"
+
+
+    unset locals_source
+    unset target_source
+}
+
+function craine_proset_delete() {
+
+    craine_varname_noval
+   
+
+    local proset_naming=${craine_name,,}
+    local target_source="$craine_proset/$proset_naming"
+
+
+    craine_vardirs_noval $target_source
+
+
+    local remote_source=$(cat "$target_source/envi" | grep "proset_repo" | grep -o '"[^"]*"' | sed 's/"//g')
+
+
+    if [[ -n $remote_source ]];then
+
+        notifer_inform "removing prosets data on locals" &&
+        for proset_target in $target_source/*; do
+            test -d $proset_target && rm -fr $proset_target
+        done
+
+        rm $target_source/envi
+
+        notifer_inform "removing prosets data at remote" &&
+        craine_gitrepo_pushs $target_source
+    fi
+    
+    test -d $target_source && rm -fr $target_source
+
+    unset proset_target
+    unset proset_naming
+    unset target_source
+    unset remote_source
+}
+
+function craine_proset_upgrad() {
+    
+    for proset_target in $craine_proset/*; do
+        if [[ -d $proset_target ]];then
+
+            local proset_naming=$(basename "$proset_target")
+            notifer_inform "prepare update $proset_naming proset"
+            craine_gitrepo_pulls $proset_target
+            notifer_inform "$proset_naming proset already update"
+        fi
+    done
+
+    unset $proset_target
+    unset $proset_naming
+}
+
+function craine_proset() {
+
+    if [[ -z $craine_mode ]];then
+        notifer_error "missing operation mode params"   
+    fi
+
+    if [[ $craine_mode == "pull" ]];then
+        craine_proset_puller
+    fi
+
+    if [[ $craine_mode == "push" ]];then
+        craine_proset_pusher
+    fi
+
+    if [[ $craine_mode == "clone" ]];then
+        craine_proset_clones
+    fi
+
+    if [[ $craine_mode == "reset" ]];then
+        craine_proset_resets
+    fi
+
+    if [[ $craine_mode == "create" ]];then
+        craine_proset_create
+    fi
+
+    if [[ $craine_mode == "delete" ]];then
+        craine_proset_delete
+    fi
+
+    if [[ $craine_mode == "upgrade" ]];then
+        craine_proset_upgrad
+    fi
+}

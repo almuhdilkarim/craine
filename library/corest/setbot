@@ -1,4 +1,5 @@
 #!/bin/bash
+# installation script generator
 
 set -e 
 
@@ -9,5 +10,8 @@ function craine_builder() {
 
     ## LOADER LIBS
     craine_preset_clone
+
+    ## 
+
     echo starting build distro
 }

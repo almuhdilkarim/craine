@@ -1,0 +1,303 @@
+#!/bin/env bash
+# Preset main process
+set -e
+
+function craine_preset_enviro() {
+    echo "load environtment"
+}
+
+function craine_preset_basics() {
+
+    craine_varinet_noval
+
+    local locals_source="$craine_preset/default"
+    local remote_source=$craine_core_gitpreset
+
+    if [[ ! -d $target_preset ]];then
+        craine_gitrepo_clone $remote_source $locals_source
+    fi
+
+    unset locals_source
+    unset remote_source
+}
+
+function craine_preset_clones() {
+
+    craine_varinet_noval
+    craine_varrepo_noval
+
+    local remote_source=$craine_link
+    local locals_source=$(craine_basename_link)
+
+    if [[ ! -d $locals_source ]];then
+        craine_gitrepo_clone $remote_source $locals_source
+    fi
+
+    unset remote_source
+    unset locals_source
+}
+
+function craine_preset_puller() {
+
+    craine_varname_noval
+
+    local locals_source="$craine_preset/$craine_name"
+
+    craine_gitrepo_pulls $locals_source 
+
+    unset locals_source
+}
+
+function craine_preset_releas() {
+    echo 'preset update major'
+}
+
+function craine_preset_update() {
+    echo 'preset update feature'
+}
+
+function craine_preset_patchs() {
+
+    craine_varname_noval
+
+    local locals_source="$craine_preset/$craine_name"
+
+    craine_gitrepo_patch $locals_source 
+
+    unset locals_source
+}
+
+function craine_preset_syncro() {
+
+
+    local preset_naming=${craine_name^}
+    local preset_unique=${craine_name,,}
+    local target_source=$1
+    local config_source=$1/conf/usr/lib/os-release
+
+
+    notifer_inform "distros presets synchronization"
+    sed -i '7d' "$target_source/envi" &&
+    sed -i '7i\preset_repo="'$craine_link'"' "$target_source/envi" &&
+    sed -i "s/"DefaultOS"/$preset_naming/g" "$target_source/envi"  &&
+    sed -i "s/"defaultos"/$preset_unique/g" "$target_source/envi" 
+
+
+    notifer_inform "distros release synchronization"
+    sed -i "s/"distrouniq"/$preset_unique/g" "$config_source" &&
+    sed -i "s/"DISTRONAME"/$preset_naming/g" "$config_source" 
+
+
+    unset preset_naming
+    unset preset_unique
+    unset target_source
+    unset config_source
+}
+
+function craine_preset_create() {
+
+    craine_varname_noval
+
+
+    local preset_unique=${craine_name,,}
+    local locals_source="$craine_preset/default"
+    local target_source="$craine_preset/$preset_unique"
+    local remote_source=$craine_link
+
+
+    craine_vardirs_exist $target_source
+
+
+    if [[ $(craine_varinet_exist) == true ]]&&[[ $(craine_varrepo_exist) == true ]] ;then
+
+
+        notifer_inform "cloning source from remote data" &&
+        craine_gitrepo_clone $craine_link $target_source &&
+
+        notifer_inform "prepare sources for preset data" &&
+        rm -fr $target_source/*
+        cp -fr $locals_source/* $target_source
+
+        notifer_inform "synchronizing local preset data" &&
+        craine_preset_syncro $target_source &&
+
+        notifer_inform "synchronizing preset to remotes" &&
+        craine_gitrepo_pushs $target_source
+        notifer_inform "remote preset build succesfully" 
+
+
+    elif [[ -d $locals_source ]];then
+
+
+        notifer_inform "creating local preset directory" &&
+        cp -fr $locals_source $target_source &&
+
+        notifer_inform "synchronizing local preset data" &&
+        craine_preset_syncro $target_source &&
+
+        notifer_inform "pure remote data configurations" &&
+        rm -fr $target_source/.git
+        notifer_inform "locals preset build succesfully" 
+    
+
+    else
+
+        notifer_error "default preset not existed"
+
+    fi
+
+    unset preset_unique
+    unset locals_source
+    unset target_source    
+}
+
+function craine_preset_resets() {
+
+    craine_varname_noval
+
+    local locals_source="$craine_preset/default"
+    local target_source="$craine_preset/$craine_name"
+
+
+    for preset_target in $target_source/*; do
+
+        if [[ -d $preset_target ]];then
+
+            local preset_naming=$(basename "$preset_target")
+
+            notifer_inform "removed preset module $preset_naming"
+            rm -fr $preset_target
+
+            notifer_inform "install preset module $preset_naming"
+            cp -fr $locals_source/$preset_naming $preset_target
+        fi
+    done
+
+    notifer_inform "checking remote preset resource"
+    craine_gitrepo_pushs $target_source &&
+    notifer_inform "preset module reset succesfully"
+
+
+    unset preset_naming
+    unset preset_target
+    unset locals_source
+    unset target_source
+}
+
+function craine_preset_delete() {
+
+
+    craine_varname_noval
+   
+
+    local preset_naming=${craine_name,,}
+    local target_source="$craine_preset/$preset_naming"
+
+
+    craine_vardirs_noval $target_source
+
+
+    local remote_source=$(cat "$target_source/envi" | grep "preset_repo" | grep -o '"[^"]*"' | sed 's/"//g')
+
+
+    if [[ -n $remote_source ]];then
+
+        notifer_inform "removing presets data on locals" &&
+        for preset_target in $target_source/*; do
+            test -d $preset_target && rm -fr $preset_target
+        done
+
+        rm $target_source/envi
+
+        notifer_inform "removing presets data at remote" &&
+        craine_gitrepo_pushs $target_source
+    fi
+    
+    test -d $target_source && rm -fr $target_source
+
+    unset preset_target
+    unset preset_naming
+    unset target_source
+    unset remote_source
+}
+
+function craine_preset_upgrad() {
+
+    for preset_target in $craine_preset/*; do
+        if [[ -d $preset_target ]];then
+
+            local preset_naming=$(basename "$preset_target")
+            notifer_inform "prepare update $preset_naming preset"
+            craine_gitrepo_pulls $preset_target
+            notifer_inform "$preset_naming preset already update"
+        fi
+    done
+
+    unset $preset_target
+    unset $preset_naming
+}
+
+function craine_preset_purify() {
+    echo "preset purify"
+}
+
+function craine_preset() {
+
+    if [[ -z $craine_mode ]];then
+        notifer_error "Missing operation mode params"   
+    fi
+
+    if [[ $craine_mode == "release" ]];then
+        craine_preset_enviro
+        craine_preset_releas
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "update" ]];then
+        craine_preset_enviro
+        craine_preset_update
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "patch" ]];then
+        craine_preset_enviro
+        craine_preset_patchs
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "pull" ]];then
+        craine_preset_enviro
+        craine_preset_puller
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "clone" ]];then
+        craine_preset_enviro
+        craine_preset_clones
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "reset" ]];then
+        craine_preset_enviro
+        craine_preset_resets
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "create" ]];then
+        craine_preset_create
+        craine_preset_enviro
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "delete" ]];then
+        craine_preset_enviro
+        craine_preset_delete
+        craine_preset_purify
+    fi
+
+    if [[ $craine_mode == "upgrade" ]];then
+        craine_preset_enviro
+        craine_preset_upgrad
+        craine_preset_purify
+    fi
+}

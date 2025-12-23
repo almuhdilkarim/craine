@@ -6,3 +6,7 @@ set -e
 craine_core_gitpreset="https://github.com/almuhdilkarim/preset.git"
 craine_core_gitproset="https://github.com/almuhdilkarim/proset.git"
 craine_core_gitprotos="https://github.com/almuhdilkarim/protos.git"
+
+
+## DEFAULT REPOSIT
+craine_labs_gitspace="https://github.com/almuhdilkarim/lab001.git"

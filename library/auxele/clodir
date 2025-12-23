@@ -1,0 +1,63 @@
+#!/bin/env bash
+# Git operation
+
+
+set -e
+
+
+function craine_gitrepo_clone() {
+    
+    craine_loging_inform "preparing remote sources meta"
+    git clone $1 $2 > /dev/null 2>&1 &&
+
+    if [ $? -eq 0 ]; then
+        craine_loging_inform "remote source directory clone"
+    else
+        craine_loging_errors "failed to clone remote source"
+    fi
+}
+
+function craine_gitrepo_major() {
+    echo "push minior"
+}
+
+function craine_gitrepo_minor() {
+    echo "push minior"
+}
+
+function craine_gitrepo_patch() {
+
+    if [[ -d $1 ]]; then
+
+        craine_loging_inform "preparing locals source data" &&
+        cd $1 && git add . > /dev/null 2>&1  && 
+
+        craine_loging_inform "commiting locals source data" &&
+        git commit -m "first commit" > /dev/null 2>&1
+    fi
+
+    if [[ -d "$1/.git"]]; then
+
+        craine_loging_inform "push patchs to remote source" &&
+        git push > /dev/null 2>&1 
+    fi
+
+    unset $1
+}
+
+
+function craine_gitrepo_pulls() {
+
+    if [[ -d $1 ]]; then
+
+        craine_loging_inform "preparing remote sources meta" && cd $1 &&
+        craine_loging_inform "remote source directory clone" && git pull > /dev/null 2>&1 
+    
+    else
+
+        craine_loging_errors "clone failed, invalid remote source"
+
+    fi
+
+    unset $1
+}
