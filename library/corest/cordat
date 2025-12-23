@@ -7,19 +7,19 @@ set -e
 function craine_preset_basics() {
 
     local target_preset="$craine_preset/default"
-    local remote_preset="$craine_core_gitpreset"
+    local remote_preset=$craine_core_gitpreset
 
     if [[ ! -d $target_preset ]]&&[[ $( craine_varinet_exist ) == true ]];then
         notifer_inform "check default preset directory"
         craine_gitrepo_clone $remote_preset $target_preset
         notifer_inform "default preset directory ready"
-    elif [[ ! -d $target_preset ]]; then
+    elif [[ $( craine_varinet_exist ) == false ]]; then
         notifer_warner "Connection error, please connect network for the first session"
     fi
 
     unset target_preset
     unset remote_preset
-}ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHV1BbDrmtsGugZQvR5sf6rnncQHmW4yabFhl89fH+tt null@temp.com
+}
 
 function craine_preset_clones() {
 
@@ -312,7 +312,7 @@ function craine_proset_basics() {
         notifer_inform "check default proset directory"
         craine_gitrepo_clone $remote_proset $target_proset
         notifer_inform "default proset directory ready"
-    elif [[ ! -d $target_proset ]]; then
+    elif [[ $( craine_varinet_exist ) == false ]]; then
         notifer_error "Connection error, please connect network for the first session"
     fi
 
@@ -595,7 +595,7 @@ function craine_protos_basics() {
         notifer_inform "check default protos directory"
         craine_gitrepo_clone $remote_protos $target_protos
         notifer_inform "default protos directory ready"
-    elif [[ ! -d $target_protos ]]; then
+    elif [[ $( craine_varinet_exist ) == false ]]; then
         notifer_error "Connection error, please connect network for the first session"
     fi
 

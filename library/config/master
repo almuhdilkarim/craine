@@ -3,6 +3,6 @@
 set -e
 
 ## GLOBAL PROTOCOL
-default_github_distro="https://github.com/yuros-packprotoc/protos-"
-default_gitlab_distro=""
-default_locals_distro=""
+#default_github_distro="https://github.com/yuros-packprotoc/protos-"
+#default_gitlab_distro=""
+#default_locals_distro=""

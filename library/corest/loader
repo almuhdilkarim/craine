@@ -41,14 +41,11 @@ craine_banner="$craine_config/banner"
 
 
 ## CONFIG LIBS
-source "$craine_config/master"
+#source "$craine_config/master"
 source "$craine_config/codexs"
 
 
 ## LOADER DEFS
-echo preset
-craine_preset_basics
-echo proset
-craine_proset_basics
-echo protos
+craine_preset_basics &&
+craine_proset_basics &&
 craine_protos_basics

@@ -4,5 +4,5 @@ set -e
 
 ## DEFAULT REPOSIT
 craine_core_gitpreset="https://github.com/almuhdilkarim/preset.git"
-craine_core_gitproses="https://github.com/almuhdilkarim/proset.git"
+craine_core_gitproset="https://github.com/almuhdilkarim/proset.git"
 craine_core_gitprotos="https://github.com/almuhdilkarim/protos.git"
