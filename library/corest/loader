@@ -46,6 +46,9 @@ source "$craine_config/codexs"
 
 
 ## LOADER DEFS
+echo preset
 craine_preset_basics
+echo proset
 craine_proset_basics
+echo protos
 craine_protos_basics

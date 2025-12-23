@@ -7,14 +7,14 @@ set -e
 function craine_preset_basics() {
 
     local target_preset="$craine_preset/default"
-    local remote_preset="https://github.com/almuhdilkarim/presets.git"
+    local remote_preset="$craine_core_gitpreset"
 
     if [[ ! -d $target_preset ]]&&[[ $( craine_varinet_exist ) == true ]];then
         notifer_inform "check default preset directory"
         craine_gitrepo_clone $remote_preset $target_preset
         notifer_inform "default preset directory ready"
     elif [[ ! -d $target_preset ]]; then
-        notifer_error "Connection error, please connect network for the first session"
+        notifer_warner "Connection error, please connect network for the first session"
     fi
 
     unset target_preset
@@ -306,7 +306,7 @@ function craine_preset() {
 function craine_proset_basics() {
 
     local target_proset="$craine_proset/default"
-    local remote_proset="https://github.com/almuhdilkarim/proset.git"
+    local remote_proset="$craine_core_gitproset"
 
     if [[ ! -d $target_proset ]]&&[[ $( craine_varinet_exist ) == true ]];then
         notifer_inform "check default proset directory"
@@ -588,7 +588,7 @@ function craine_protos_basics() {
 
 
     local target_protos="$craine_protos/default"
-    local remote_protos="https://github.com/almuhdilkarim/protos.git"
+    local remote_protos="$craine_core_gitprotos"
 
 
     if [[ ! -d $target_protos ]]&&[[ $( craine_varinet_exist ) == true ]];then

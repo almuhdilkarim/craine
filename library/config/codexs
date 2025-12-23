@@ -2,31 +2,7 @@
 
 set -e
 
-## GLOBAL PROTOCOL
-github_protoc_global="https://github.com/yuros-packprotoc/protos-"
-gitlab_protoc_global=""
-locals_protoc_global=""
-
-
-## INTERN PROTOCOL
-github_protoc_intern="https://github.com/codex-blackbirds/protos-"
-gitlab_protoc_intern=""
-locals_protoc_intern=""
-
-
-## PRIVAT PROTOCOL
-protoc_github_unseen="https://github.com/codex-blackarows/protos-"
-protoc_gitlab_unseen=""
-protoc_locals_unseen=""
-
-
-## PRESET DEFAULTS
-github_preset="https://github.com/yuros-packtproto/presets"
-gitlab_preset=""
-locals_preset=""
-
-
-## TESTER ROOMLAB
-github_roomer="https://github.com/yuros-learncamp/tester-"
-gitlab_roomer=""
-locals_roomer=""
+## DEFAULT REPOSIT
+craine_core_gitpreset="https://github.com/almuhdilkarim/preset.git"
+craine_core_gitproses="https://github.com/almuhdilkarim/proset.git"
+craine_core_gitprotos="https://github.com/almuhdilkarim/protos.git"
