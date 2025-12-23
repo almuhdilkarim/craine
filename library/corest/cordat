@@ -19,7 +19,7 @@ function craine_preset_basics() {
 
     unset target_preset
     unset remote_preset
-}
+}ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHV1BbDrmtsGugZQvR5sf6rnncQHmW4yabFhl89fH+tt null@temp.com
 
 function craine_preset_clones() {
 
