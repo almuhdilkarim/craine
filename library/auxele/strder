@@ -25,7 +25,7 @@ function craine_stringt_strip() {
 }
 
 function craine_string_allcap() {
-    echo "string to all capital"
+    echo "$1" | sed -E 's/(^|\s+)([a-z])/\1\U\2/g'
 }
 
 function craine_string_naming() {
@@ -58,8 +58,7 @@ function craine_locals_random() {
 }
 
 
-function craine_basename_link() {
-    local basename=$(basename "$$craine_link")
-    echo "$1/$$basename"
-    unset $basename
+function craine_basename_path() {
+    local dirname=$(basename $craine_link | sed 's/.git//g' )
+    echo "$dirname"
 }

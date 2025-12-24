@@ -26,8 +26,9 @@ craine_preloc="$craine_worker/preloc"
 
 
 ## AUXELE LIBRARY
-source "$craine_helper/clodir"
-source "$craine_helper/colirs"
+source "$craine_helper/config"
+source "$craine_helper/colors"
+source "$craine_helper/opegit"
 source "$craine_helper/cratei"
 source "$craine_helper/dilmir"
 source "$craine_helper/logdir"

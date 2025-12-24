@@ -2,8 +2,19 @@
 # Preset main process
 set -e
 
+function craine_preset_enpath() {
+    local locals_resource="$craine_preset/$craine_name"
+
+    echo "path declaration"
+}
+
 function craine_preset_enviro() {
-    echo "load environtment"
+
+    craine_config_getval "$craine_preset/$craine_name/envi"
+
+    distro_name=$( craine_string_allcap $preset_spreading )
+
+    echo "$distro_name"
 }
 
 function craine_preset_basics() {
@@ -11,10 +22,10 @@ function craine_preset_basics() {
     craine_varinet_noval
 
     local locals_source="$craine_preset/default"
-    local remote_source=$craine_core_gitpreset
+    local remote_source="$craine_core_gitpreset"
 
-    if [[ ! -d $target_preset ]];then
-        craine_gitrepo_clone $remote_source $locals_source
+    if [[ ! -d $locals_source ]];then
+        craine_gitrepo_clone "$remote_source" "$locals_source"
     fi
 
     unset locals_source
@@ -26,12 +37,12 @@ function craine_preset_clones() {
     craine_varinet_noval
     craine_varrepo_noval
 
-    local remote_source=$craine_link
-    local locals_source=$(craine_basename_link)
+    local preset_naming=$(craine_basename_path)
+    local remote_source="$craine_link"
+    local locals_source="$craine_preset/$preset_naming"
 
-    if [[ ! -d $locals_source ]];then
-        craine_gitrepo_clone $remote_source $locals_source
-    fi
+    test -d "$locals_source" && craine_loging_errors "$preset_naming preset is already exist"
+    craine_gitrepo_clone "$remote_source" "$locals_source"
 
     unset remote_source
     unset locals_source
@@ -43,7 +54,7 @@ function craine_preset_puller() {
 
     local locals_source="$craine_preset/$craine_name"
 
-    craine_gitrepo_pulls $locals_source 
+    craine_gitrepo_pulls "$locals_source"
 
     unset locals_source
 }
@@ -62,12 +73,12 @@ function craine_preset_patchs() {
 
     local locals_source="$craine_preset/$craine_name"
 
-    craine_gitrepo_patch $locals_source 
+    craine_gitrepo_patch "$locals_source" 
 
     unset locals_source
 }
 
-function craine_preset_syncro() {
+function craine_preset_writer() {
 
 
     local preset_naming=${craine_name^}
@@ -119,7 +130,7 @@ function craine_preset_create() {
         cp -fr $locals_source/* $target_source
 
         notifer_inform "synchronizing local preset data" &&
-        craine_preset_syncro $target_source &&
+        craine_preset_writer $target_source &&
 
         notifer_inform "synchronizing preset to remotes" &&
         craine_gitrepo_pushs $target_source

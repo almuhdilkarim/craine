@@ -15,3 +15,13 @@ function craine_proscon_geter() {
 function craine_protcon_geter() {
     echo "protos config getter"
 }
+
+function craine_config_keyfil() {
+
+    test -f $1 && grep -E '[a-zA-Z0-9_]*=' "$1" | grep -E -v '^#' | cut -d'=' -f1 | awk '{print $1}'
+}
+
+function craine_config_getval() {
+    
+    test -f $1 && source "$1" 
+}
