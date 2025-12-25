@@ -142,7 +142,9 @@ function craine_preset_create() {
         craine_locals_clones "$craine_locpre" "$preset_random"
     fi
 
+    craine_preset_writer $random_enviro &&
     craine_preset_editor $random_enviro &&
+    craine_preset_tokens $random_enviro &&
     craine_preset_getenv $random_enviro &&
 
     craine_remote_clones $preset_remote $preset_locals &&
