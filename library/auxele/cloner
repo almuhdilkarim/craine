@@ -1,0 +1,138 @@
+ #!/bin/env bash
+# Git operation
+
+set -e
+
+## HELPERS
+function craine_envirepo_keys() {
+    local local_path=$(craine_stringt_strip "$preset_spreading")
+    cat "$craine_tokens/$proc/$local_path"
+}
+
+function craint_envirepo_link() {
+
+    local envi="$1"
+    local keys=$(craine_envirepo_keys)
+    local host=$(craine_string_geturi $envi)
+    local name=$(craine_string_getlas $envi)
+    local user=$(craine_string_gettwo $envi)
+
+    gitrepo_link="https://${user}:${keys}@${host}/${user}/${name}"
+}
+
+function craine_tokens_invoke() {
+
+    source $locals_enviro && craint_envirepo_link "$repository_based"
+    git remote set-url origin "$gitrepo_link"
+}
+
+function craine_tokens_revoke() {
+
+    git remote set-url origin "$repository_based"
+}
+
+
+## PROCESS
+function craine_takerepo_pure() {
+    echo "pure repo data"
+}
+
+function craine_remote_clones() {
+    
+    local remote_source=$1
+    local locals_source=$2
+
+    if [[ ! -d $locals_source ]]; then
+        craine_loging_inform "preparing remote sources meta"
+        git clone $remote_source $locals_source > /dev/null 2>&1
+
+        if [ $? -eq 0 ]; then
+            craine_loging_inform "remote source directory clone"
+        else
+            craine_loging_errors "failed to clone remote source"
+        fi
+    else
+        rm -fr $locals_source &&
+        craine_loging_errors "conflicting name with existing local data"
+    fi
+
+    unset remote_source
+    unset locals_source
+}
+
+function craine_locals_clones() {
+
+    craine_loging_inform "preparing locals sources meta"
+    cp -fr $1 $2
+
+    if [ $? -eq 0 ]; then
+        craine_loging_inform "locals source directory clone"
+    else
+        craine_loging_errors "failed to clone locals source"
+    fi
+}
+
+function craine_locals_movers() {
+
+    local master_source=$1
+    local target_source=$2
+
+    if [[ -d $target_source ]]; then
+
+        craine_loging_inform "preparing locals sources meta"
+        cp -fr $master_source/* $target_source
+
+        if [ $? -eq 0 ]; then
+            craine_loging_inform "locals source directory clone"
+        else
+            craine_loging_errors "failed to clone locals source"
+        fi
+
+        rm -fr $master_source
+
+    else
+
+        rm -fr $master_source &&
+        craine_loging_errors "local directory not existing"
+    fi
+}
+
+function craine_gitrepo_major() {
+    echo "push minior"
+}
+
+function craine_gitrepo_minor() {
+    echo "push minior"
+}
+
+function craine_gitrepo_patch() {
+
+    if [[ -d "$locals_source" ]]; then
+
+        cd $locals_source && craine_tokens_invoke
+        craine_loging_inform "preparing locals source data" && git add . > /dev/null 2>&1 
+
+        if [[ -n "$(git status --porcelain)" ]]; then
+            craine_loging_inform "commiting locals source data" && 
+            git commit -m "first commit" > /dev/null 2>&1
+        fi
+     
+        craine_loging_inform "push patchs to remote source" && 
+        git push > /dev/null 2>&1 && craine_tokens_revoke
+    fi
+}
+
+function craine_gitrepo_pulls() {
+
+    if [[ -d $1 ]]; then
+
+        craine_loging_inform "preparing remote sources meta" && cd $1 &&
+        craine_loging_inform "remote source directory clone" && git pull > /dev/null 2>&1 
+    
+    else
+
+        craine_loging_errors "clone failed, invalid remote source"
+    fi
+
+    unset $1
+}

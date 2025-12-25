@@ -25,3 +25,9 @@ function craine_config_getval() {
     
     test -f $1 && source "$1" 
 }
+
+function craine_config_editor() {
+
+    test -f $1 && $EDITOR $1
+    
+}

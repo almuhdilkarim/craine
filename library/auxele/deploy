@@ -1,23 +1,40 @@
-#!/bin/bash
+#!/bin/env bash
 
 set -e
 
+## FILE MANIPULATION
+function craine_merger_folder() {
+    echo "directory for to merge"
+}
 
+function craine_merger_filers() {
+    echo "files force to merge"
+}
 
+## FUNCTIONS CRAETER
+function craine_makefunc_envi() {
+    echo "create envi function"
+}
 
+function craine_makefunc_prep() {
+    echo "create envi function"
+}
 
+function craine_makefunc_main() {
+    echo "create envi function"
+}
 
+function craine_makefunc_post() {
+    echo "create envi function"
+}
 
+function craine_makefunc_make() {
+    echo "create envi function"
+}
 
-
-
-
-
-
-
-
-
-
+function craine_makefunc_done() {
+    echo "create envi function"
+}
 
 ## 
 function craine_enviro() {

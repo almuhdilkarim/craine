@@ -62,6 +62,7 @@ function craine_varinet_noval() {
 
 }
 
+
 function craine_varrepo_exist() {
 
     craine_varlink_noval &&
@@ -74,12 +75,20 @@ function craine_varrepo_exist() {
     fi
 }
 
-function craine_vardirs_exist() {
+function craine_vardirs_noval() {
 
     if [[ -d $1 ]]; then
-        craine_loging_errors "installation directory is exist"   
+        craine_loging_errors "installation directory is exist" 
     fi
 }
+
+function craine_varpres_noval() {
+
+    if [[ -d "$craine_preset/$craine_name" ]]; then
+        craine_loging_errors "installation directory is exist" 
+    fi
+}
+
 
 function craine_varinet_exist() {
 
@@ -88,4 +97,13 @@ function craine_varinet_exist() {
     else
         echo false
     fi
+}
+
+
+function craine_regists_token() {
+    echo "token registraion"
+}
+
+function craine_revokes_token() {
+    echo "token revok"
 }

@@ -16,12 +16,19 @@ function craine_stringt_lower() {
     echo "string to lower"
 }
 
-function craine_stringt_slash() {
-    echo "string to slash"
+function craine_stringt_uncor() {
+
+    local strep="${1// /_}"     # replace all spaces with underscore        
+    local strep="${strep//-/_}" # replace all hypens with underscore
+    echo ${strep,,}
 }
 
 function craine_stringt_strip() {
-    echo "string to slash"
+
+    local strep="${1// /-}"     # replace all spaces with hyphens        
+    local strep="${strep//_/-}" # replace all underscore with hyphens
+    echo ${strep,,}
+
 }
 
 function craine_string_allcap() {
@@ -40,6 +47,18 @@ function craine_string_varian() {
     echo "string to vars"
 }
 
+function craine_string_geturi() {
+    echo "$1" | cut -d/ -f3
+}
+
+function craine_string_getlas() {
+    basename "$1"
+}
+
+function craine_string_gettwo() {
+    basename "$(dirname "$1")"
+}
+
 function craine_string_append() {
     echo "replace string on file"
 }
@@ -51,10 +70,12 @@ function craine_lining_append() {
 function craine_locals_random() {
 
     local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
-    local locals_source="$1/$random_number"
-    echo $locals_source
+
+    preset_random="$craine_preset/$random_number"
+    proset_random="$craine_proset/$random_number"
+    protos_random="$craine_protos/$random_number"
+
     unset random_number
-    unset locals_source
 }
 
 
