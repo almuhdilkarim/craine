@@ -27,6 +27,7 @@ function craine_stringt_strip() {
 
     local strep="${1// /-}"     # replace all spaces with hyphens        
     local strep="${strep//_/-}" # replace all underscore with hyphens
+    
     echo ${strep,,}
 
 }
@@ -35,8 +36,16 @@ function craine_string_allcap() {
     echo "$1" | sed -E 's/(^|\s+)([a-z])/\1\U\2/g'
 }
 
-function craine_string_naming() {
-    echo "string to name"
+function craine_string_pather() {
+
+    local strep=${1,,}                                     # string to lower
+    local strep=$( echo "${strep}" | sed 's/os//g' )       # remove os string
+    local strep=$( echo "${strep}" | sed 's/linux//g' )    # remove linux string
+    local strep=$( echo "${strep}" | sed 's/system//g' )   # remove system string
+    local strep="${strep//-/}"                             # replace all spaces with hyphens        
+    local strep="${strep//_/}"                             # replace all underscore with hyphens
+    echo ${strep}
+    
 }
 
 function craine_string_unique() {

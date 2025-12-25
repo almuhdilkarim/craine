@@ -19,7 +19,8 @@ function craine_preset_getenv() {
 
 function craine_preset_setenv() {
 
-    locals_source="$craine_preset/$craine_name"
+    local pathers=$( craine_string_pather $craine_name )
+    locals_source="$craine_preset/$pathers"
     locals_enviro="$locals_source/envi"
     random_enviro="$preset_random/envi"
     remote_source="$craine_link"
@@ -123,13 +124,15 @@ function craine_preset_editor() {
     test -f $1 && $EDITOR $1
 }
 
+function craine_preset_tokens() {
+    echo "register deployment tokens"
+}
+
 function craine_preset_create() {
 
     craine_varname_noval
-    craine_varpres_noval
+    craine_dirpres_noval
     craine_preset_setenv
-    
-    echo "reach"
     
     if [[ $(craine_varinet_exist) == true ]];then
         craine_remote_clones "$craine_gitpre" "$preset_random"

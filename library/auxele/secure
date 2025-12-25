@@ -82,9 +82,9 @@ function craine_vardirs_noval() {
     fi
 }
 
-function craine_varpres_noval() {
+function craine_dirpres_noval() {
 
-    if [[ -d "$craine_preset/$craine_name" ]]; then
+    if [[ -d "$locals_source" ]]; then
         craine_loging_errors "installation directory is exist" 
     fi
 }
