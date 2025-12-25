@@ -30,10 +30,10 @@ function craine_preset_basics() {
     craine_varinet_noval
 
     local locals_source="$craine_preset/default"
-    local remote_source="$craine_core_gitpreset"
+    local remote_source="$craine_gitpre"
 
     if [[ ! -d $locals_source ]];then
-        craine_gitrepo_clone "$remote_source" "$locals_source"
+        craine_remote_clones "$remote_source" "$locals_source"
     fi
 
     unset locals_source

@@ -1,11 +1,7 @@
 #!/bin/env bash
-# Autoload function
-
+# autoload function
 
 set -e
-
-## CRAINE DIRECTORY
-mkdir -p $craine_tokens
 
 
 ## WORKER DIRECTORY
@@ -14,13 +10,17 @@ mkdir -p $craine_preset
 mkdir -p $craine_protos
 mkdir -p $craine_prolab
 mkdir -p $craine_preloc
-
-## TOKENS DIRECTORY
+mkdir -p $craine_tokens
 mkdir -p $craine_tokens/preset
 mkdir -p $craine_tokens/proset
 mkdir -p $craine_tokens/protos
 
-## DEFAULT LOADER  
+
+## WORKER CONFIGURE
+cp -n $craine_config/config $craine_precon
+
+
+## CRAINE DAEOMONIZ  
 craine_preset_basics &&
 craine_proset_basics &&
 craine_protos_basics &&

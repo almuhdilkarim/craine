@@ -9,10 +9,10 @@ function craine_protos_basics() {
     craine_varinet_noval
 
     local locals_source="$craine_protos/default"
-    local remote_source="$craine_core_gitprotos"
+    local remote_source="$craine_gitprt"
 
     if [[ ! -d $locals_source ]];then
-        craine_gitrepo_clone $remote_source $locals_source
+        craine_remote_clones $remote_source $locals_source
     fi
 
     unset locals_source
