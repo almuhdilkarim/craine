@@ -1,4 +1,0 @@
-#!/bin/bash
-# build complete distro
-
-set -e

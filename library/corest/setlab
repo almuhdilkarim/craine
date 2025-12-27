@@ -1,6 +1,0 @@
-#!/bin/bash
-# testing lab generator
-
-function craine_testers() {
-    echo "craine test"
-}

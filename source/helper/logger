@@ -42,7 +42,7 @@ function craine_notif_stage() {
     ((stage_num++))
 }
 
-function craine_loging_abort() {
+function craine_notif_abort() {
     echo -e "\t${red}┌─────────────────────────────────────────────────────┐"${reset}
     echo -e "\t${red}│    / \                                              │"${reset}
     echo -e "\t${red}│   / | \     CRAINE ERROR                            │"${reset}

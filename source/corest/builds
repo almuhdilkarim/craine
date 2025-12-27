@@ -308,3 +308,35 @@ function craine_maker() {
         exit 0
     fi
 }
+
+
+## IMAGE
+function craine_builds_images() {
+    echo "build images"
+}
+
+## SITES
+function craine_builds_websit() {
+    echo "build website"
+}
+
+## TESTS
+function craine_builds_labrom() {
+    echo "build labroom"
+}
+
+
+function craine_builds() {
+
+    if [[ $action_data == "image" ]]; then
+        unset crain_data && craine_builds_images && exit 0
+    fi
+
+    if [[ $action_data == "sites" ]]; then
+        unset crain_data && craine_builds_websit && exit 0
+    fi
+
+    if [[ $action_data == "tester" ]]; then
+        unset crain_data && craine_builds_labrom && exit 0
+    fi
+}

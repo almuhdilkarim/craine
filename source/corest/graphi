@@ -98,7 +98,7 @@ function craine_desktop_panel_main() {
 }
 
 
-function craine_guimod() {
+function craine_window() {
     craine_desktop_panel_list
     craine_desktop_panel_main
 }

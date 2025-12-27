@@ -1,0 +1,133 @@
+#!/bin/env bash
+# autoload function
+
+set -e
+
+
+
+## SYSTEM
+function craine_systems_struct() {
+    craine_assets="$craine_libs/assets"
+    craine_corest="$craine_libs/corest"
+    craine_config="$craine_libs/config"
+    craine_operat="$craine_libs/operat"
+    craine_helper="$craine_libs/helper"
+}
+
+
+function craine_systems_remote() {
+    craine_preset="https://github.com/almuhdilkarim/preset.git"
+    craine_proset="https://github.com/almuhdilkarim/proset.git"
+    craine_protos="https://github.com/almuhdilkarim/protos.git"
+}
+
+
+function craine_systems_assets() {
+    craine_banner="$craine_assets/banner.txt"
+    craine_brands="$craine_assets/brands.png"
+}
+
+
+function craine_systems_source() {
+
+    ## config
+    source "$craine_config/labrom"
+    source "$craine_config/corest"
+
+    ## library
+    source "$craine_helper/assets"
+    source "$craine_helper/colors"
+    source "$craine_helper/config"
+    source "$craine_helper/cloner"
+    source "$craine_helper/deploy"
+    source "$craine_helper/logger"
+    source "$craine_helper/seders"
+    source "$craine_helper/secure"
+
+    # module
+    source "$craine_corest/create"
+    source "$craine_corest/preset"
+    source "$craine_corest/proset"
+    source "$craine_corest/protos"
+    source "$craine_corest/graphi"
+}
+
+
+function craine_systems() {
+
+    craine_systems_struct
+    craine_systems_remote
+    craine_systems_assets
+    craine_systems_source
+}
+
+
+## WORKER 
+function craine_workers_struct() {
+
+    worker_folder="$HOME/.local/craine"
+    worker_secret="$HOME/.ssh/crainkey"
+    worker_preset="$worker_folder/preset"
+    worker_protos="$worker_folder/protos"
+    worker_proset="$worker_folder/proset"
+    worker_prolab="$worker_folder/prolab"
+    worker_preloc="$worker_folder/preloc"
+    worker_config="$worker_folder/config"
+    worker_tokens="$worker_folder/tokens"
+}
+
+
+function craine_workers_prepar() {
+    
+    mkdir -p $worker_folder
+    mkdir -p $worker_secret
+    mkdir -p $worker_preset
+    mkdir -p $worker_proset
+    mkdir -p $worker_prolab
+    mkdir -p $worker_preloc
+    mkdir -p $worker_config
+    mkdir -p $worker_tokens
+}
+
+
+function craine_workers_secret() {
+    mkdir -p $worker_secret
+    chmod -R 700 $worker_secret
+}
+
+
+function craine_workers_tokens() {
+    mkdir -p $worker_tokens/{preset,proset,protos} 
+    chmod -R 700 $worker_tokens
+}
+
+
+function craine_workers_config() {
+    cp -n $craine_config/config $worker_config
+}
+
+
+function craine_workers() {
+    craine_workers_struct
+    craine_workers_prepar
+    craine_workers_secret
+    craine_workers_tokens
+    craine_workers_config
+}
+
+
+# LIBRARY LOAD
+craine_systems
+craine_workers
+
+
+
+
+
+## PRESET CONFIGURE
+
+
+## CRAINE DAEOMONIZ  
+## craine_preset_basics &&
+## craine_proset_basics &&
+## craine_protos_basics &&

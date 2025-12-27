@@ -37,7 +37,7 @@ function craine_create_helper_clone() {
 # update master repo to late version
 function craine_create_remote_latest() {
 
-    local local_resource="$craine_worker/$craine_data/default"
+    local local_resource="$worker_folder/$action_data/default"
 
     cd $local_resource && git pull > /dev/null 2>&1
 
@@ -108,70 +108,6 @@ function craine_create_versio_commit() {
 
 
 
-
-#######################################
-##--- 4 | FORMAT
-#######################################
-
-
-#--> formating to groups module name
-function craine_create_format_naming() {
-    local string="$1"
-    echo "$string"
-}
-
-
-#--> formating to variant module name
-function craine_create_format_spiner() {
-    local string="$1"
-    echo "$string"
-}
-
-
-#--> formating to target target name
-function craine_create_format_pather() {
-    local string="$1"
-    echo "$string"
-}
-
-
-#--> formating to target target path
-function craine_create_format_locals() {
-    local string="$1"
-    echo "$string"
-}
-
-
-#--> formating to target random path
-function craine_create_format_random() {
-    local string="$1"
-    echo "$string"
-}
-
-
-#--> formating to git repository name
-function craine_create_format_repnam() {
-    local string="$1"
-    echo "$string"
-}
-
-
-#--> formating to git repository user
-function craine_create_format_repusr() {
-    local string="$1"
-    echo "$string"
-}
-
-
-#--> formating to git repository host
-function craine_create_format_rephos() {
-    local string="$1"
-    echo "$string"
-}
-
-
-
-
 #######################################
 ##--- DATUMS
 #######################################
@@ -180,27 +116,26 @@ function craine_create_format_rephos() {
 # 1 | command line base data organizer
 function craine_create_enviro_preper() {
 
+
     ## base variable
-    base_name=$( craine_string_toname ${craine_name} )
-    base_slug=$( craine_string_toslug ${craine_name} )
-    base_lead=$( craine_string_tolead ${craine_name} )
-    base_vars=$( craine_string_tovars ${craine_name} )
+    base_name=$( craine_string_toname ${option_name} )
+    base_slug=$( craine_string_toslug ${option_name} )
+    base_lead=$( craine_string_tolead ${option_name} )
+    base_vars=$( craine_string_tovars ${option_name} )
     
+
     ## spin variable
-    spin_name=$( craine_string_toname ${craine_spin} )
-    spin_slug=$( craine_string_toslug ${craine_spin} )
-    spin_lead=$( craine_string_tolead ${craine_spin} )
-    spin_vars=$( craine_string_tovars ${craine_spin} )
+    spin_name=$( craine_string_toname ${option_spin} )
+    spin_slug=$( craine_string_toslug ${option_spin} )
+    spin_lead=$( craine_string_tolead ${option_spin} )
+    spin_vars=$( craine_string_tovars ${option_spin} )
     
+
     ## author variable
-    auth_name=$( craine_string_toname "$craine_auth" )    
-    auth_lead=$( craine_string_toname "$craine_auth" )    
-    auth_slug=$( craine_string_toname "$craine_auth" )    
-    auth_vars=$( craine_string_toname "$craine_auth" ) 
-
-
-    ## banner variable
-    ban_prevs=""  
+    auth_name=$( craine_string_toname "$option_auth" )    
+    auth_lead=$( craine_string_toname "$option_auth" )    
+    auth_slug=$( craine_string_toname "$option_auth" )    
+    auth_vars=$( craine_string_toname "$option_auth" ) 
 
 
     ## logic variable
@@ -209,28 +144,31 @@ function craine_create_enviro_preper() {
 
 
     ## locals variable
-    path_base="$craine_worker/$craine_data"
-    path_rand="$path_base/$base_slug/$vars_rand"                    # temporary path
-    path_main="$path_base/$base_slug/$vars_spin"                    # locals path
+    path_base="$worker_folder/$action_data"
+    path_rand="$path_base/$base_slug/$vars_rand"                            # temporary path
+    path_main="$path_base/$base_slug/$vars_spin"                            # locals folders
 
 
     ## remote variable
-    repo_keys="$craine_keys"                                        # repository keys
-    repo_http=$( craine_reposi_tohttp $craine_repo )                # repository link
-    repo_sshd=$( craine_reposi_tosshd $craine_repo )                # repository name
-    repo_name=$( craine_reposi_torepo $craine_repo )                # repository name
-    repo_user=$( craine_reposi_touser $craine_repo )                # repository user
-    repo_host=$( craine_reposi_tohost $craine_repo )                # repository host
-    repo_push=$( craine_reposi_topush $craine_repo )                # repository push
+    repo_http=$( craine_reposi_tohttp $option_repo )                        # repository link
+    repo_sshd=$( craine_reposi_tosshd $option_repo )                        # repository name
+    repo_name=$( craine_reposi_torepo $option_repo )                        # repository name
+    repo_user=$( craine_reposi_touser $option_repo )                        # repository user
+    repo_host=$( craine_reposi_tohost $option_repo )                        # repository host
+    repo_push=$( craine_reposi_topush $option_repo )                        # repository push
     
+
+    ## secret variable
+    keys_path="$worker_folder/tokens/$action_data/$base_slug/$vars_spin"    # keys path
+    keys_sshd="$worker_secret/$base_slug/"                                  # sshd path
+    keys_file="$keys_path/repo"                                             # keys path
+    keys_data="$option_keys"                                                # keys data
     
 
     ## notife variable
     stage_num=1
     alert_num=1
     erorr_num=1
-
-
 }
 
 
@@ -300,7 +238,7 @@ function craine_create_notife_info() {
     ##--[2] selection text message based on error code
     
     ##---(110) helper 
-    test $code == 1101 && text="update default $craine_data successfull" 
+    test $code == 1101 && text="update default $action_data successfull" 
     
 
     ##---(120) preset
@@ -309,14 +247,16 @@ function craine_create_notife_info() {
     test $code == 1203 && text="checking targets sources availablility"
     test $code == 1204 && text="creating targets sources workdirectory"
     test $code == 1205 && text="install modules to working directories"
+    test $code == 1206 && text="create access tokens vault directories"
+    test $code == 1207 && text="add personal access token to vaultfile"
 
 
     ##---(130) proset
-    test $code == 1301 && text="update default $craine_data successfull"
+    test $code == 1301 && text="update default $action_data successfull"
 
 
     ##---(140) protos
-    test $code == 1301 && text="update default $craine_data successfull"
+    test $code == 1301 && text="update default $action_data successfull"
 
 
 
@@ -369,19 +309,19 @@ function craine_create_notife_fail() {
     ##--[2] selection text message based on error code
     
     ##---(410) helper 
-    test $code == 4101 && text="update default $craine_data successfull" 
+    test $code == 4101 && text="update default $action_data successfull" 
     
 
     ##---(420) preset
-    test $code == 4201 && text="conflicting name, $craine_data preset is existing"
+    test $code == 4201 && text="conflicting name, $action_data preset is existing"
 
 
     ##---(430) proset
-    test $code == 4301 && text="update default $craine_data successfull"
+    test $code == 4301 && text="update default $action_data successfull"
 
 
     ##---(440) protos
-    test $code == 4301 && text="update default $craine_data successfull"
+    test $code == 4301 && text="update default $action_data successfull"
 
 
 
@@ -438,7 +378,6 @@ function craine_create_notlog() {
 function craine_create_daemon_preset() {
     echo "debug"
 }
-
 
 
 # protos daemon 
@@ -543,14 +482,33 @@ function craine_create_preset_prepar () {
     fi
 
 
-    echo $path_rand
-    echo $path_core
+    #--[5] create tokens pat access folders
+    mkdir -p $keys_path
 
-    #if [[ $? -eq 0 ]]; then
-    #    craine_create_notlog 1 1101
-    #else
-    #    craine_create_notlog 3 1101
-    #fi
+    if [[ $? -eq 0 ]]; then
+        craine_create_notlog 1 1206
+    else
+        craine_create_notlog 3 1206
+    fi
+
+
+    #--[6] write token data to vault folder
+    echo "$keys_data" > "$keys_file"
+    
+    if [[ $? -eq 0 ]]; then
+        craine_create_notlog 1 1207
+    else
+        craine_create_notlog 3 1207
+    fi
+
+
+    unset path_core
+}
+
+
+#--| write userinput to temporer direcotry envi
+function craine_create_preset_writer () {
+    echo debug
 }
 
 
@@ -605,12 +563,6 @@ function craine_create_preset_remote () {
 
 
 #--| write userinput to temporer direcotry envi
-function craine_create_preset_writer () {
-    echo debug
-}
-
-
-#--| write userinput to temporer direcotry envi
 function craine_create_preset_instal () {
     echo debug
 }
@@ -634,8 +586,8 @@ function craine_create_preset_report () {
     sleep 2 && craine_baner_header_banner
     echo -e  "\t${green} |  BUILD REPORTING                                                  ${reset}"
     echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    echo -e  "\t${green} |  base     | $craine_name                                          ${reset}"
-    echo -e  "\t${green} |  spin     | $craine_spin                                          ${reset}"
+    echo -e  "\t${green} |  base     | $option_name                                          ${reset}"
+    echo -e  "\t${green} |  spin     | $option_spin                                          ${reset}"
     echo -e  "\t${green} |  error    |                                                       ${reset}"
     echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
     echo -e  "\t${green} |  REMOTE REPOSITORY                                                ${reset}"
@@ -669,7 +621,7 @@ function craine_create_preset() {
 
 
     #--[4] write userinput to temporer direcotry envi 
-    #craine_create_preset_writer
+    craine_create_preset_writer
 
 
     #--[5] provide user edit on build wokerdir preset 
@@ -737,26 +689,26 @@ function craine_create_protos() {
 # main process 
 function craine_create() { 
 
-    test -z $craine_data && craine_create_notlog 4 1
+    test -z $action_data && craine_create_notlog 4 1
 
 
-    if [[ $craine_data == "preset" ]]; then
+    if [[ $action_data == "preset" ]]; then
         unset crain_data && craine_create_preset && exit 0
     fi
 
-    if [[ $craine_data == "proset" ]]; then
+    if [[ $action_data == "proset" ]]; then
         unset crain_data && craine_create_proset && exit 0
     fi
 
-    if [[ $craine_data == "protos" ]]; then
+    if [[ $action_data == "protos" ]]; then
         unset crain_data && craine_create_protos && exit 0
     fi
 
-    if [[ $craine_data == "release" ]]; then
+    if [[ $action_data == "release" ]]; then
         unset crain_data && craine_create_images && exit 0
     fi
 
-    if [[ $craine_data == "testing" ]]; then
+    if [[ $action_data == "testing" ]]; then
         unset crain_data && craine_create_tester && exit 0
     fi
 }

@@ -1,0 +1,60 @@
+#!/bin/env bash
+# craine skeleton loader
+
+set -e
+
+
+##--[1] action options
+while getopts "c:l:d:b:e:u:g:w:n:s:r:k:a:" option; do
+    case $option in
+        c) action_mode="create" && action_data="${OPTARG}"
+        ;;
+        l) action_mode="lister" && action_data="${OPTARG}"
+        ;;
+        d) action_mode="delete" && action_data="${OPTARG}"
+        ;;
+        b) action_mode="builds" && action_data="${OPTARG}"
+        ;;
+        e) action_mode="editer" && action_data="${OPTARG}"
+        ;;
+        u) action_mode="update" && action_data="${OPTARG}"
+        ;;
+        g) action_mode="taking" && action_data="${OPTARG}"
+        ;;
+        w) action_mode="window" && action_data="${OPTARG}"
+        ;;
+        n) option_name="${OPTARG}"
+        ;;
+        s) option_spin="${OPTARG}"
+        ;;
+        r) option_repo="${OPTARG}"
+        ;;
+        k) option_keys="${OPTARG}"
+        ;;
+        a) option_auth="${OPTARG}"
+        ;;
+    esac
+done
+
+
+##--[2] variable check
+test -z $action_mode && echo "missing mode parameter" && exit 1
+craine_init="$craine_libs/helper/loader"
+
+
+##--[3] window modules
+if [[ $action_mode == "window" ]];then
+    source $craine_init && craine_window
+fi
+
+
+##--[4] create modules
+if [[ $action_mode == "create" ]];then
+    test -z $option_name && echo "missing name parameter" && exit 1
+    source $craine_init && craine_create
+fi
+
+
+##--[6] pure garbage
+unset option_name
+unset craine_init

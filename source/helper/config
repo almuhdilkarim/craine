@@ -1,0 +1,19 @@
+#!/bin/env bash
+# Configuration data 
+ 
+set -e
+
+## CONFIG GETDATA
+function craine_config_keyvar() {
+
+    test -f $1 && grep -E '[a-zA-Z0-9_]*=' "$1" | grep -E -v '^#' | cut -d'=' -f1 | awk '{print $1}'
+}
+
+function craine_config_source() {
+    
+    test -f $1 && source "$1" 
+}
+
+function craine_config_editor() {
+    test -f $1 && $EDITOR $1 
+}
