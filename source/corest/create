@@ -370,33 +370,33 @@ function craine_create_notlog() {
 
 
 #######################################
-##--- DAEMON
+##--- DEFAULT
 #######################################
 
 
 # daemon preset
-function craine_create_daemon_preset() {
-    echo "debug"
-}
-
-
-# protos daemon 
-function craine_create_daemon_protos() {
+function craine_create_master_preset() {
     echo "debug"
 }
 
 
 # daemon proset 
-function craine_create_daemon_proset() {
+function craine_create_master_proset() {
+    echo "debug"
+}
+
+
+# protos daemon 
+function craine_create_master_protos() {
     echo "debug"
 }
 
 
 # daemon corest
-function craine_create_daemon() {
-    craine_create_daemon_preset &&
-    craine_create_daemon_protos &&
-    craine_create_daemon_proset
+function craine_create_master() {
+    craine_create_master_preset &&
+    craine_create_master_proset &&
+    craine_create_master_protos
 }
 
 
@@ -691,6 +691,7 @@ function craine_create() {
 
     test -z $action_data && craine_create_notlog 4 1
 
+    craine_create_master
 
     if [[ $action_data == "preset" ]]; then
         unset crain_data && craine_create_preset && exit 0
