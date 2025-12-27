@@ -5,19 +5,29 @@ set -e
 
 
 ## TAKE OPTIONS
-while getopts "o:n:b:m:a:l:p:" opt; do
+while getopts "c:l:o:n:b:d:m:a:r:p:s:k:" opt; do
     case $opt in
-        o) proc="${OPTARG}"
+        c) craine_proc="create" && craine_data="${OPTARG}"
+        ;;
+        l) craine_proc="lister" && craine_data="${OPTARG}"
         ;;
         n) craine_name="${OPTARG}"
         ;;
+        s) craine_spin="${OPTARG}"
+        ;;
+        r) craine_repo="${OPTARG}"
+        ;;
+        k) craine_keys="${OPTARG}"
+        ;;
+        o) craine_outp="${OPTARG}"
+        ;;
         b) craine_base="${OPTARG}"
+        ;;
+        d) craine_dist="${OPTARG}"
         ;;
         m) craine_mode="${OPTARG}"
         ;;
         a) craine_auth="${OPTARG}"
-        ;;
-        l) craine_link="${OPTARG}"
         ;;
         p) craine_pitc="${OPTARG}"
         ;;
@@ -32,28 +42,40 @@ test -n $crdevs_stat && craine_libs=$(pwd)/library
 source "$craine_libs/corest/loader"
 
 
-## CRAINE MAIN
-if [[ -n $proc ]];then
-    if [[ $proc == "desktop" ]];then
-        craine_guimode
-    elif [[ $proc == "guides" ]];then
-        craine_diamode
-    elif [[ $proc == "tester" ]];then
-        craine_testers
-    elif [[ $proc == "proset" ]];then
-        craine_proset $craine_mode
-    elif [[ $proc == "preset" ]];then
-        craine_preset $craine_mode
-    elif [[ $proc == "protos" ]];then
-        craine_protos $craine_mode
-    elif [[ $proc == "editor" ]];then
-        craine_editors
-    elif [[ $proc == "create" ]];then
-        craine_builder
-    else
-        notifer_error 'Operation parameter not found'
-    fi
+## CRAINE PROC
+test -z $craine_proc && craine_loging_errors 'Operation parameter not found'
+
+
+if [[ $craine_proc == "create" ]];then
+    craine_create
 fi
+
+exit 0
+## CRAINE MAIN
+if [[ $craine_proc == "create" ]];then
+    
+    craine_create
+elif [[ $craine_proc == "desktop" ]];then
+    craine_guimode
+elif [[ $craine_proc == "guides" ]];then
+    craine_diamode
+elif [[ $craine_proc == "tester" ]];then
+    craine_testers
+elif [[ $craine_proc == "proset" ]];then
+
+    craine_proset $craine_mode
+elif [[ $craine_proc == "preset" ]];then
+        echo $craine_proc
+    craine_preset $craine_mode
+elif [[ $craine_proc == "protos" ]];then
+    craine_protos $craine_mode
+elif [[ $craine_proc == "editor" ]];then
+    craine_editors
+fi
+ 
+       
+
+
 
 
 unset craine_auth

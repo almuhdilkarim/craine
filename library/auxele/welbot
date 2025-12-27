@@ -10,18 +10,23 @@ mkdir -p $craine_preset
 mkdir -p $craine_protos
 mkdir -p $craine_prolab
 mkdir -p $craine_preloc
-mkdir -p $craine_tokens
-mkdir -p $craine_tokens/preset
-mkdir -p $craine_tokens/proset
-mkdir -p $craine_tokens/protos
+
+
+## TOKENS DIRECTORY
+mkdir -p $craine_secret
+mkdir -p $craine_secret/preset
+mkdir -p $craine_secret/proset
+mkdir -p $craine_secret/protos
 
 
 ## WORKER CONFIGURE
 cp -n $craine_config/config $craine_precon
 
 
+## PRESET CONFIGURE
+
+
 ## CRAINE DAEOMONIZ  
-craine_preset_basics &&
-craine_proset_basics &&
-craine_protos_basics &&
-craine_locals_random
+## craine_preset_basics &&
+## craine_proset_basics &&
+## craine_protos_basics &&

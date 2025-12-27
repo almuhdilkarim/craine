@@ -3,6 +3,173 @@
 set -e
 
 
+## STRING MODIFIER
+function craine_string_tovars() {
+    
+    local string=${1}
+    local string=${string,,}                                  # string to lower
+    local string=$( echo "${string}" | sed 's/ os//g' )       # remove os string
+    local string=$( echo "${string}" | sed 's/ linux//g' )    # remove linux string
+    local string=$( echo "${string}" | sed 's/ system//g' )   # remove system string
+    local string="${string// /_}"                             # replace all spaces with underscore        
+    local string="${string//-/_}"                             # replace all hyphens with underscore 
+    echo ${string}
+}
+
+
+function craine_string_toslug() {
+    
+    local string=${1}
+    local string=${string,,}                                  # string to lower
+    local string=$( echo "${string}" | sed 's/ os//g' )       # remove os string
+    local string=$( echo "${string}" | sed 's/ linux//g' )    # remove linux string
+    local string=$( echo "${string}" | sed 's/ system//g' )   # remove system string
+    local string="${string// /-}"                             # replace all spaces with hyphens        
+    local string="${string//_/-}"                             # replace all underscore with hyphens
+    echo ${string}
+}
+
+
+function craine_string_toname() {
+    
+    local string=${1}
+    local string=$(echo "${string}" | sed -E 's/(^|\s+)([a-z])/\1\U\2/g')   # capitalize all first word
+    local string="${string//-/ }"                                           # replace all hyphens with spaces         
+    local string="${string//_/ }"                                           # replace all underscore with spaces
+    echo ${string}
+}
+
+
+function craine_string_tolead() {
+    
+    local string=${1}
+    local string="${string^^}"                                              # uppercase all character
+    local string="${string//-/ }"                                           # replace all hyphens with spaces         
+    local string="${string//_/ }"                                           # replace all underscore with spaces
+    echo ${string}
+}
+
+
+function craine_string_random() {
+    local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
+    echo $random_number
+    unset random_number
+}
+
+
+## REPOSITORY PARSER
+
+function craine_reposi_torepo() {
+
+    local parser=${1}
+
+    if [[ -n $( echo ${parser} | grep "https://" ) ]];then
+        local parser=$(basename ${parser} )
+    else
+        local parser=$( echo ${parser} | sed 's|.*/||' )
+    fi
+
+    echo "$parser"
+    unset parser
+}
+
+
+function craine_reposi_touser() {
+
+    local parser=${1}
+
+    if [[ -n $( echo ${parser} | grep "https://" ) ]];then
+        local parser=$( basename "$(dirname "$parser")")
+    else
+        local parser=$( echo ${parser} | sed 's/.*:\([^/]*\)\/.*/\1/' )
+    fi
+
+    echo "$parser"
+    unset parser
+}
+
+
+function craine_reposi_tohost() {
+
+    local parser=${1}
+    if [[ -n $( echo ${parser} | grep "https://" ) ]];then
+        local parser=$( echo ${parser} | cut -d/ -f3)
+    else
+        local parser=$( echo ${parser} | sed -E 's/.*@([^:]*):.*/\1/' )
+    fi
+    
+    echo "$parser"
+    unset parser
+}
+
+
+function craine_reposi_topush() {
+
+    local parser=${1} 
+    local naming=$( craine_reposi_torepo $parser )
+    local userer=$( craine_reposi_touser $parser )
+    local hoster=$( craine_reposi_tohost $parser )
+    local parser="https://${userer}:${repo_keys}@${hoster}/${userer}/${naming}"
+
+    echo "$parser"
+    unset parser
+    unset naming
+    unset userer
+    unset hoster
+}
+
+
+function craine_reposi_tohttp() {
+    
+    local parser=${1}
+
+    if [[ -n $( echo ${parser} | grep "https://" ) ]];then
+
+        local parser=${1}
+
+    else
+        local naming=$( craine_reposi_torepo $parser )
+        local userer=$( craine_reposi_touser $parser )
+        local hoster=$( craine_reposi_tohost $parser )
+        local parser="https://${hoster}/${userer}/${naming}"
+    fi
+
+   
+    echo "$parser"
+    unset parser
+}
+
+
+function craine_reposi_tosshd() {
+
+    local parser=${1}
+
+    if [[ -n $( echo ${parser} | grep "https://" ) ]];then
+        local naming=$( craine_reposi_torepo $parser )
+        local userer=$( craine_reposi_touser $parser )
+        local hoster=$( craine_reposi_tohost $parser )
+        local parser="git@${hoster}:${userer}/${naming}"
+    else
+        local parser=${1}
+    fi
+
+   
+    echo "$parser"
+    unset parser
+}
+
+
+## STRING REPLACING
+function craine_retext_string() {
+    echo "replace string on file"
+}
+
+
+function craine_retext_lining() {
+    echo "replace line on file"
+}
+
+
 ## STRING MANIPULATION
 function craine_stringt_capit() {
     echo "string to capitalize"
@@ -68,24 +235,7 @@ function craine_string_gettwo() {
     basename "$(dirname "$1")"
 }
 
-function craine_string_append() {
-    echo "replace string on file"
-}
 
-function craine_lining_append() {
-    echo "replace line on file"
-}
-
-function craine_locals_random() {
-
-    local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
-
-    preset_random="$craine_preset/$random_number"
-    proset_random="$craine_proset/$random_number"
-    protos_random="$craine_protos/$random_number"
-
-    unset random_number
-}
 
 
 function craine_basename_path() {

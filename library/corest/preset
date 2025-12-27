@@ -27,7 +27,7 @@ function craine_preset_setenv() {
 }
 
 function craine_preset_basics() {
-
+craine_create_notlog 3 1101
     craine_varinet_noval
 
     local locals_source="$craine_preset/default"
