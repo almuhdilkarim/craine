@@ -135,7 +135,7 @@ function craine_create_enviro_preper() {
     spin_lead=$( craine_string_tolead ${option_spin} )
     spin_vars=$( craine_string_tovars ${option_spin} )
     
-    
+
 
     ## author variable
     auth_name=$( craine_string_toname "$option_auth" )    
@@ -639,7 +639,12 @@ function craine_create_preset() {
 
 
     #--[3] clone default preset to temporer directory 
-    craine_create_preset_prepar
+   
+
+
+
+## DEFAULT REPOSIT
+craine_labs_gitspace="https://github.com/almuhdilkarim/lab001.git" craine_create_preset_prepar
 
 
     #--[4] write userinput to temporer direcotry envi 
@@ -712,7 +717,7 @@ function craine_create_protos() {
 function craine_create() { 
 
     test -z $action_data && craine_create_notlog 4 1
-
+    exit 0
     craine_create_master
 
     if [[ $action_data == "preset" ]]; then

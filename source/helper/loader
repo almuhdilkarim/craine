@@ -7,16 +7,7 @@ set -e
 
 ## SYSTEM
 
-#-- declare core system remote sources
-function craine_systems_remote() {
-
-    remote_preset="https://github.com/almuhdilkarim/preset.git"
-    remote_proset="https://github.com/almuhdilkarim/proset.git"
-    remote_protos="https://github.com/almuhdilkarim/protos.git"
-}
-
-
-#-- craine core system directory structur
+#-- craine core system structur
 function craine_systems_struct() {
     
     craine_assets="$craine_libs/assets"
@@ -31,19 +22,18 @@ function craine_systems_struct() {
 }
 
 
+#-- craine core system configs
+function craine_systems_config() {
+    source "$craine_config/system"
+    source "$craine_config/labrom"
+}
+
+
 #-- craine core system assets
 function craine_systems_assets() {
 
     craine_banner="$craine_assets/banner.txt"
     craine_brands="$craine_assets/brands.png"
-}
-
-
-#-- craine core system config
-function craine_systems_config() {
-
-    source "$craine_config/labrom"
-    source "$craine_config/corest"
 }
 
 
@@ -73,12 +63,11 @@ function craine_systems_corest() {
 }
 
 
-#-- craine core system initialize
+#-- craine core system initial
 function craine_systems() {
-    craine_systems_remote
     craine_systems_struct
-    craine_systems_assets
     craine_systems_config
+    craine_systems_assets
     craine_systems_librar
     craine_systems_corest
 }
@@ -91,8 +80,8 @@ function craine_systems() {
 ##-- load craine preset module and libary
 function craine_modular_preset() {
 
-    # load source
-    source "$craine_preset/config"
+    # load library
+    source "$craine_preset/parser"
 } 
 
 
@@ -218,22 +207,8 @@ function craine_workers() {
 
 
 
-
 # LIBRARY LOAD
-
 craine_systems
 craine_vendors
 craine_modular
 craine_workers
-
-
-
-
-
-## PRESET CONFIGURE
-
-
-## CRAINE DAEOMONIZ  
-## craine_preset_basics &&
-## craine_proset_basics &&
-## craine_protos_basics &&

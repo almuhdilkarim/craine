@@ -3,7 +3,6 @@
 set -e
 
 
-
-
-## DEFAULT REPOSIT
-craine_labs_gitspace="https://github.com/almuhdilkarim/lab001.git"
+remote_preset="https://github.com/almuhdilkarim/preset.git"
+remote_proset="https://github.com/almuhdilkarim/proset.git"
+remote_protos="https://github.com/almuhdilkarim/protos.git"
