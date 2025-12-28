@@ -7,28 +7,33 @@ set -e
 
 ## SYSTEM
 
-#-- craine core system directory structur
-function craine_systems_struct() {
-    craine_assets="$craine_libs/assets"
-    craine_corest="$craine_libs/corest"
-    craine_config="$craine_libs/config"
-    craine_operat="$craine_libs/operat"
-    craine_helper="$craine_libs/helper"
-    craine_proset="$craine_libs/proset"
-    craine_protos="$craine_libs/protos"
+#-- declare core system remote sources
+function craine_systems_remote() {
+
+    remote_preset="https://github.com/almuhdilkarim/preset.git"
+    remote_proset="https://github.com/almuhdilkarim/proset.git"
+    remote_protos="https://github.com/almuhdilkarim/protos.git"
 }
 
 
-#-- craine core system remote
-function craine_systems_remote() {
-    craine_preset="https://github.com/almuhdilkarim/preset.git"
-    craine_proset="https://github.com/almuhdilkarim/proset.git"
-    craine_protos="https://github.com/almuhdilkarim/protos.git"
+#-- craine core system directory structur
+function craine_systems_struct() {
+    
+    craine_assets="$craine_libs/assets"
+    craine_corest="$craine_libs/corest"
+    craine_config="$craine_libs/config"
+    craine_helper="$craine_libs/helper"
+    craine_operat="$craine_libs/operat"
+    craine_preset="$craine_libs/preset"
+    craine_proset="$craine_libs/proset"
+    craine_protos="$craine_libs/protos"
+    craine_vendor="$craine_libs/vendor"
 }
 
 
 #-- craine core system assets
 function craine_systems_assets() {
+
     craine_banner="$craine_assets/banner.txt"
     craine_brands="$craine_assets/brands.png"
 }
@@ -36,7 +41,7 @@ function craine_systems_assets() {
 
 #-- craine core system config
 function craine_systems_config() {
-    ## config
+
     source "$craine_config/labrom"
     source "$craine_config/corest"
 }
@@ -44,8 +49,6 @@ function craine_systems_config() {
 
 #-- craine core system library
 function craine_systems_librar() {
-
-
 
     ## library
     source "$craine_helper/assets"
@@ -56,8 +59,6 @@ function craine_systems_librar() {
     source "$craine_helper/logger"
     source "$craine_helper/seders"
     source "$craine_helper/secure"
-
-
 }
 
 
@@ -74,9 +75,8 @@ function craine_systems_corest() {
 
 #-- craine core system initialize
 function craine_systems() {
-
-    craine_systems_struct
     craine_systems_remote
+    craine_systems_struct
     craine_systems_assets
     craine_systems_config
     craine_systems_librar
@@ -84,15 +84,42 @@ function craine_systems() {
 }
 
 
+
+
 ## MODULE
 
 ##-- load craine preset module and libary
 function craine_modular_preset() {
 
-    # preset module
-    local module="$craine_libs/preset"
-    source "$module/config"
+    # load source
+    source "$module_preset/config"
 } 
+
+
+function craine_modular() {
+    craine_modular_preset
+}
+
+
+
+
+## VENDOR
+function craine_vendor_struct() {
+    vendor_editor="$craine_vendor/editor"
+}
+
+
+function craine_vendor_prepar() {
+    mkdir -p $craine_vendor
+}
+
+
+function craine_vendors() {
+    craine_vendor_struct
+    craine_vendor_prepar
+}
+
+
 
 
 ## WORKER 
@@ -123,6 +150,21 @@ function craine_workers_prepar() {
 }
 
 
+function craine_workers_preset() {
+    echo debug
+}
+
+
+function craine_workers_proset() {
+    echo debug
+}
+
+
+function craine_workers_protos() {
+    echo debug
+}
+
+
 function craine_workers_secret() {
     mkdir -p $worker_secret
     chmod -R 700 $worker_secret
@@ -143,14 +185,21 @@ function craine_workers_config() {
 function craine_workers() {
     craine_workers_struct
     craine_workers_prepar
+    craine_workers_preset
+    craine_workers_proset
+    craine_workers_protos
     craine_workers_secret
     craine_workers_tokens
     craine_workers_config
 }
 
 
+
+
 # LIBRARY LOAD
 craine_systems
+craine_vendors
+craine_modular
 craine_workers
 
 

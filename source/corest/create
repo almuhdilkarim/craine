@@ -145,9 +145,9 @@ function craine_create_enviro_preper() {
 
     ## locals variable
     path_base="$worker_folder/$action_data"
-    path_main="$path_base/$base_slug"                            # distros folders
-    path_rand="$path_main/$vars_rand"                            # temporary paths
-    path_spin="$path_main/$vars_spin"                            # variant folders
+    path_main="$path_base/$base_slug"                                       # distros folders
+    path_rand="$path_main/$vars_rand"                                       # temporary paths
+    path_spin="$path_main/$vars_spin"                                       # variant folders
 
 
     ## remote variable
@@ -158,18 +158,30 @@ function craine_create_enviro_preper() {
     repo_sshd=$( craine_reposi_tosshd $option_repo )                        # repository name
     repo_push=$( craine_reposi_topush $option_repo )                        # repository push
     repo_toke="$worker_folder/tokens/$action_data/$base_slug/$vars_spin"    # tokens path
-    repo_keys="$worker_secret/$base_slug/"                                  # sshkey path
+    repo_keys="$worker_secret/$base_slug/"                                  # secret path
 
     ## secret variable
-    keys_sshd="$worker_secret/$base_slug/"                                  # sshd path
-    keys_file="$keys_path/repo"                                             # keys path
-    keys_data="$option_keys"                                                # keys data
+    keys_file="$repo_toke/repo"                                             # token path
+    keys_data="$option_keys"                                                # token data
     
 
     ## notife variable
     stage_num=1
     alert_num=1
     erorr_num=1
+
+
+    ##-- replace home variable 
+    ##   replacement home varibale against absolute path using tilda (~) for fix perset creating
+    
+    local worker_repdir="~/.local/craine"
+    local worker_repsec="~/.ssh/crainkey"
+
+    rpat_base="$worker_repdir/$action_data"                                 # craine replacement
+    rpat_main="$worker_repdir/$base_slug"                                   # distro replacement
+    rpat_spin="$worker_repdir/$vars_spin"                                   # varian replacement
+    rrep_keys="$worker_repsec/$base_slug/craine"                            # secret replacement
+    rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$vars_spin"    # tokens replacement
 }
 
 
@@ -484,7 +496,7 @@ function craine_create_preset_prepar () {
 
 
     #--[5] create tokens pat access folders
-    mkdir -p $keys_path
+    mkdir -p $repo_toke
 
     if [[ $? -eq 0 ]]; then
         craine_create_notlog 1 1206

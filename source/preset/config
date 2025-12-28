@@ -34,8 +34,8 @@ function craine_preset_config_prenvi() {
 
 
     ## path variable
-    craine_config_appends "path_main" $path_main $envi_file
-    craine_config_appends "path_spin" $path_spin $envi_file
+    craine_config_appends "path_main" $rpat_main $envi_file
+    craine_config_appends "path_spin" $rpat_spin $envi_file
 
 
     ## repo variable
@@ -44,16 +44,10 @@ function craine_preset_config_prenvi() {
     test -n $repo_name && craine_config_appends "repo_name" $repo_name $envi_file
     test -n $repo_http && craine_config_appends "repo_http" $repo_http $envi_file
     test -n $repo_sshd && craine_config_appends "repo_sshd" $repo_sshd $envi_file
-    test -n $repo_toke && craine_config_appends "repo_toke" $keys_file $envi_file
-    test -n $repo_keys && craine_config_appends "repo_keys" $keys_file $envi_file
+    test -n $rrep_toke && craine_config_appends "repo_toke" $rrep_toke $envi_file
+    test -n $rrep_keys && craine_config_appends "repo_keys" $rrep_keys $envi_file
 
 
     ## pure variable
     unset envi_file
 }
-
-
-
-
-
-
