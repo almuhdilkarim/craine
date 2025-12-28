@@ -3,9 +3,41 @@
 
 set -e
 
+#######################################
+##--- 1 | SANITAZION
+#######################################
 
 
-## VALIDATION
+# alphabet sanitize input
+function craine_create_cleans_alpha() {
+    echo "debug"
+}
+
+# number sanitize input
+function craine_create_cleans_numbe() {
+    echo "debug"
+}
+
+# slug sanitize input
+function craine_create_cleans_slugs() {
+    echo "debug"
+}
+
+# link sanitize input
+function craine_create_cleans_links() {
+    echo "debug"
+}
+
+# variable sanitize input
+function craine_create_cleans_varia() {
+    echo "debug"
+}
+
+
+
+#######################################
+##--- 2 | SANITAZION
+#######################################
 
 function craine_varauth_noval() {
     if [[ -z $craine_auth ]];then

@@ -1,0 +1,52 @@
+#!/bin/env bash
+# logs and notification
+
+set -e
+
+
+## LOGGER DATA
+
+
+
+function craine_notif_error() {
+    test -n "$1" && echo -e "\t${blue} [CHK] ─> $1 passed ${reset}"
+}
+
+
+function craine_notif_stage() {
+
+    test -n "$1" && echo -e "\t${green}        |                ${reset}" | sed 's/^[[:space:]]*//'
+    test -n "$1" && echo -e "\t${green} stage ($stage_num) ─> $1${reset}" | sed 's/^[[:space:]]*//'
+    test -n "$1" && echo -e "\t${green}        |                ${reset}" | sed 's/^[[:space:]]*//'
+    ((stage_num++))
+
+}
+
+
+function craine_notif_warns() {
+    test -n "$1" && echo -e "\t${red} [WRN] ─> $1${reset}"
+}
+
+
+function craine_notif_abort() {
+
+    echo -e "\t${red}                                                                  "${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}┌────────────────────────────────────────────────────────────────┐"${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}|                                                                |"${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}│        / \                                                     │"${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}│       / | \     HELLO THERE !                                  │"${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}│      /  #  \    SOMETHING GOES WRONG,PROCESS TERMINATED        │"${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}│     /_______\                                                  │"${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}|                                                                |"${reset} | sed 's/^[[:space:]]*//' 
+    echo -e "\t${red}└────────────────────────────────────────────────────────────────┘"${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}                                                                  "${reset} | sed 's/^[[:space:]]*//'    
+    echo -e "\t${red} [$2] ERROR                                                       "${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}   |                                                              "${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}   |─> $1                                                         "${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}                                                                  "${reset} | sed 's/^[[:space:]]*//'
+    
+    exit 1 
+}
+
+
+

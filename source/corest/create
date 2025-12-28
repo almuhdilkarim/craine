@@ -62,40 +62,6 @@ function craine_create_helper_betest() {
 
 
 
-
-#######################################
-##--- 2 | SECURE
-#######################################
-
-
-# alphabet sanitize input
-function craine_create_cleans_alpha() {
-    echo "debug"
-}
-
-# number sanitize input
-function craine_create_cleans_numbe() {
-    echo "debug"
-}
-
-# slug sanitize input
-function craine_create_cleans_slugs() {
-    echo "debug"
-}
-
-# link sanitize input
-function craine_create_cleans_links() {
-    echo "debug"
-}
-
-# variable sanitize input
-function craine_create_cleans_varia() {
-    echo "debug"
-}
-
-
-
-
 #######################################
 ##--- 3 | VERSIO
 #######################################
@@ -129,7 +95,7 @@ function craine_create_enviro_preper() {
     
 
 
-    ## spin variable
+    ## spin variablbase_namee
     spin_name=$( craine_string_toname ${option_spin} )
     spin_slug=$( craine_string_toslug ${option_spin} )
     spin_lead=$( craine_string_tolead ${option_spin} )
@@ -162,7 +128,8 @@ function craine_create_enviro_preper() {
     repo_http=$( craine_reposi_tohttp $option_repo )                        # repository link
     repo_sshd=$( craine_reposi_tosshd $option_repo )                        # repository name
     repo_push=$( craine_reposi_topush $option_repo )                        # repository push
-    repo_keys="$worker_secret/$base_slug/"                                  # repository sshd
+    repo_keys="$worker_secret/master"                                       # repository sshd
+
 
 
     ## tokens variable
@@ -187,7 +154,7 @@ function craine_create_enviro_preper() {
     rpat_base="$worker_repdir/$action_data"                                 # module directory
     rpat_main="$worker_repdir/$base_slug"                                   # distro directory
     rpat_spin="$worker_repdir/$vars_spin"                                   # varian directory
-    rrep_keys="$worker_repsec/secretfile"                                   # secret directory
+    rrep_keys="$worker_repsec/master"                                       # secret directory
     rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$vars_spin"    # tokens directory
 }
 
@@ -333,7 +300,7 @@ function craine_create_notife_fail() {
     
 
     ##---(420) preset
-    test $code == 4201 && text="conflicting name, $action_data preset is existing"
+    test $code == 4201 && text="conflicting name, $base_name $spin_name preset is existing"
 
 
     ##---(430) proset
@@ -346,8 +313,9 @@ function craine_create_notife_fail() {
 
 
     ##--[3] render message
-    test -n "$text" && craine_loging_abort "$text"
+    test -n "$text" && craine_notif_abort "$text" "$code"
     
+    exit 0
 
     ##--[4] clean variable
     unset code && unset text
@@ -432,7 +400,14 @@ function craine_create_tester() {
 
 #--| display starting message and load modulars
 function craine_create_preset_booter () {
-    craine_baner_header_banner
+
+
+    #--[1] validate build preset
+    test -d $path_spin && craine_create_notlog 4 4201
+
+
+    #--[2] starting build preset
+    craine_baner_prime
     echo -e  "\t${green}  PREPARE BUILD MODULE                                              ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
 }
@@ -491,90 +466,146 @@ function craine_create_preset_prepar () {
         craine_create_notlog 3 1207
     fi
 
-
     unset path_core
 }
 
 
 #--| write userinput to temporer direcotry envi
 function craine_create_preset_writer () {
-    
-    local envi_file="$path_rand/envi"
     craine_preset_parser_prenvi
-}
-
-#--| edit preset working directory environtment
-function craine_create_preset_editor () {
-    craine_module_editor $path_rand
-}
-
-
-#--| confirmed user data using system previewer
-function craine_create_preset_banner () {
-
-    test -d $path_main && craine_create_notlog 4 4201
-
-    craine_baner_header_banner
-    echo -e  "\t${green} |  PRESET OVERVIEW                                                  ${reset}"
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    echo -e  "\t${green} |  distro   | $base_name                                            ${reset}"
-    echo -e  "\t${green} |  author   | $auth_name                                            ${reset}"
-    echo -e  "\t${green} |  variant  | $path_spin                                            ${reset}"
-    echo -e  "\t${green} |  install  | $path_main                                            ${reset}"
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    echo -e  "\t${green} |  REMOTE REPOSITORY                                                ${reset}"
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    echo -e  "\t${green} |  host     | $repo_host                                            ${reset}"
-    echo -e  "\t${green} |  user     | $repo_user                                            ${reset}"
-    echo -e  "\t${green} |  repo     | $repo_name                                            ${reset}"
-    echo -e  "\t${green} |  sshd     | $repo_sshd                                            ${reset}"
-    echo -e  "\t${green} |  http     | $repo_http                                            ${reset}"
-    echo -e  "\t${green} |  keys     | $repo_keys                                            ${reset}"
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    echo -e  "\t${green} |  BUILD INFORMATION                                                ${reset}"
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    echo -e  "\t${green} |  logpath  |                                                       ${reset}"
-    echo -e  "\t${green} |  keypath  |                                                       ${reset}"
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    echo -ne "\t${green} |  Do you want create distro based on current preview data: [Y/n] ${reset}" && read ban_prevs
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    
-    if [[ $ban_prevs == "Y" ]]||[[ $ban_prevs == "y" ]];then
-        local message="DISTRO PRESET BUILD STARTED"
-        local aborted=false
-    else
-        local message="DISTRO PRESET BUILD ABORTED"
-    fi
-
-    echo -e  "\t${green} | ${message}                                                        ${reset}"
-    echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
-    
-    test -z  $aborted && exit 0
 }
 
 
 #--| clone remote preset repository to workerdir
 function craine_create_preset_remote () {
+
+    craine_remote_clones $repo_http $path_spin
     echo "preset remote clone"
 }
 
 
 #--| write userinput to temporer direcotry envi
 function craine_create_preset_instal () {
-    echo debug
+
+    cp -fr $path_rand/* $path_spin &&
+    rm -fr $path_rand
+    echo "preset installation"
 }
 
 
 #--| commited preset to their remote repository
 function craine_create_preset_commit () {
+
     echo "first commit"
 }
 
 
-#--|  display new preset final report parameter
+#--| confirmed user data using system previewer
 function craine_create_preset_report () {
+
+
+    craine_baner_prime
+
+    echo -e  "\t${green}   PRESET OVERVIEW                                                  ${reset}" | sed 's/^[[:space:]]*//' 
+    echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   distro   | $base_name                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   author   | $auth_name                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   variant  | $path_spin                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   install  | $path_main                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   REMOTE REPOSITORY                                                ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   host     | $repo_host                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   user     | $repo_user                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   repo     | $repo_name                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   sshd     | $repo_sshd                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   http     | $repo_http                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   keys     | $repo_keys                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   BUILD INFORMATION                                                ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   logpath  |                                                       ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   keypath  |                                                       ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
+    echo -ne "\t${green}   Do you want create distro based on current preview data: [Y/n]   ${reset}" | sed 's/^[[:space:]]*//' && 
     
-    sleep 2 && craine_baner_header_banner
+    read ban_prevs
+
+    
+    if [[ $ban_prevs == "Y" ]]||[[ $ban_prevs == "y" ]];then
+        echo editing
+    fi
+    
+    test -z  $aborted && exit 0
+}
+
+
+#--| edit preset working directory environtment
+function craine_create_preset_editor () {
+    craine_module_editor $path_rand/envi
+}
+
+
+#--| preset corest
+function craine_create_preset() {
+
+    #--[1] declare userinput data and setup for build 
+    craine_create_enviro_preper
+
+
+    #--[2] display starting message and load modulars 
+    craine_create_preset_booter
+
+
+    #--[3] download to latest version default presets
+    craine_create_remote_latest
+
+
+    #--[4] clone default preset to temporer directory 
+    craine_create_preset_prepar
+
+
+    #--[5] write userinput to temporer direcotry envi 
+    craine_create_preset_writer
+
+
+    #--[6] clone remote preset repository to workerdir 
+    craine_create_preset_remote
+
+
+    #--[7] clone temporer data to workdir and cleanup
+    craine_create_preset_instal
+
+
+    #--[8] commited preset to their remote repository
+    #craine_create_preset_commit
+
+
+    #--[10] display new preset final report parameter
+    craine_create_preset_report
+
+
+    #--[5] provide user edit on build wokerdir preset 
+    #craine_create_preset_editor
+
+    #--[11] purge build variable from current procces 
+    craine_create_enviro_purify 
+
+
+}
+
+
+
+
+#######################################
+##--- PROSET
+#######################################
+
+
+#--|  display new preset final report parameter
+function craine_create_proset_report () {
+    
+    sleep 2 && craine_baner_prime
     echo -e  "\t${green} |  BUILD REPORTING                                                  ${reset}"
     echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
     echo -e  "\t${green} |  base     | $option_name                                          ${reset}"
@@ -591,69 +622,6 @@ function craine_create_preset_report () {
     echo -e  "\t${green} |-------------------------------------------------------------------${reset}"
 }
 
-
-#--| preset corest
-function craine_create_preset() {
-
-    #--[1] display starting message and load modulars 
-    craine_create_preset_booter
-
-
-    #--[1] declare userinput data and setup for build 
-    craine_create_enviro_preper
-
-
-    #--[2] download to latest version default presets
-    craine_create_remote_latest
-
-
-    #--[3] clone default preset to temporer directory 
-   
-
-
-
-## DEFAULT REPOSIT
-craine_labs_gitspace="https://github.com/almuhdilkarim/lab001.git" craine_create_preset_prepar
-
-
-    #--[4] write userinput to temporer direcotry envi 
-    craine_create_preset_writer
-
-
-    #--[5] provide user edit on build wokerdir preset 
-    craine_create_preset_editor
-
-
-    #--[6] confirmed user data using system previewer 
-    #craine_create_preset_banner
-
-
-    #--[7] clone remote preset repository to workerdir 
-    #craine_create_preset_remote
-
-
-    #--[8] clone temporer data to wokerdir preset dir
-    #craine_create_preset_instal
-
-
-    #--[9] commited preset to their remote repository
-    #craine_create_preset_commit
-
-
-    #--[10] display new preset final report parameter
-    #craine_create_preset_report
-
-
-    #--[11] purge build variable from current procces 
-    craine_create_enviro_purify 
-}
-
-
-
-
-#######################################
-##--- PROSET
-#######################################
 
 
 # proset corest

@@ -162,7 +162,8 @@ function craine_reposi_tosshd() {
 ## DATUM EDITOR
 
 function craine_module_editor() {
-    exec $vendor_editor $1
+    exec $vendor_editor $1 &&
+    return 0
 }
 
 

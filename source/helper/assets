@@ -4,7 +4,18 @@ set -e
 
 
 ## RAPTOR BANNER
-function craine_baner_raptors() {
+function craine_baner_rapto() {
     cat "${srcpath}/banner" && echo ""
 }
 
+## PRIMER BANNER
+function craine_baner_prime() {
+    clear
+    echo -e "\t${green}                                                                    ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${green}                                                                    ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${green} CRAINE LINUX STUDIO MAKER                                          ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${green} copyright@2025 null <null@yuros.org>                               ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${green}                                                                    ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
+
+}
