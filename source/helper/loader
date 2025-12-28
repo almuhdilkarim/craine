@@ -9,56 +9,48 @@ set -e
 
 #-- craine core system structur
 function craine_systems_struct() {
-    
-    craine_assets="$craine_libs/assets"
-    craine_corest="$craine_libs/corest"
-    craine_config="$craine_libs/config"
-    craine_helper="$craine_libs/helper"
-    craine_operat="$craine_libs/operat"
-    craine_preset="$craine_libs/preset"
-    craine_proset="$craine_libs/proset"
-    craine_protos="$craine_libs/protos"
-    craine_vendor="$craine_libs/vendor"
+    system_assets="$craine_libs/assets"
+    system_corest="$craine_libs/corest"
+    system_config="$craine_libs/config"
+    system_helper="$craine_libs/helper"
+    system_operat="$craine_libs/operat"
 }
 
 
 #-- craine core system configs
 function craine_systems_config() {
-    source "$craine_config/system"
-    source "$craine_config/labrom"
+    source "$system_config/system"
+    source "$system_config/labrom"
 }
 
 
 #-- craine core system assets
 function craine_systems_assets() {
 
-    craine_banner="$craine_assets/banner.txt"
-    craine_brands="$craine_assets/brands.png"
+    craine_banner="$system_assets/banner.txt"
+    craine_brands="$system_assets/brands.png"
 }
 
 
 #-- craine core system library
 function craine_systems_librar() {
 
-    source "$craine_helper/assets"
-    source "$craine_helper/colors"
-    source "$craine_helper/config"
-    source "$craine_helper/cloner"
-    source "$craine_helper/deploy"
-    source "$craine_helper/notife"
-    source "$craine_helper/seders"
-    source "$craine_helper/secure"
+    source "$system_helper/assets"
+    source "$system_helper/colors"
+    source "$system_helper/config"
+    source "$system_helper/cloner"
+    source "$system_helper/deploy"
+    source "$system_helper/notefa"
+    source "$system_helper/seders"
+    source "$system_helper/secure"
 }
 
 
 #-- craine core system actions
 function craine_systems_corest() {
     
-    source "$craine_corest/create"
-    source "$craine_corest/preset"
-    source "$craine_corest/proset"
-    source "$craine_corest/protos"
-    source "$craine_corest/graphi"
+    source "$system_corest/create"
+    source "$system_corest/graphi"
 }
 
 
@@ -77,15 +69,38 @@ function craine_systems() {
 ## MODULE
 
 ##-- load craine preset module and libary
+function craine_modular_struct() {
+
+    module_preset="$craine_libs/preset"
+    module_proset="$craine_libs/proset"
+    module_protos="$craine_libs/protos"
+
+}
+
+
 function craine_modular_preset() {
 
     # load library
-    source "$craine_preset/parser"
+    source "$module_preset/preset"
+    source "$module_preset/parser"
 } 
 
 
+function craine_modular_proset() {
+    source "$module_proset/proset"
+}
+
+
+function craine_modular_protos() {
+    source "$module_protos/protos"
+}
+
+
 function craine_modular() {
+    craine_modular_struct
     craine_modular_preset
+    craine_modular_proset
+    craine_modular_protos
 }
 
 
@@ -94,13 +109,15 @@ function craine_modular() {
 ## VENDOR
 
 function craine_vendor_struct() {
-    vendor_editor="$craine_vendor/editor"
+
+    vendor_source="$craine_libs/vendor"
+    vendor_editor="$vendor_source/editor"
 }
 
 
 
 function craine_vendor_prepar() {
-    mkdir -p $craine_vendor
+    mkdir -p $vendor_source
 }
 
 
@@ -205,7 +222,7 @@ function craine_workers_tokens() {
 
 
 function craine_workers_config() {
-    cp -n $craine_config/worker $worker_config
+    cp -n $system_config/worker $worker_config
 }
 
 
