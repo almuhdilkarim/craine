@@ -43,17 +43,11 @@ function craine_remote_clones() {
     local locals_source=$2
 
     if [[ ! -d $locals_source ]]; then
-        craine_loging_inform "preparing remote sources meta"
+        
         git clone $remote_source $locals_source > /dev/null 2>&1
 
-        if [ $? -eq 0 ]; then
-            craine_loging_inform "remote source directory clone"
-        else
-            craine_loging_errors "failed to clone remote source"
-        fi
     else
-        rm -fr $locals_source &&
-        craine_loging_errors "conflicting name with existing local data"
+        rm -fr $locals_source && exit 1
     fi
 
     unset remote_source

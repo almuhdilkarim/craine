@@ -5,18 +5,24 @@ set -e
 
 
 # eeplace value from configration file
-function craine_configs_append() {
+
+function craine_config_rewrite () {
 
     local keyvar="${1}"
-    local values="${2}"
+    local values='"'${2}'"'
     local config="${3}"
 
-    echo $keyvar
-    echo $values
-    echo $config
-
-    #sed -i "s@^\(${keyvar}=\).*@\1${values}@" "$config"
+    if [[ $keyvar == "repo_sshd" ]]; then
+        sed -i "s@^\(${keyvar}=\).*#\1${values}@" "$config"
+    else
+        sed -i "s@^\(${keyvar}=\).*@\1${values}@" "$config"
+    fi
+    
+    unset keyvar
+    unset values
+    unset config
 }
+
 
 
 ## CONFIG GETDATA

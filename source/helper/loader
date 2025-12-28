@@ -92,7 +92,7 @@ function craine_systems() {
 function craine_modular_preset() {
 
     # load source
-    source "$module_preset/config"
+    source "$craine_preset/config"
 } 
 
 
@@ -104,6 +104,7 @@ function craine_modular() {
 
 
 ## VENDOR
+
 function craine_vendor_struct() {
     vendor_editor="$craine_vendor/editor"
 }
@@ -123,6 +124,7 @@ function craine_vendors() {
 
 
 ## WORKER 
+
 function craine_workers_struct() {
 
     worker_folder="$HOME/.local/craine"
@@ -151,17 +153,38 @@ function craine_workers_prepar() {
 
 
 function craine_workers_preset() {
-    echo debug
+
+    local locals_source="$worker_preset/default"
+
+    if [[ ! -d $locals_source ]];then
+        craine_remote_clones "$remote_preset" "$locals_source"
+    fi
+
+    unset locals_source
 }
 
 
 function craine_workers_proset() {
-    echo debug
+
+    local locals_source="$worker_preset/default"
+
+    if [[ ! -d $locals_source ]];then
+        craine_remote_clones "$remote_proset" "$locals_source"
+    fi
+
+    unset locals_source
 }
 
 
 function craine_workers_protos() {
-    echo debug
+
+    local locals_source="$worker_protos/default"
+
+    if [[ ! -d $locals_source ]];then
+        craine_remote_clones "$remote_protos" "$locals_source"
+    fi
+
+    unset locals_source
 }
 
 
@@ -197,6 +220,7 @@ function craine_workers() {
 
 
 # LIBRARY LOAD
+
 craine_systems
 craine_vendors
 craine_modular

@@ -117,6 +117,10 @@ function craine_create_versio_commit() {
 function craine_create_enviro_preper() {
 
 
+    ## logic variable
+    option_spin=$( [[ -z $option_spin ]] && echo "default" || echo "$option_spin" )
+
+
     ## base variable
     base_name=$( craine_string_toname ${option_name} )
     base_slug=$( craine_string_toslug ${option_name} )
@@ -138,16 +142,13 @@ function craine_create_enviro_preper() {
     auth_vars=$( craine_string_toname "$option_auth" ) 
 
 
-    ## logic variable
-    vars_rand=$( craine_string_random )
-    vars_spin=$( [[ -z $spin_slug ]] && echo "default" || echo "$spin_slug" )
-
 
     ## locals variable
+    vars_rand=$( craine_string_random )
     path_base="$worker_folder/$action_data"
     path_main="$path_base/$base_slug"                                       # distros folders
     path_rand="$path_main/$vars_rand"                                       # temporary paths
-    path_spin="$path_main/$vars_spin"                                       # variant folders
+    path_spin="$path_main/$spin_slug"                                       # variant folders
 
 
     ## remote variable
@@ -157,7 +158,7 @@ function craine_create_enviro_preper() {
     repo_http=$( craine_reposi_tohttp $option_repo )                        # repository link
     repo_sshd=$( craine_reposi_tosshd $option_repo )                        # repository name
     repo_push=$( craine_reposi_topush $option_repo )                        # repository push
-    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$vars_spin"    # tokens path
+    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # tokens path
     repo_keys="$worker_secret/$base_slug/"                                  # secret path
 
     ## secret variable
