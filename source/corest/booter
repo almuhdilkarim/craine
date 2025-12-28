@@ -38,11 +38,11 @@ function craine_systems_librar() {
     source "$system_helper/assets"
     source "$system_helper/colors"
     source "$system_helper/config"
-    source "$system_helper/cloner"
     source "$system_helper/deploy"
     source "$system_helper/notefa"
-    source "$system_helper/seders"
+    source "$system_helper/remote"
     source "$system_helper/secure"
+    source "$system_helper/seders"
 }
 
 
@@ -74,7 +74,6 @@ function craine_modular_struct() {
     module_preset="$craine_libs/preset"
     module_proset="$craine_libs/proset"
     module_protos="$craine_libs/protos"
-
 }
 
 
@@ -113,7 +112,6 @@ function craine_vendor_struct() {
     vendor_source="$craine_libs/vendor"
     vendor_editor="$vendor_source/editor"
 }
-
 
 
 function craine_vendor_prepar() {

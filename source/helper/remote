@@ -1,7 +1,64 @@
- #!/bin/env bash
-# Git operation
+#!/bin/env bash
+# module remote operation
 
 set -e
+
+
+## DATUM PREPARATION
+
+#-- validate operation sources 
+function craine_remote_prevals() {
+    echo "priority"
+}
+
+
+#-- get priority data sources 
+function craine_remote_options() {
+    echo "priority"
+}
+
+
+#-- prepare http temporary link
+function craine_remote_prepuri() {
+    echo "priority"
+}
+
+
+#-- rebased http temporary link
+function craine_remote_pureuri() {
+    echo "priority"
+}
+
+
+#-- register keys to ssh agent
+function craine_remote_prepkey() {
+    echo "priority"
+}
+
+
+## CLONER OPERATION
+
+#-- clone operation for gitrepo
+function craine_cloner_remoter() {
+    echo "update"
+}
+
+
+#-- clone operation by download
+function craine_cloner_package() {
+    echo "update"
+}
+
+
+function craine_cloner() {
+    echo debug
+}
+
+
+
+
+
+
 
 ## HELPERS
 function craine_envirepo_keys() {
@@ -57,6 +114,7 @@ function craine_remote_clones() {
 function craine_locals_clones() {
 
     craine_loging_inform "preparing locals sources meta"
+    
     cp -fr $1 $2
 
     if [ $? -eq 0 ]; then

@@ -1,0 +1,23 @@
+#!/bin/env bash
+
+
+set -e
+
+
+## UPGRADE OPERATION
+
+#-- upgrade local module using gitrepo
+function craine_upgrade_gitbase() {
+    echo "update"
+}
+
+
+#-- upgrade local module using package
+function craine_upgrade_uribase() {
+    echo "update"
+}
+
+
+function craine_upgrade() {
+    echo upgrade
+}

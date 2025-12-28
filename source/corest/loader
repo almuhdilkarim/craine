@@ -1,5 +1,5 @@
 #!/bin/env bash
-# craine skeleton loader
+# craine main processing
 
 set -e
 
@@ -38,23 +38,27 @@ done
 
 
 ##--[2] variable check
-test -z $action_mode && echo "missing mode parameter" && exit 1
-craine_init="$craine_libs/helper/loader"
+if [[ -z $action_mode ]];then
+    echo "missing mode parameter" && exit 1
+fi
 
 
-##--[3] window modules
+##--[3] library loads
+source "$craine_libs/corest/booter"
+
+
+##--[4] window modules
 if [[ $action_mode == "window" ]];then
-    source $craine_init && craine_window
+    craine_window
 fi
 
 
-##--[4] create modules
+##--[5] create modules
 if [[ $action_mode == "create" ]];then
-    test -z $option_name && echo "missing name parameter" && exit 1
-    source $craine_init && craine_create
+    test -n $option_name && craine_create
 fi
 
 
-##--[6] pure garbage
+##--[6] remove garbage
 unset option_name
 unset craine_init
