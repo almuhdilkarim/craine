@@ -128,11 +128,13 @@ function craine_create_enviro_preper() {
     base_vars=$( craine_string_tovars ${option_name} )
     
 
+
     ## spin variable
     spin_name=$( craine_string_toname ${option_spin} )
     spin_slug=$( craine_string_toslug ${option_spin} )
     spin_lead=$( craine_string_tolead ${option_spin} )
     spin_vars=$( craine_string_tovars ${option_spin} )
+    
     
 
     ## author variable
@@ -151,20 +153,23 @@ function craine_create_enviro_preper() {
     path_spin="$path_main/$spin_slug"                                       # variant folders
 
 
+
     ## remote variable
+    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # repository apts
     repo_host=$( craine_reposi_tohost $option_repo )                        # repository host
     repo_user=$( craine_reposi_touser $option_repo )                        # repository user
     repo_name=$( craine_reposi_torepo $option_repo )                        # repository name
     repo_http=$( craine_reposi_tohttp $option_repo )                        # repository link
     repo_sshd=$( craine_reposi_tosshd $option_repo )                        # repository name
     repo_push=$( craine_reposi_topush $option_repo )                        # repository push
-    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # tokens path
-    repo_keys="$worker_secret/$base_slug/"                                  # secret path
+    repo_keys="$worker_secret/$base_slug/"                                  # repository sshd
 
-    ## secret variable
-    keys_file="$repo_toke/repo"                                             # token path
-    keys_data="$option_keys"                                                # token data
+
+    ## tokens variable
+    toke_path="$repo_toke/repo"                                             # tokneizers path
+    toke_data="$option_keys"                                                # tokneizers data
     
+
 
     ## notife variable
     stage_num=1
@@ -172,17 +177,18 @@ function craine_create_enviro_preper() {
     erorr_num=1
 
 
-    ##-- replace home variable 
-    ##   replacement home varibale against absolute path using tilda (~) for fix perset creating
+
+    ##-- relative path replacement 
+    ##   replace absolute home variable with tilda (~), fix perset creating function building 
     
     local worker_repdir="~/.local/craine"
-    local worker_repsec="~/.ssh/crainkey"
+    local worker_repsec="~/.ssh/crainkey/"
 
-    rpat_base="$worker_repdir/$action_data"                                 # craine replacement
-    rpat_main="$worker_repdir/$base_slug"                                   # distro replacement
-    rpat_spin="$worker_repdir/$vars_spin"                                   # varian replacement
-    rrep_keys="$worker_repsec/$base_slug/craine"                            # secret replacement
-    rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$vars_spin"    # tokens replacement
+    rpat_base="$worker_repdir/$action_data"                                 # module directory
+    rpat_main="$worker_repdir/$base_slug"                                   # distro directory
+    rpat_spin="$worker_repdir/$vars_spin"                                   # varian directory
+    rrep_keys="$worker_repsec/secretfile"                                   # secret directory
+    rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$vars_spin"    # tokens directory
 }
 
 
@@ -507,7 +513,7 @@ function craine_create_preset_prepar () {
 
 
     #--[6] write token data to vault folder
-    echo "$keys_data" > "$keys_file"
+    echo "$toke_data" > "$toke_path"
     
     if [[ $? -eq 0 ]]; then
         craine_create_notlog 1 1207

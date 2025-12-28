@@ -201,7 +201,7 @@ function craine_workers_tokens() {
 
 
 function craine_workers_config() {
-    cp -n $craine_config/config $worker_config
+    cp -n $craine_config/worker $worker_config
 }
 
 
