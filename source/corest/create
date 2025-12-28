@@ -145,21 +145,22 @@ function craine_create_enviro_preper() {
 
     ## locals variable
     path_base="$worker_folder/$action_data"
-    path_rand="$path_base/$base_slug/$vars_rand"                            # temporary path
-    path_main="$path_base/$base_slug/$vars_spin"                            # locals folders
+    path_main="$path_base/$base_slug"                            # distros folders
+    path_rand="$path_main/$vars_rand"                            # temporary paths
+    path_spin="$path_main/$vars_spin"                            # variant folders
 
 
     ## remote variable
+    repo_host=$( craine_reposi_tohost $option_repo )                        # repository host
+    repo_user=$( craine_reposi_touser $option_repo )                        # repository user
+    repo_name=$( craine_reposi_torepo $option_repo )                        # repository name
     repo_http=$( craine_reposi_tohttp $option_repo )                        # repository link
     repo_sshd=$( craine_reposi_tosshd $option_repo )                        # repository name
-    repo_name=$( craine_reposi_torepo $option_repo )                        # repository name
-    repo_user=$( craine_reposi_touser $option_repo )                        # repository user
-    repo_host=$( craine_reposi_tohost $option_repo )                        # repository host
     repo_push=$( craine_reposi_topush $option_repo )                        # repository push
-    
+    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$vars_spin"    # tokens path
+    repo_keys="$worker_secret/$base_slug/"                                  # sshkey path
 
     ## secret variable
-    keys_path="$worker_folder/tokens/$action_data/$base_slug/$vars_spin"    # keys path
     keys_sshd="$worker_secret/$base_slug/"                                  # sshd path
     keys_file="$keys_path/repo"                                             # keys path
     keys_data="$option_keys"                                                # keys data
@@ -508,7 +509,9 @@ function craine_create_preset_prepar () {
 
 #--| write userinput to temporer direcotry envi
 function craine_create_preset_writer () {
-    echo debug
+    
+    local envi_file="$path_rand/envi"
+    craine_preset_config_prenvi
 }
 
 

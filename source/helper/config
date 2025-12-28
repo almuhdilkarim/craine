@@ -1,7 +1,23 @@
 #!/bin/env bash
-# Configuration data 
+# configuration data manipulation 
  
 set -e
+
+
+# eeplace value from configration file
+function craine_configs_append() {
+
+    local keyvar="${1}"
+    local values="${2}"
+    local config="${3}"
+
+    echo $keyvar
+    echo $values
+    echo $config
+
+    #sed -i "s@^\(${keyvar}=\).*@\1${values}@" "$config"
+}
+
 
 ## CONFIG GETDATA
 function craine_config_keyvar() {

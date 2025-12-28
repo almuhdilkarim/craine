@@ -1,0 +1,59 @@
+#!/bin/env bash
+# preset config writers
+
+set -e
+
+
+
+## add user input to envi for create preset action 
+function craine_preset_config_prenvi() {
+
+
+    local envi_file="$path_rand/envi"
+
+
+    ### base variable
+    craine_config_appends "base_name" $base_name $envi_file
+    craine_config_appends "base_slug" $base_slug $envi_file
+    craine_config_appends "base_lead" $base_lead $envi_file
+    craine_config_appends "base_vars" $base_vars $envi_file
+
+
+    ## spin variable
+    craine_config_appends "spin_name" $spin_name $envi_file
+    craine_config_appends "spin_slug" $spin_slug $envi_file
+    craine_config_appends "spin_lead" $spin_lead $envi_file
+    craine_config_appends "spin_vars" $spin_vars $envi_file
+
+
+    ## author variable
+    craine_config_appends "auth_name" $auth_name $envi_file
+    craine_config_appends "auth_lead" $auth_lead $envi_file
+    craine_config_appends "auth_slug" $auth_slug $envi_file
+    craine_config_appends "auth_vars" $auth_vars $envi_file
+
+
+    ## path variable
+    craine_config_appends "path_main" $path_main $envi_file
+    craine_config_appends "path_spin" $path_spin $envi_file
+
+
+    ## repo variable
+    test -n $repo_host && craine_config_appends "repo_host" $repo_host $envi_file
+    test -n $repo_user && craine_config_appends "repo_user" $repo_user $envi_file
+    test -n $repo_name && craine_config_appends "repo_name" $repo_name $envi_file
+    test -n $repo_http && craine_config_appends "repo_http" $repo_http $envi_file
+    test -n $repo_sshd && craine_config_appends "repo_sshd" $repo_sshd $envi_file
+    test -n $repo_toke && craine_config_appends "repo_toke" $keys_file $envi_file
+    test -n $repo_keys && craine_config_appends "repo_keys" $keys_file $envi_file
+
+
+    ## pure variable
+    unset envi_file
+}
+
+
+
+
+
+
