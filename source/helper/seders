@@ -159,6 +159,12 @@ function craine_reposi_tosshd() {
 }
 
 
+## DATUM EDITOR
+
+function craine_module_editor() {
+    exec $vendor_editor $1
+}
+
 
 ## STRING REPLACING
 function craine_retext_string() {

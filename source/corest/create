@@ -139,9 +139,9 @@ function craine_create_enviro_preper() {
 
     ## author variable
     auth_name=$( craine_string_toname "$option_auth" )    
-    auth_lead=$( craine_string_toname "$option_auth" )    
-    auth_slug=$( craine_string_toname "$option_auth" )    
-    auth_vars=$( craine_string_toname "$option_auth" ) 
+    auth_lead=$( craine_string_toslug "$option_auth" )    
+    auth_slug=$( craine_string_tolead "$option_auth" )    
+    auth_vars=$( craine_string_tovars "$option_auth" ) 
 
 
 
@@ -389,36 +389,6 @@ function craine_create_notlog() {
 
 
 
-#######################################
-##--- DEFAULT
-#######################################
-
-
-# daemon preset
-function craine_create_master_preset() {
-    echo "debug"
-}
-
-
-# daemon proset 
-function craine_create_master_proset() {
-    echo "debug"
-}
-
-
-# protos daemon 
-function craine_create_master_protos() {
-    echo "debug"
-}
-
-
-# daemon corest
-function craine_create_master() {
-    craine_create_master_preset &&
-    craine_create_master_proset &&
-    craine_create_master_protos
-}
-
 
 #######################################
 ##--- BUILDER
@@ -530,7 +500,12 @@ function craine_create_preset_prepar () {
 function craine_create_preset_writer () {
     
     local envi_file="$path_rand/envi"
-    craine_preset_config_prenvi
+    craine_preset_parser_prenvi
+}
+
+#--| edit preset working directory environtment
+function craine_create_preset_editor () {
+    craine_module_editor $path_rand
 }
 
 
@@ -586,12 +561,6 @@ function craine_create_preset_remote () {
 
 #--| write userinput to temporer direcotry envi
 function craine_create_preset_instal () {
-    echo debug
-}
-
-
-#--| clone temporer data to wokerdir preset dir
-function craine_create_preset_editor () {
     echo debug
 }
 
@@ -652,7 +621,7 @@ craine_labs_gitspace="https://github.com/almuhdilkarim/lab001.git" craine_create
 
 
     #--[5] provide user edit on build wokerdir preset 
-    #craine_create_preset_editor
+    craine_create_preset_editor
 
 
     #--[6] confirmed user data using system previewer 
@@ -717,8 +686,7 @@ function craine_create_protos() {
 function craine_create() { 
 
     test -z $action_data && craine_create_notlog 4 1
-    exit 0
-    craine_create_master
+    
 
     if [[ $action_data == "preset" ]]; then
         unset crain_data && craine_create_preset && exit 0

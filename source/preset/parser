@@ -6,7 +6,7 @@ set -e
 
 
 ## add user input to envi for create preset action 
-function craine_preset_config_prenvi() {
+function craine_preset_parser_prenvi() {
 
 
     local envi_file="$path_rand/envi"

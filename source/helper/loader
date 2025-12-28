@@ -99,21 +99,37 @@ function craine_vendor_struct() {
 }
 
 
+
 function craine_vendor_prepar() {
     mkdir -p $craine_vendor
 }
 
 
+function craine_vendor_editor() {
+
+    local remote="https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-linux-x86_64-portable.tar.gz"
+
+    if [[ ! -f "$vendor_editor/lite-xl" ]];then
+        curl -L -o /tmp/editor.tar.gz $remote &&  
+        tar -xf /tmp/editor.tar.gz -C $craine_vendor &&
+        mv -f $craine_vendor/lite-xl $vendor_editor
+    fi
+
+    vendor_editor="$vendor_editor/lite-xl"
+    unset $remote
+}
+ 
+
 function craine_vendors() {
     craine_vendor_struct
     craine_vendor_prepar
+    craine_vendor_editor
 }
 
 
 
 
 ## WORKER 
-
 function craine_workers_struct() {
 
     worker_folder="$HOME/.local/craine"

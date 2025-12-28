@@ -7,3 +7,4 @@ set -e
 function craine_baner_raptors() {
     cat "${srcpath}/banner" && echo ""
 }
+
