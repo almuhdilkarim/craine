@@ -236,6 +236,10 @@ function craine_create_notife_info() {
     test $code == 1205 && text="install modules to working directories"
     test $code == 1206 && text="create access tokens vault directories"
     test $code == 1207 && text="add personal access token to vaultfile"
+    test $code == 1208 && text="writing user input data to tmp presets"
+    test $code == 1209 && text="clone remote sources to working folder"
+    test $code == 1210 && text="install preset to remote source folder"
+    test $code == 1211 && text="purifiying source at temporary presets"
 
 
     ##---(130) proset
@@ -428,7 +432,7 @@ function craine_create_preset_prepar () {
 
 
     #--[3] create preset working directory
-    mkdir -p $path_rand
+    mkdir -p $path_rand &&
 
     if [[ $? -eq 0 ]]; then
         craine_create_notlog 1 1204
@@ -438,7 +442,7 @@ function craine_create_preset_prepar () {
 
     
     #--[4] clone default preset to workdir
-    cp -fr $path_core/* $path_rand
+    cp -fr $path_core/* $path_rand &&
 
     if [[ $? -eq 0 ]]; then
         craine_create_notlog 1 1205
@@ -448,7 +452,7 @@ function craine_create_preset_prepar () {
 
 
     #--[5] create tokens pat access folders
-    mkdir -p $repo_toke
+    mkdir -p $repo_toke &&
 
     if [[ $? -eq 0 ]]; then
         craine_create_notlog 1 1206
@@ -458,7 +462,7 @@ function craine_create_preset_prepar () {
 
 
     #--[6] write token data to vault folder
-    echo "$toke_data" > "$toke_path"
+    echo "$toke_data" > "$toke_path" &&
     
     if [[ $? -eq 0 ]]; then
         craine_create_notlog 1 1207
@@ -472,24 +476,54 @@ function craine_create_preset_prepar () {
 
 #--| write userinput to temporer direcotry envi
 function craine_create_preset_writer () {
-    craine_preset_parser_prenvi
+
+    craine_preset_parser_prenvi &&
+
+    if [[ $? -eq 0 ]]; then
+        craine_create_notlog 1 1208
+    else
+        craine_create_notlog 3 1204
+    fi
 }
 
 
 #--| clone remote preset repository to workerdir
 function craine_create_preset_remote () {
 
-    craine_remote_clones $repo_http $path_spin
-    echo "preset remote clone"
+    craine_remote_clones $repo_http $path_spin &&
+    
+    if [[ $? -eq 0 ]]; then
+        craine_create_notlog 1 1209
+    else
+        craine_create_notlog 3 1204
+    fi
 }
 
 
 #--| write userinput to temporer direcotry envi
 function craine_create_preset_instal () {
 
+
+    #--[1] copy preset data from temporary folder
+
     cp -fr $path_rand/* $path_spin &&
-    rm -fr $path_rand
-    echo "preset installation"
+    
+    if [[ $? -eq 0 ]]; then
+        craine_create_notlog 1 1210
+    else
+        craine_create_notlog 3 1204
+    fi
+
+
+    #--[2] remove temporary preset directories
+
+    rm -fr $path_rand &&
+
+    if [[ $? -eq 0 ]]; then
+        craine_create_notlog 1 1211
+    else
+        craine_create_notlog 3 1204
+    fi
 }
 
 
