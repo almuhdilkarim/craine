@@ -209,7 +209,7 @@ function craine_create_datums_pure {
 #######################################
 
 
-# (1) level info notif
+#-- (1) level info notif
 function craine_create_notife_info() {
 
 
@@ -256,37 +256,37 @@ function craine_create_notife_info() {
 }
 
 
-# (1) level info loging 
+#-- (1) level info loging 
 function craine_create_logger_info() {
     echo debug > /dev/null
 }
 
 
-# (2) level warn notif 
+#-- (2) level warn notif 
 function craine_create_notife_warn() {
     echo debug
 }
 
 
-# (2) level info loging
+#-- (2) level info loging
 function craine_create_logger_warn() {
     echo debug
 }
 
 
-# (3) level error notif
+#-- (3) level error notif
 function craine_create_notife_errs() {
     echo debug
 }
 
 
-# (3) level error loging
+#-- (3) level error loging
 function craine_create_logger_errs() {
     echo debug
 }
 
 
-# (4) level fatal notif
+#-- (4) level fatal notif
 function craine_create_notife_fail() {
     ##--[1] declare varible for error code and text message
     local text=""
@@ -322,7 +322,7 @@ function craine_create_notife_fail() {
 }
 
 
-# (4) level fatal loging
+#-- (4) level fatal loging
 function craine_create_logger_fail() {
     echo debug
 }
@@ -567,7 +567,6 @@ function craine_create_preset_info () {
         craine_module_editor $path_spin/crain &
     fi
 }
-
 
 
 #--| preset corest
