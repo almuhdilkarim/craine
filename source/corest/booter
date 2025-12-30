@@ -43,7 +43,7 @@ function craine_systems_corest() {
     source "$system_corest/parsed"
     source "$system_corest/remote"
     source "$system_corest/secure"
-    source "$system_corest/polare" 
+    source "$system_corest/deskto" 
 }
 
 
