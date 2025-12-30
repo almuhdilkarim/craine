@@ -132,7 +132,7 @@ function craine_update_remote_secret () {
 }
 
 
-##--[1] validate tokens
+##--[2] validate tokens
 function craine_update_remote_tokens () {
 
     if [[ -z toke_data ]];then
