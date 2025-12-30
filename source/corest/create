@@ -386,7 +386,7 @@ function craine_create_images() {
 
 
 #######################################
-##--- TESTER
+##--- LABROM
 #######################################
 
 
@@ -527,13 +527,6 @@ function craine_create_preset_instal () {
 }
 
 
-#--| commited preset to their remote repository
-function craine_create_preset_commit () {
-
-    echo "first commit"
-}
-
-
 #--| confirmed user data using system previewer
 function craine_create_preset_report () {
 
@@ -561,23 +554,16 @@ function craine_create_preset_report () {
     echo -e  "\t${green}   logpath  |                                                       ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   keypath  |                                                       ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
-    echo -ne "\t${green}   Do you want create distro based on current preview data: [Y/n]   ${reset}" | sed 's/^[[:space:]]*//' && 
+    echo -ne "\t${green}   Do you want make change by editing new distro using text editor: [Y/n] ${reset}" | sed 's/^[[:space:]]*//' && 
     
     read ban_prevs
 
     
     if [[ $ban_prevs == "Y" ]]||[[ $ban_prevs == "y" ]];then
-        echo editing
+        craine_module_editor $path_spin/envi &
     fi
-    
-    test -z  $aborted && exit 0
 }
 
-
-#--| edit preset working directory environtment
-function craine_create_preset_editor () {
-    craine_module_editor $path_rand/envi
-}
 
 
 #--| preset corest
@@ -611,21 +597,12 @@ function craine_create_preset() {
     craine_create_preset_instal
 
 
-    #--[8] commited preset to their remote repository
-    #craine_create_preset_commit
-
-
-    #--[10] display new preset final report parameter
+    #--[9] display new preset final report parameter
     craine_create_preset_report
 
-
-    #--[5] provide user edit on build wokerdir preset 
-    #craine_create_preset_editor
-
-    #--[11] purge build variable from current procces 
-    craine_create_enviro_purify 
-
-
+    
+    #--[10] purge build variable from current procces 
+    craine_create_enviro_purify
 }
 
 

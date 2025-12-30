@@ -48,8 +48,11 @@ function craine_systems_librar() {
 
 #-- craine core system actions
 function craine_systems_corest() {
-    
+
+    source "$system_corest/builds"
     source "$system_corest/create"
+    source "$system_corest/updati"
+    source "$system_corest/upgrai"
     source "$system_corest/graphi"
 }
 

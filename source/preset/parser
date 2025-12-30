@@ -9,7 +9,7 @@ set -e
 function craine_preset_parser_prenvi() {
 
 
-    local envi_file="$path_rand/envi"
+    local envi_file="$path_rand/crain"
 
 
     ### base variable
@@ -50,4 +50,19 @@ function craine_preset_parser_prenvi() {
 
     ## pure variable
     unset envi_file
+}
+
+
+## write user input to master default system preset 
+function craine_preset_parser_predoc() {
+
+    #--[1] root file
+    local read_file="$path_rand/README.md"
+
+    
+
+    #--[2] conf file
+    local rels_file="$path_rand/conf/usr/lib/os-release"
+
+
 }
