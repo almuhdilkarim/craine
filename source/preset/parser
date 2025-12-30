@@ -90,19 +90,22 @@ function craine_preset_parser_rebase() {
 function craine_preset_logger_create() {
 
     mkdir -p $logs_path && 
-    
-    echo  "#######################################################" >  $logs_file
+
+    echo  "                                                       " >> $logs_file
+    echo  "#######################################################" >> $logs_file
     echo  " CRAINE PRESET  BUILD LOGS                             " >> $logs_file
     echo  "#######################################################" >> $logs_file
-    echo  " distro   :                                            " >> $logs_file
-    echo  " variant  :                                            " >> $logs_file
+    echo  " distro   : $base_name                                 " >> $logs_file
+    echo  " variant  : $spin_name                                 " >> $logs_file
     echo  " builder  : $USER                                      " >> $logs_file
-    echo  " actions  : $craine_mode                               " >> $logs_file
+    echo  " actions  : $action_mode                               " >> $logs_file
+    echo  " modules  : $action_data                               " >> $logs_file
     echo  " starting : $( date )                                  " >> $logs_file
     echo  " hostname : $HOSTNAME                                  " >> $logs_file
     echo  "#######################################################" >> $logs_file
     echo  "                                                       " >> $logs_file
 }
+
 
 ## add user input to envi for create preset action 
 function craine_preset_parser_remake() {
@@ -116,7 +119,7 @@ function craine_preset_parser_remake() {
     craine_varkey_rewrite "base_name" "$base_name" "$envi_file"
     craine_varkey_rewrite "spin_name" "$spin_name" "$envi_file"
     craine_varkey_rewrite "auth_name" "$auth_name" "$envi_file"
-    craine_varkey_rewrite "repo_path" "$repo_http" "$envi_file"
+    craine_varkey_rewrite "base_repo" "$repo_http" "$envi_file"
 
 
     ## path variable

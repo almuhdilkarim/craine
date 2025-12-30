@@ -52,8 +52,8 @@ function craine_systems_corest() {
 
     source "$system_corest/builds"
     source "$system_corest/create"
-    source "$system_corest/updati"
-    source "$system_corest/upgrai"
+    source "$system_corest/pushit"
+    source "$system_corest/refine"
     source "$system_corest/graphi"
 }
 
@@ -214,8 +214,18 @@ function craine_workers_protos() {
 
 
 function craine_workers_secret() {
+
+
+    #--[1] create folder
     mkdir -p $worker_secret
     chmod -R 700 $worker_secret
+
+
+    #--[2] create secret
+    if [[ ! -f "$worker_secret/master"  ]];then
+        ssh-keygen -q -t ed25519 -f $worker_secret/master -N ""
+        chmod 600 $worker_secret/master
+    fi
 }
 
 

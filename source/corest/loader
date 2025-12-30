@@ -5,7 +5,7 @@ set -e
 
 
 ##--[1] action options
-while getopts "c:l:d:b:e:u:g:w:n:s:r:k:a:" option; do
+while getopts "c:l:d:b:e:p:u:g:w:m:n:s:r:k:a:" option; do
     case $option in
         c) action_mode="create" && action_data="${OPTARG}"
         ;;
@@ -17,11 +17,15 @@ while getopts "c:l:d:b:e:u:g:w:n:s:r:k:a:" option; do
         ;;
         e) action_mode="editer" && action_data="${OPTARG}"
         ;;
-        u) action_mode="update" && action_data="${OPTARG}"
+        p) action_mode="update" && action_data="${OPTARG}"
+        ;;
+        u) action_mode="refine" && action_data="${OPTARG}"
         ;;
         g) action_mode="taking" && action_data="${OPTARG}"
         ;;
         w) action_mode="window" && action_data="${OPTARG}"
+        ;;
+        m) option_mode="${OPTARG}"
         ;;
         n) option_name="${OPTARG}"
         ;;
@@ -56,6 +60,12 @@ fi
 ##--[5] create modules
 if [[ $action_mode == "create" ]];then
     test -n $option_name && craine_create
+fi
+
+
+##--[6] update modules
+if [[ $action_mode == "update" ]];then
+    test -n $option_name && craine_update
 fi
 
 

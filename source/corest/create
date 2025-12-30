@@ -131,8 +131,12 @@ function craine_create_enviro_preper() {
     repo_keys="$worker_secret/master"                                       # repository sshd
 
 
+
     ## loging variable                                       
     logs_file="$worker_logger/$action_mode-$action_data-$vars_rand"         # logging filedat
+    logs_pack="$path_spin/track/$vars_rand"
+    logs_make="$path_spin/track/_init"
+
 
 
     ## tokens variable
@@ -149,10 +153,11 @@ function craine_create_enviro_preper() {
 
 
     ##-- relative path replacement 
-    ##   replace absolute home variable with tilda (~), fix perset creating function building 
+    ##   replace absolute home variable with tilda (~), fix perset creating function buildings 
     
     local worker_repdir="~/.local/craine"
     local worker_repsec="~/.ssh/crainkey/"
+
 
     rpat_base="$worker_repdir/$action_data"                                 # module directory
     rpat_main="$worker_repdir/$base_slug"                                   # distro directory
@@ -533,6 +538,11 @@ function craine_create_preset_instal () {
     else
         craine_create_notlog 3 1204
     fi
+
+    #--[3] clone build logs to presets folders
+    mkdir -p "$path_spin/track/" &&
+    cp -f $logs_file $logs_make
+
 }
 
 
@@ -557,8 +567,8 @@ function craine_create_preset_report () {
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   BUILD INFORMATION                                                ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   logs     |                                                       ${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   type     |                                                       ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   logs     | $logs_make                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   type     | desktop                                               ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
     echo -ne "\t${green}   Do you want make change by editing new distro using text editor: [Y/n] ${reset}" | sed 's/^[[:space:]]*//' && 
     

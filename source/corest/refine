@@ -7,7 +7,7 @@ set -e
 ## UPGRADE OPERATION
 
 #-- upgrade local module using gitrepo
-function craine_upgrade_gitbase() {
+function craine_pushit_gitbase() {
     echo "update"
 }
 

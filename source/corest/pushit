@@ -1,0 +1,325 @@
+#!/bin/env bash
+## craine update
+
+
+#######################################
+##--- DATUMS
+#######################################
+
+# 1 | command line base data organizer
+
+function craine_update_datums_pooled () {
+   
+
+    ## logic variable
+    option_spin=$( [[ -z $option_spin ]] && echo "default" || echo "$option_spin" )
+
+
+    ## loads sources
+    local base_conf="$worker_folder/$action_data/$option_name/$option_spin/crain"
+    
+
+    if [[ ! -f $base_conf ]];then
+
+        echo "error : file not found" && exit 0
+    else
+
+        source $base_conf
+    fi
+
+
+    ## base variable
+    base_name=$( craine_module_toname ${base_name} )
+    base_slug=$( craine_module_toslug ${base_name} )
+    base_lead=$( craine_module_tolead ${base_name} )
+    base_vars=$( craine_module_tovars ${base_name} )
+    
+
+
+    ## spin variablbase_namee
+    spin_name=$( craine_module_toname ${spin_name} )
+    spin_slug=$( craine_module_toslug ${spin_name} )
+    spin_lead=$( craine_module_tolead ${spin_name} )
+    spin_vars=$( craine_module_tovars ${spin_name} )
+    
+
+
+    ## author variable
+    auth_name=$( craine_module_toname "$auth_name" )    
+    auth_lead=$( craine_module_toslug "$auth_name" )    
+    auth_slug=$( craine_module_tolead "$auth_name" )    
+    auth_vars=$( craine_module_tovars "$auth_name" ) 
+
+
+
+    ## locals variable
+    vars_rand=$( craine_module_filetim )
+    path_base="$worker_folder/$action_data"
+    path_main="$path_base/$base_slug"                                       # distros folders
+    path_rand="$path_main/$vars_rand"                                       # temporary paths
+    path_spin="$path_main/$spin_slug"                                       # variant folders
+    
+
+
+    ## remote variable
+    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # repository apts
+    repo_host=$( craine_remote_tohost $base_repo )                          # repository host
+    repo_user=$( craine_remote_touser $base_repo )                          # repository user
+    repo_name=$( craine_remote_torepo $base_repo )                          # repository name
+    repo_http=$( craine_remote_tohttp $base_repo )                          # repository link
+    repo_sshd=$( craine_remote_tosshd $base_repo )                          # repository name
+    repo_push=$( craine_remote_topush $base_repo )                          # repository push
+    repo_keys="$worker_secret/master"                                       # repository sshd
+
+
+
+    ## loging variable                                       
+    logs_file="$worker_logger/$action_mode-$action_data-$vars_rand"         # logging filedat
+    logs_pack="$path_spin/track/$vars_rand"
+    logs_make="$path_spin/track/_init"
+
+
+
+    ## tokens variable
+    toke_path="$repo_toke/repo"                                             # tokneizers path
+    toke_data=$( cat $toke_path )                                                # tokneizers data
+    
+
+
+    ## notife variable
+    stage_num=1
+    alert_num=1
+    erorr_num=1
+
+
+
+    ##-- relative path replacement 
+    ##   replace absolute home variable with tilda (~), fix perset creating function buildings 
+    
+    local worker_repdir="~/.local/craine"
+    local worker_repsec="~/.ssh/crainkey/"
+
+
+    rpat_base="$worker_repdir/$action_data"                                 # module directory
+    rpat_main="$worker_repdir/$base_slug"                                   # distro directory
+    rpat_spin="$worker_repdir/$base_slug/$spin_slug"                        # varian directory
+    rrep_keys="$worker_repsec/master"                                       # secret directory
+    rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$spin_slug"    # tokens directory
+}
+
+
+#######################################
+##--- PROGRES
+#######################################
+
+##--[1] validate secret
+function craine_update_remote_secret () {
+
+    #--[1] initialzer ssh-agents
+    if [[ ! -f $worker_secret/master  ]];then    
+        sshd_keys=false && return 1
+    fi
+
+    #--[2] initialzer ssh-agents 
+    eval "$(ssh-agent -s)" > /dev/null 2>&1 &&
+
+    #--[3] add secret to ssh agent 
+    ssh-add $worker_secret/master > /dev/null 2>&1
+
+    #--[4] connection test to github
+    yes | ssh -T git@github.com >  /dev/null 2>&1
+
+}
+
+
+##--[1] validate tokens
+function craine_update_remote_tokens () {
+
+    if [[ -z toke_data ]];then
+        http_keys=false
+    fi
+}
+
+
+function craine_update_remote_hosted () {
+
+    #--[1] validate ssh connection
+
+    test -z $sshd_stat &&  git ls-remote --exit-code $repo_sshd > /dev/null 2>&1
+    
+    if [[ $? -eq 0 ]]; then
+        sshd_stat=true && return 0
+    fi
+
+    #--[2] validate uri connection
+}
+
+
+function craine_update_remote_commit () {
+    echo "push to host"
+}
+
+
+function craine_update_remote_pushed () {
+
+    if [[ $sshd_stat == true  ]]; then
+        echo "update using sshd"
+
+        return 0
+    fi
+
+
+    if [[ $http_stat == true  ]]; then
+        echo "update using http"
+
+        return 0
+    fi
+}
+
+
+
+
+#######################################
+##--- VERSION
+#######################################
+
+
+function craine_update_versio_major() {
+    echo $ver_major
+}
+
+
+function craine_update_versio_minor() {
+    echo $ver_minor
+}
+
+
+function craine_update_versio_patch() {
+    echo $ver_patch
+}
+
+
+
+#######################################
+##--- PRESET
+#######################################
+
+
+function craine_update_preset_majors() {
+
+    craine_update_datums_preps
+    craine_update_remote_avail
+    craine_update_versio_major
+}
+
+
+function craine_update_preset_minors() {
+
+    craine_update_datums_preps
+    craine_update_remote_avail
+    craine_update_versio_minor
+}
+
+
+function craine_update_preset_patchs() {
+
+    #--[1] populate preset data
+    craine_update_datums_pooled
+
+
+    #--[1] validate preset keys
+    craine_update_remote_secret
+
+
+    #--[1] validate preset toke
+    craine_update_remote_tokens
+
+
+    #--[1] validate preset host
+    craine_update_remote_hosted
+
+
+    #--[1] update patch numbers
+    craine_update_versio_patchs
+
+
+    #--[1] defined commit texts
+    craine_update_remote_commit
+
+
+    #--[1] update patch number
+    craine_update_remote_pushed
+}
+
+
+function craine_update_preset() {
+
+    if [[ $option_mode == "minor" ]]; then
+
+        craine_update_preset_minors
+
+    elif [[ $option_mode == "major" ]]; then
+
+        craine_update_preset_majors
+
+    else
+
+        craine_update_preset_patchs
+    fi
+}
+
+
+
+#######################################
+##--- PROSET
+#######################################
+
+
+function craine_update_proset() {
+    echo debug
+}
+
+
+#######################################
+##--- PROTOS
+#######################################
+
+
+function craine_update_protos() {
+    echo debug
+}
+
+
+
+#######################################
+##--- INITIAL
+#######################################
+
+
+function craine_update() {
+
+    test -z $action_data && craine_create_notlog 4 1
+
+
+
+    if [[ $action_data == "preset" ]]; then
+        
+        unset crain_data && craine_update_preset && exit 0
+    fi
+
+    if [[ $action_data == "proset" ]]; then
+        unset crain_data && craine_update_proset && exit 0
+    fi
+
+    if [[ $action_data == "protos" ]]; then
+        unset crain_data && craine_update_protos && exit 0
+    fi
+
+    if [[ $action_data == "release" ]]; then
+        unset crain_data && craine_update_images && exit 0
+    fi
+
+    if [[ $action_data == "testing" ]]; then
+        unset crain_data && craine_update_tester && exit 0
+    fi
+}
