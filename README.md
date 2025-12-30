@@ -1,5 +1,5 @@
 # Craine Studio
-Operating System Studio Maker 
+Architecth Linux Studio Maker 
 
 # operation
 
