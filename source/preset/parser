@@ -82,6 +82,7 @@ function craine_preset_parser_rebase() {
     craine_preset_parser_relead $file
     craine_preset_parser_revars $file 
     unset file
+    
 }
 
 
@@ -91,6 +92,7 @@ function craine_preset_parser_remake() {
 
      #--[1] root file
     local envi_file="$path_rand/crain"
+
 
     ### base variable
     craine_varkey_rewrite "base_name" "$base_name" "$envi_file"
