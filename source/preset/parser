@@ -93,19 +93,15 @@ function craine_preset_parser_remake() {
     local envi_file="$path_rand/crain"
 
     ### base variable
-    craine_varkey_rewrite "base_name" "$base_name" $envi_file
-    craine_varkey_rewrite "spin_name" "$spin_name" $envi_file
-    craine_varkey_rewrite "auth_name" "$auth_name" $envi_file
+    craine_varkey_rewrite "base_name" "$base_name" "$envi_file"
+    craine_varkey_rewrite "spin_name" "$spin_name" "$envi_file"
+    craine_varkey_rewrite "auth_name" "$auth_name" "$envi_file"
+    craine_varkey_rewrite "repo_path" "$repo_http" "$envi_file"
 
 
     ## path variable
-    craine_varkey_rewrite "path_main" "$rpat_main" $envi_file
-    craine_varkey_rewrite "path_spin" "$rpat_spin" $envi_file
-
-
-    ## repo variable
-    test -n $repo_http && craine_varkey_rewrite "repo_http" "$repo_http" "$envi_file"
-    test -n $repo_sshd && craine_varkey_rewrite "repo_sshd" "$repo_sshd" "$envi_file"
+    craine_varkey_rewrite "path_main" "$rpat_main" "$envi_file"
+    craine_varkey_rewrite "path_spin" "$rpat_spin" "$envi_file"
 
 
 

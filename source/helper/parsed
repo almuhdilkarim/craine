@@ -59,6 +59,7 @@ function craine_module_random() {
 
 ## REPOSITORY PARSER
 
+
 function craine_remote_torepo() {
 
     local parser=${1}
@@ -92,6 +93,7 @@ function craine_remote_touser() {
 function craine_remote_tohost() {
 
     local parser=${1}
+
     if [[ -n $( echo ${parser} | grep "https://" ) ]];then
         local parser=$( echo ${parser} | cut -d/ -f3)
     else
@@ -106,9 +108,9 @@ function craine_remote_tohost() {
 function craine_remote_topush() {
 
     local parser=${1} 
-    local naming=$( craine_reposi_torepo $parser )
-    local userer=$( craine_reposi_touser $parser )
-    local hoster=$( craine_reposi_tohost $parser )
+    local naming=$( craine_remote_torepo $parser )
+    local userer=$( craine_remote_touser $parser )
+    local hoster=$( craine_remote_tohost $parser )
     local parser="https://${userer}:${repo_keys}@${hoster}/${userer}/${naming}"
 
     echo "$parser"
@@ -123,17 +125,10 @@ function craine_remote_tohttp() {
     
     local parser=${1}
 
-    if [[ -n $( echo ${parser} | grep "https://" ) ]];then
-
-        local parser=${1}
-
-    else
-        local naming=$( craine_reposi_torepo $parser )
-        local userer=$( craine_reposi_touser $parser )
-        local hoster=$( craine_reposi_tohost $parser )
-        local parser="https://${hoster}/${userer}/${naming}"
-    fi
-
+    local naming=$( craine_remote_torepo $parser )
+    local userer=$( craine_remote_touser $parser )
+    local hoster=$( craine_remote_tohost $parser )
+    local parser="https://${hoster}/${userer}/${naming}"
    
     echo "$parser"
     unset parser
@@ -144,15 +139,10 @@ function craine_remote_tosshd() {
 
     local parser=${1}
 
-    if [[ -n $( echo ${parser} | grep "https://" ) ]];then
-        local naming=$( craine_reposi_torepo $parser )
-        local userer=$( craine_reposi_touser $parser )
-        local hoster=$( craine_reposi_tohost $parser )
-        local parser="git@${hoster}:${userer}/${naming}"
-    else
-        local parser=${1}
-    fi
-
+    local naming=$( craine_remote_torepo $parser )
+    local userer=$( craine_remote_touser $parser )
+    local hoster=$( craine_remote_tohost $parser )
+    local parser="git@${hoster}:${userer}/${naming}"
    
     echo "$parser"
     unset parser

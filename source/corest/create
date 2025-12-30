@@ -130,7 +130,6 @@ function craine_create_enviro_preper() {
     repo_keys="$worker_secret/master"                                       # repository sshd
 
 
-
     ## tokens variable
     toke_path="$repo_toke/repo"                                             # tokneizers path
     toke_data="$option_keys"                                                # tokneizers data
@@ -485,7 +484,6 @@ function craine_create_preset_writer () {
         craine_create_notlog 3 1204
     fi
 
-    exit 0
 }
 
 
