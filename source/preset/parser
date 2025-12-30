@@ -82,9 +82,27 @@ function craine_preset_parser_rebase() {
     craine_preset_parser_relead $file
     craine_preset_parser_revars $file 
     unset file
-    
+
 }
 
+
+## register logging file for current preset action
+function craine_preset_logger_create() {
+
+    mkdir -p $logs_path && 
+    
+    echo  "#######################################################" >  $logs_file
+    echo  " CRAINE PRESET  BUILD LOGS                             " >> $logs_file
+    echo  "#######################################################" >> $logs_file
+    echo  " distro   :                                            " >> $logs_file
+    echo  " variant  :                                            " >> $logs_file
+    echo  " builder  : $USER                                      " >> $logs_file
+    echo  " actions  : $craine_mode                               " >> $logs_file
+    echo  " starting : $( date )                                  " >> $logs_file
+    echo  " hostname : $HOSTNAME                                  " >> $logs_file
+    echo  "#######################################################" >> $logs_file
+    echo  "                                                       " >> $logs_file
+}
 
 ## add user input to envi for create preset action 
 function craine_preset_parser_remake() {

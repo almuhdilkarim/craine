@@ -98,11 +98,12 @@ function craine_remote_clones() {
     local locals_source=$2
 
     if [[ ! -d $locals_source ]]; then
-        
-        git clone $remote_source $locals_source > /dev/null 2>&1
+    
+        git clone $remote_source $locals_source > /dev/null 2>&1 
 
     else
-        rm -fr $locals_source && exit 1
+
+        return 1
     fi
 
     unset remote_source
@@ -116,8 +117,10 @@ function craine_locals_clones() {
     cp -fr $1 $2
 
     if [ $? -eq 0 ]; then
+
         craine_loging_inform "locals source directory clone"
     else
+    
         craine_loging_errors "failed to clone locals source"
     fi
 }

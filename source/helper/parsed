@@ -50,6 +50,10 @@ function craine_module_tolead() {
 }
 
 
+function craine_module_filetim() {
+    echo $(date "+%Y.%m.%d.%H.%M.%S")
+}
+
 function craine_module_random() {
     local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
     echo $random_number

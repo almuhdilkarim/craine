@@ -112,11 +112,12 @@ function craine_create_enviro_preper() {
 
 
     ## locals variable
-    vars_rand=$( craine_module_random )
+    vars_rand=$( craine_module_filetim )
     path_base="$worker_folder/$action_data"
     path_main="$path_base/$base_slug"                                       # distros folders
     path_rand="$path_main/$vars_rand"                                       # temporary paths
     path_spin="$path_main/$spin_slug"                                       # variant folders
+    
 
 
     ## remote variable
@@ -128,6 +129,10 @@ function craine_create_enviro_preper() {
     repo_sshd=$( craine_remote_tosshd $option_repo )                        # repository name
     repo_push=$( craine_remote_topush $option_repo )                        # repository push
     repo_keys="$worker_secret/master"                                       # repository sshd
+
+
+    ## loging variable                                       
+    logs_file="$worker_logger/$action_mode-$action_data-$vars_rand"         # logging filedat
 
 
     ## tokens variable
@@ -408,7 +413,11 @@ function craine_create_preset_booter () {
     test -d $path_spin && craine_create_notlog 4 4201
 
 
-    #--[2] starting build preset
+    #--[2] create build log file
+    craine_preset_logger_create 
+
+
+    #--[3] starting build preset
     craine_baner_prime
     echo -e  "\t${green}  PREPARE BUILD MODULE                                              ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
@@ -538,21 +547,18 @@ function craine_create_preset_report () {
     echo -e  "\t${green}   distro   | $base_name                                            ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   author   | $auth_name                                            ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   variant  | $path_spin                                            ${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   install  | $path_main                                            ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   REMOTE REPOSITORY                                                ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   host     | $repo_host                                            ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   user     | $repo_user                                            ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   repo     | $repo_name                                            ${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   sshd     | $repo_sshd                                            ${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   http     | $repo_http                                            ${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   keys     | $repo_keys                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   link     | $repo_http                                            ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green}   BUILD INFORMATION                                                ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   logpath  |                                                       ${reset}" | sed 's/^[[:space:]]*//'
-    echo -e  "\t${green}   keypath  |                                                       ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   logs     |                                                       ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e  "\t${green}   type     |                                                       ${reset}" | sed 's/^[[:space:]]*//'
     echo -e  "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
     echo -ne "\t${green}   Do you want make change by editing new distro using text editor: [Y/n] ${reset}" | sed 's/^[[:space:]]*//' && 
     

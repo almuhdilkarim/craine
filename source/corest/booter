@@ -158,6 +158,7 @@ function craine_workers_struct() {
     worker_prolab="$worker_folder/prolab"
     worker_preloc="$worker_folder/preloc"
     worker_config="$worker_folder/config"
+    worker_logger="$worker_folder/logger"
     worker_tokens="$worker_folder/tokens"
 }
 
@@ -172,6 +173,7 @@ function craine_workers_prepar() {
     mkdir -p $worker_preloc
     mkdir -p $worker_config
     mkdir -p $worker_tokens
+    mkdir -p $worker_logger
 }
 
 
