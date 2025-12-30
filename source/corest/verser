@@ -91,20 +91,6 @@ function craine_update_datums_pooled () {
     alert_num=1
     erorr_num=1
 
-
-
-    ##-- relative path replacement 
-    ##   replace absolute home variable with tilda (~), fix perset creating function buildings 
-    
-    local worker_repdir="~/.local/craine"
-    local worker_repsec="~/.ssh/crainkey/"
-
-
-    rpat_base="$worker_repdir/$action_data"                                 # module directory
-    rpat_main="$worker_repdir/$base_slug"                                   # distro directory
-    rpat_spin="$worker_repdir/$base_slug/$spin_slug"                        # varian directory
-    rrep_keys="$worker_repsec/master"                                       # secret directory
-    rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$spin_slug"    # tokens directory
 }
 
 
@@ -115,83 +101,117 @@ function craine_update_datums_pooled () {
 ##--[1] validate secret
 function craine_update_remote_secret () {
 
+
     #--[1] initialzer ssh-agents
     if [[ ! -f $worker_secret/master  ]];then    
-        sshd_keys=false && return 1
+        return
     fi
+
 
     #--[2] initialzer ssh-agents 
     eval "$(ssh-agent -s)" > /dev/null 2>&1 &&
 
+
     #--[3] add secret to ssh agent 
     ssh-add $worker_secret/master > /dev/null 2>&1
+
 
     #--[4] connection test to github
     yes | ssh -T git@github.com >  /dev/null 2>&1
 
+    
+    #--[5] validate ssh connection
+    cd $path_spin && git ls-remote --exit-code $repo_sshd > /dev/null 2>&1
+    
+
+    #--[1] validate ssh connection
+    if [[ $? -eq 0 ]]; then
+        sshd_stat=true 
+    fi
 }
 
 
 ##--[2] validate tokens
 function craine_update_remote_tokens () {
 
+
+    #--[1] validate ssh connection, return false is ssh connection available
+    if [[ $sshd_stat == true ]];then
+        return
+    fi
+
+
+    #--[2] check personal access tokens available, exit with error code if not exist
     if [[ -z toke_data ]];then
-        http_keys=false
-    fi
-}
-
-
-function craine_update_remote_hosted () {
-
-
-    #--[1] validate ssh connection
-
-    test -z $sshd_stat &&  git ls-remote --exit-code $repo_sshd > /dev/null 2>&1
-    
-    if [[ $? -eq 0 ]]; then
-        sshd_stat=true && return
+        echo "no remote resources available" && exit 1
     fi
 
 
-    #--[2] validate uri connection
-
+    #--[3] validate uri connection
     cd $path_spin && git remote set-url origin "$repo_keys"
 
+
+    #--[4] validate uri connection
     test -z $http_keys && cd $path_spin &&  git ls-remote --exit-code $repo_http > /dev/null 2>&1
 
 
-    if [[ $? -eq 0 ]]; then
-        http_stat=true && return
+    #--[5] validate uri connection
+    if [[ $? -ne 0 ]]; then
+
+        #--[5-1] validate uri connection
+        cd $path_spin && git remote set-url origin "$base_repo"
+
+        #--[5-2] validate uri connection
+        echo "no remote resources available" && exit 1
     fi
 
 
-    #--[3] rebase gitremote url
-    cd cd $path_spin && git remote set-url origin "$base_repo"
+    #--[6] validate uri connection
+    http_stat=true 
 
 
-    #--[3] no validated repo aborted process 
-    exit 1
+    #--[7] validate uri connection
+    cd $path_spin && git remote set-url origin "$base_repo"
 }
+
 
 
 function craine_update_remote_commit () {
 
+    #--[1] validate uri connection
     cd $path_spin && git add . &&
+
+
+    #--[2] validate uri connection
     cd $path_spin && git commit -m "update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
 }
 
 
 function craine_update_remote_pushed () {
 
+    #--[1] pushed using sshd connection
+    if [[ $shhd_stat == true  ]]; then
+
+        #--[1.1] pushed using sshd connection
+        cd $path_spin && git push &&
+
+        #--[1.2] pushed using sshd connection
+        return
+    fi
+
+
+    #--[2] pushed using http connection
     if [[ $http_stat == true  ]]; then
+
+        #--[2.1] pushed using sshd connection
         cd $path_spin && git remote set-url origin "$repo_keys"
-    fi
 
-    cd $path_spin && git push &&
+        #--[2.2] pushed using sshd connection
+        cd $path_spin && git push &&
 
-    if [[ $http_stat == true  ]]; then
+        #--[2.3] pushed using sshd connection
         cd $path_spin && git remote set-url origin "$base_repo"
-    fi
+    fi   
 }
 
 
@@ -202,34 +222,68 @@ function craine_update_remote_pushed () {
 
 
 function craine_update_versio_majors() {
-    echo $ver_major
-}
 
 
-function craine_update_versio_minors() {
-    echo $ver_minor
-}
-
-
-function craine_update_versio_patchs() {
-
+    #--[1] root file
     if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
         return
     fi
+
 
     #--[1] root file
     local envi_file="$path_spin/crain"
 
 
-    ### base variable
-    ver_patch=$((ver_patch + 1 ))
-    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
+    #--[1] root file
+    ver_major=$((ver_major + 1 ))
 
+
+    #--[1] root file
+    sed -i "s@^\(ver_major=\).*@\1${ver_major}@" "$envi_file"
+}
+
+
+function craine_update_versio_minors() {
 
     
+    #--[1] root file
+    if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
+        return
+    fi
 
 
-    echo $ver_patch
+    #--[1] root file
+    local envi_file="$path_spin/crain"
+
+
+    #--[1] root file
+    ver_minor=$((ver_minor + 1 ))
+
+
+    #--[1] root file
+    sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$envi_file"
+}
+
+
+function craine_update_versio_patchs() {
+
+
+    #--[1] root file
+    if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
+        return
+    fi
+
+
+    #--[1] root file
+    local envi_file="$path_spin/crain"
+
+
+    #--[1] root file
+    ver_patch=$((ver_patch + 1 ))
+
+
+    #--[1] root file
+    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
 }
 
 
@@ -241,47 +295,82 @@ function craine_update_versio_patchs() {
 
 function craine_update_preset_majors() {
 
-    craine_update_datums_preps
-    craine_update_remote_avail
-    craine_update_versio_major
+    #--[1] populate preset data
+    craine_update_datums_pooled
+
+
+    #--[2] validate preset keys
+    craine_update_remote_secret
+
+
+    #--[3] validate preset toke
+    craine_update_remote_tokens
+
+
+    #--[4] update patch numbers
+    craine_update_versio_majors
+
+
+    #--[5] defined commit texts
+    craine_update_remote_commit
+
+
+    #--[6] updates repositories
+    craine_update_remote_pushed
 }
 
 
 function craine_update_preset_minors() {
 
-    craine_update_datums_preps
-    craine_update_remote_avail
-    craine_update_versio_minor
+    #--[1] populate preset data
+    craine_update_datums_pooled
+
+
+    #--[2] validate preset keys
+    craine_update_remote_secret
+
+
+    #--[3] validate preset toke
+    craine_update_remote_tokens
+
+
+    #--[4] update patch numbers
+    craine_update_versio_minors
+
+
+    #--[5] defined commit texts
+    craine_update_remote_commit
+
+
+    #--[6] updates repositories
+    craine_update_remote_pushed
 }
 
 
 function craine_update_preset_patchs() {
 
+
     #--[1] populate preset data
     craine_update_datums_pooled
 
 
-    #--[1] validate preset keys
+    #--[2] validate preset keys
     craine_update_remote_secret
 
 
-    #--[1] validate preset toke
+    #--[3] validate preset toke
     craine_update_remote_tokens
 
 
-    #--[1] validate preset host
-    craine_update_remote_hosted
-
-
-    #--[1] update patch numbers
+    #--[4] update patch numbers
     craine_update_versio_patchs
 
 
-    #--[1] defined commit texts
+    #--[5] defined commit texts
     craine_update_remote_commit
 
 
-    #--[1] updates repositories
+    #--[6] updates repositories
     craine_update_remote_pushed
 }
 
@@ -332,25 +421,29 @@ function craine_update_protos() {
 
 function craine_update() {
 
+
     test -z $action_data && craine_create_notlog 4 1
 
 
     if [[ $action_data == "preset" ]]; then
-        
         unset crain_data && craine_update_preset && exit 0
     fi
+
 
     if [[ $action_data == "proset" ]]; then
         unset crain_data && craine_update_proset && exit 0
     fi
 
+
     if [[ $action_data == "protos" ]]; then
         unset crain_data && craine_update_protos && exit 0
     fi
 
+
     if [[ $action_data == "release" ]]; then
         unset crain_data && craine_update_images && exit 0
     fi
+
 
     if [[ $action_data == "testing" ]]; then
         unset crain_data && craine_update_tester && exit 0
