@@ -35,7 +35,7 @@ function craine_create_helper_clone() {
 
 
 # update master repo to late version
-function craine_create_remote_latest() {
+function craine_create_remote_late() {
 
     local local_resource="$worker_folder/$action_data/default"
 
@@ -80,7 +80,7 @@ function craine_create_versio_commit() {
 
 
 # 1 | command line base data organizer
-function craine_create_enviro_preper() {
+function craine_create_datums_pool() {
 
 
     ## logic variable
@@ -168,25 +168,13 @@ function craine_create_enviro_preper() {
 
 
 # 2 | extract data to installs folder
-function craine_create_enviro_instal() {
-    echo "debug"
-}
-
-
-# 3 | save token data to secret vaults
-function craine_create_datkeys() {
-    echo debug
-}
-
-
-# 4 | save clean data to target folder
-function craine_create_datload() {
+function craine_create_datums_make() {
     echo "debug"
 }
 
 
 # 5 | wipes temporer installation data
-function craine_create_enviro_purify {
+function craine_create_datums_pure {
     
     ## distro variable
     unset envi_base
@@ -411,7 +399,7 @@ function craine_create_tester() {
 #######################################
 
 #--| display starting message and load modulars
-function craine_create_preset_booter () {
+function craine_create_preset_boot () {
 
 
     #--[1] validate build preset
@@ -430,7 +418,7 @@ function craine_create_preset_booter () {
 
 
 #--| clone default preset to temporer directory
-function craine_create_preset_prepar () {
+function craine_create_preset_prep () {
 
     local path_core="$path_base/default"
 
@@ -488,7 +476,7 @@ function craine_create_preset_prepar () {
 
 
 #--| write userinput to temporer direcotry envi
-function craine_create_preset_writer () {
+function craine_create_preset_refi () {
 
     craine_preset_parser_remake &&
 
@@ -502,7 +490,7 @@ function craine_create_preset_writer () {
 
 
 #--| clone remote preset repository to workerdir
-function craine_create_preset_remote () {
+function craine_create_preset_clon () {
 
     craine_remote_clones $repo_http $path_spin &&
     
@@ -515,7 +503,7 @@ function craine_create_preset_remote () {
 
 
 #--| write userinput to temporer direcotry envi
-function craine_create_preset_instal () {
+function craine_create_preset_make () {
 
 
     #--[1] copy preset data from temporary folder
@@ -547,7 +535,7 @@ function craine_create_preset_instal () {
 
 
 #--| confirmed user data using system previewer
-function craine_create_preset_report () {
+function craine_create_preset_info () {
 
 
     craine_baner_prime
@@ -586,39 +574,39 @@ function craine_create_preset_report () {
 function craine_create_preset() {
 
     #--[1] declare userinput data and setup for build 
-    craine_create_enviro_preper
+    craine_create_datums_pool
 
 
     #--[2] display starting message and load modulars 
-    craine_create_preset_booter
+    craine_create_preset_boot
 
 
     #--[3] download to latest version default presets
-    craine_create_remote_latest
+    craine_create_remote_late
 
 
     #--[4] clone default preset to temporer directory 
-    craine_create_preset_prepar
+    craine_create_preset_prep
 
 
     #--[5] write userinput to temporer direcotry envi 
-    craine_create_preset_writer
+    craine_create_preset_refi
 
 
     #--[6] clone remote preset repository to workerdir 
-    craine_create_preset_remote
+    craine_create_preset_clon
 
 
     #--[7] clone temporer data to workdir and cleanup
-    craine_create_preset_instal
+    craine_create_preset_make
 
 
     #--[9] display new preset final report parameter
-    craine_create_preset_report
+    craine_create_preset_info
 
     
     #--[10] purge build variable from current procces 
-    craine_create_enviro_purify
+    craine_create_datums_pure
 }
 
 
