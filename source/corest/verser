@@ -63,12 +63,12 @@ function craine_update_datums_pool () {
 
     ## remote variable
     repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # repository apts
-    repo_host=$( craine_remote_tohost $base_repo )                          # repository host
-    repo_user=$( craine_remote_touser $base_repo )                          # repository user
-    repo_name=$( craine_remote_torepo $base_repo )                          # repository name
-    repo_http=$( craine_remote_tohttp $base_repo )                          # repository link
-    repo_sshd=$( craine_remote_tosshd $base_repo )                          # repository name
-    repo_push=$( craine_remote_topush $base_repo )                          # repository push
+    repo_host=$( craine_remote_tohost $site_repo )                          # repository host
+    repo_user=$( craine_remote_touser $site_repo )                          # repository user
+    repo_name=$( craine_remote_torepo $site_repo )                          # repository name
+    repo_http=$( craine_remote_tohttp $site_repo )                          # repository link
+    repo_sshd=$( craine_remote_tosshd $site_repo )                          # repository name
+    repo_push=$( craine_remote_topush $site_repo )                          # repository push
     repo_keys="$worker_secret/master"                                       # repository sshd
 
 
@@ -81,9 +81,9 @@ function craine_update_datums_pool () {
 
 
     ## tokens variable
-    toke_path="$repo_toke/repo"                                             # tokneizers path
-    toke_data=$( cat $toke_path )                                                # tokneizers data
-    repo_keys="https://${repo_user}:${toke_data}@${repo_host}/${repo_user}/${repo_name}"
+    toke_path="$repo_toke/repo"                                                             # tokneizers path
+    toke_data=$( cat $toke_path )                                                           # tokneizers data
+    toke_uris="https://${repo_user}:${toke_data}@${repo_host}/${repo_user}/${repo_name}"
 
 
     ## notife variable
@@ -301,7 +301,7 @@ function craine_update_remote_toke () {
 
 
     #--[3] validate uri connection
-    cd $path_spin && git remote set-url origin "$repo_keys"
+    cd $path_spin && git remote set-url origin "$toke_uris"
 
 
     #--[4] validate uri connection
@@ -312,7 +312,7 @@ function craine_update_remote_toke () {
     if [[ $? -ne 0 ]]; then
 
         #--[5-1] validate uri connection
-        cd $path_spin && git remote set-url origin "$base_repo"
+        cd $path_spin && git remote set-url origin "$site_repo"
 
         #--[5-2] validate uri connection
         echo "no remote resources available" && exit 1
@@ -324,7 +324,7 @@ function craine_update_remote_toke () {
 
 
     #--[7] validate uri connection
-    cd $path_spin && git remote set-url origin "$base_repo"
+    cd $path_spin && git remote set-url origin "$site_repo"
 }
 
 
@@ -358,13 +358,13 @@ function craine_update_remote_push () {
     if [[ $http_stat == true  ]]; then
 
         #--[2.1] pushed using sshd connection
-        cd $path_spin && git remote set-url origin "$repo_keys"
+        cd $path_spin && git remote set-url origin "$toke_uris"
 
         #--[2.2] pushed using sshd connection
         cd $path_spin && git push &&
 
         #--[2.3] pushed using sshd connection
-        cd $path_spin && git remote set-url origin "$base_repo"
+        cd $path_spin && git remote set-url origin "$site_repo"
     fi   
 }
 
@@ -376,7 +376,7 @@ function craine_update_remote_push () {
 
 
 ##--(4) validate tokens
-function craine_update_versio_majo()) {
+function craine_update_versio_majo () {
 
 
     #--[1] root file
@@ -399,7 +399,7 @@ function craine_update_versio_majo()) {
 
 
 ##--(4) validate tokens
-function craine_update_versio_mino() {
+function craine_update_versio_mino () {
 
     
     #--[1] root file
@@ -422,7 +422,7 @@ function craine_update_versio_mino() {
 
 
 ##--(4) validate tokens
-function craine_update_versio_patc() {
+function craine_update_versio_patc () {
 
 
     #--[1] root file
@@ -451,7 +451,7 @@ function craine_update_versio_patc() {
 #######################################
 
 
-function craine_update_preset_majo() {
+function craine_update_preset_majo () {
 
     #--[1] populate preset data
     craine_update_datums_pool
@@ -478,7 +478,7 @@ function craine_update_preset_majo() {
 }
 
 
-function craine_update_preset_mino() {
+function craine_update_preset_mino () {
 
     #--[1] populate preset data
     craine_update_datums_pool
@@ -505,7 +505,7 @@ function craine_update_preset_mino() {
 }
 
 
-function craine_update_preset_patc() {
+function craine_update_preset_patc () {
 
 
     #--[1] populate preset data
@@ -533,7 +533,7 @@ function craine_update_preset_patc() {
 }
 
 
-function craine_update_preset() {
+function craine_update_preset () {
 
     if [[ $option_mode == "minor" ]]; then
 

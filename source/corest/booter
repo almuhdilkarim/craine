@@ -34,7 +34,6 @@ function craine_systems_assets() {
 
 #-- craine core system library
 function craine_systems_librar() {
-
     source "$system_helper/assets"
     source "$system_helper/colors"
     source "$system_helper/config"
@@ -42,8 +41,7 @@ function craine_systems_librar() {
     source "$system_helper/notefa"
     source "$system_helper/parsed"
     source "$system_helper/remote"
-    source "$system_helper/secure"
-    
+    source "$system_helper/secure" 
 }
 
 
@@ -51,9 +49,9 @@ function craine_systems_librar() {
 function craine_systems_corest() {
     source "$system_corest/builds"
     source "$system_corest/create"
-    source "$system_corest/refine"
-    source "$system_corest/verser"
     source "$system_corest/polare"
+    source "$system_corest/refane"
+    source "$system_corest/verser"
 }
 
 
@@ -190,7 +188,7 @@ function craine_workers_preset() {
 
 function craine_workers_proset() {
 
-    local locals_source="$worker_preset/default"
+    local locals_source="$worker_proset/default"
 
     if [[ ! -d $locals_source ]];then
         craine_remote_clones "$remote_proset" "$locals_source"

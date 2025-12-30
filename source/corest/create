@@ -155,8 +155,8 @@ function craine_create_datums_pool() {
     ##-- relative path replacement 
     ##   replace absolute home variable with tilda (~), fix perset creating function buildings 
     
-    local worker_repdir="~/.local/craine"
-    local worker_repsec="~/.ssh/crainkey/"
+    local worker_repdir=".local/craine"
+    local worker_repsec=".ssh/crainkey/"
 
 
     rpat_base="$worker_repdir/$action_data"                                 # module directory
