@@ -8,7 +8,7 @@
 
 # 1 | command line base data organizer
 
-function craine_update_datums_pooled () {
+function craine_update_datums_pool () {
    
 
     ## logic variable
@@ -95,11 +95,164 @@ function craine_update_datums_pooled () {
 
 
 #######################################
+##--- NOTLOG
+#######################################
+
+
+# (1) level info notif
+function craine_update_notife_info() {
+
+
+    ##--[1] declare varible for error code and text message
+    local text=""
+    local code="$1" 
+
+
+    ##--[2] selection text message based on error code
+    
+    ##---(110) helper 
+    test $code == 1101 && text="update default $action_data successfull" 
+    
+
+    ##---(120) preset
+    test $code == 1201 && text="checking and prepare deployment target"
+    test $code == 1202 && text="checking install sources availablility"
+    test $code == 1203 && text="checking targets sources availablility"
+    test $code == 1204 && text="creating targets sources workdirectory"
+    test $code == 1205 && text="install modules to working directories"
+    test $code == 1206 && text="create access tokens vault directories"
+    test $code == 1207 && text="add personal access token to vaultfile"
+    test $code == 1208 && text="writing user input data to tmp presets"
+    test $code == 1209 && text="clone remote sources to working folder"
+    test $code == 1210 && text="install preset to remote source folder"
+    test $code == 1211 && text="purifiying source at temporary presets"
+
+
+    ##---(130) proset
+    test $code == 1301 && text="update default $action_data successfull"
+
+
+    ##---(140) protos
+    test $code == 1301 && text="update default $action_data successfull"
+
+
+
+    ##--[3] render message
+    test -n "$text" && craine_notif_stage "$text"
+    
+
+    ##--[4] clean variable
+    unset code && unset text
+}
+
+
+# (1) level info loging 
+function craine_update_logger_info() {
+    echo debug > /dev/null
+}
+
+
+# (2) level warn notif 
+function craine_update_notife_warn() {
+    echo debug
+}
+
+
+# (2) level info loging
+function craine_update_logger_warn() {
+    echo debug
+}
+
+
+# (3) level error notif
+function craine_update_notife_errs() {
+    echo debug
+}
+
+
+# (3) level error loging
+function craine_update_logger_errs() {
+    echo debug
+}
+
+
+# (4) level fatal notif
+function craine_update_notife_fail() {
+    ##--[1] declare varible for error code and text message
+    local text=""
+    local code="$1" 
+
+
+    ##--[2] selection text message based on error code
+    
+    ##---(410) helper 
+    test $code == 4101 && text="update default $action_data successfull" 
+    
+
+    ##---(420) preset
+    test $code == 4201 && text="conflicting name, $base_name $spin_name preset is existing"
+
+
+    ##---(430) proset
+    test $code == 4301 && text="update default $action_data successfull"
+
+
+    ##---(440) protos
+    test $code == 4301 && text="update default $action_data successfull"
+
+
+
+    ##--[3] render message
+    test -n "$text" && craine_notif_abort "$text" "$code"
+    
+    exit 0
+
+    ##--[4] clean variable
+    unset code && unset text
+}
+
+
+# (4) level fatal loging
+function craine_update_logger_fail() {
+    echo debug
+}
+
+
+# notife corest 
+function craine_update_notlog() {
+
+    local type="$1"
+    local code="$2"
+
+    if [[ $type == 1 ]];then
+        craine_update_notife_info "$code"
+        craine_update_logger_info "$code"
+    fi
+
+    if [[ $type == 2 ]];then
+        craine_update_notife_warn "$code"
+        craine_update_logger_warn "$code"
+    fi
+
+    if [[ $type == 3 ]];then
+        craine_update_notife_errs "$code"
+        craine_update_logger_errs "$code"
+    fi
+
+    if [[ $type == 4 ]];then
+        craine_update_notife_fail "$code"
+        craine_update_logger_fail "$code"
+    fi
+}
+
+
+#######################################
 ##--- PROGRES
 #######################################
 
+
 ##--[1] validate secret
-function craine_update_remote_secret () {
+function craine_update_remote_keys () {
 
 
     #--[1] initialzer ssh-agents
@@ -132,7 +285,7 @@ function craine_update_remote_secret () {
 
 
 ##--[2] validate tokens
-function craine_update_remote_tokens () {
+function craine_update_remote_toke () {
 
 
     #--[1] validate ssh connection, return false is ssh connection available
@@ -175,8 +328,8 @@ function craine_update_remote_tokens () {
 }
 
 
-
-function craine_update_remote_commit () {
+##--[3] validate tokens
+function craine_update_remote_pool () {
 
     #--[1] validate uri connection
     cd $path_spin && git add . &&
@@ -187,7 +340,8 @@ function craine_update_remote_commit () {
 }
 
 
-function craine_update_remote_pushed () {
+##--[4] validate tokens
+function craine_update_remote_push () {
 
     #--[1] pushed using sshd connection
     if [[ $shhd_stat == true  ]]; then
@@ -220,8 +374,8 @@ function craine_update_remote_pushed () {
 ##--- VERSION
 #######################################
 
-
-function craine_update_versio_majors() {
+##--(4) validate tokens
+function craine_update_versio_majo()) {
 
 
     #--[1] root file
@@ -243,7 +397,8 @@ function craine_update_versio_majors() {
 }
 
 
-function craine_update_versio_minors() {
+##--(4) validate tokens
+function craine_update_versio_mino() {
 
     
     #--[1] root file
@@ -265,7 +420,8 @@ function craine_update_versio_minors() {
 }
 
 
-function craine_update_versio_patchs() {
+##--(4) validate tokens
+function craine_update_versio_patc() {
 
 
     #--[1] root file
@@ -288,90 +444,91 @@ function craine_update_versio_patchs() {
 
 
 
+
 #######################################
 ##--- PRESET
 #######################################
 
 
-function craine_update_preset_majors() {
+function craine_update_preset_majo() {
 
     #--[1] populate preset data
-    craine_update_datums_pooled
+    craine_update_datums_pool
 
 
     #--[2] validate preset keys
-    craine_update_remote_secret
+    craine_update_remote_secr
 
 
     #--[3] validate preset toke
-    craine_update_remote_tokens
+    craine_update_remote_toke
 
 
     #--[4] update patch numbers
-    craine_update_versio_majors
+    craine_update_versio_majo
 
 
     #--[5] defined commit texts
-    craine_update_remote_commit
+    craine_update_remote_pool
 
 
     #--[6] updates repositories
-    craine_update_remote_pushed
+    craine_update_remote_push
 }
 
 
-function craine_update_preset_minors() {
+function craine_update_preset_mino() {
 
     #--[1] populate preset data
-    craine_update_datums_pooled
+    craine_update_datums_pool
 
 
     #--[2] validate preset keys
-    craine_update_remote_secret
+    craine_update_remote_secr
 
 
     #--[3] validate preset toke
-    craine_update_remote_tokens
+    craine_update_remote_toke
 
 
     #--[4] update patch numbers
-    craine_update_versio_minors
+    craine_update_versio_mino
 
 
     #--[5] defined commit texts
-    craine_update_remote_commit
+    craine_update_remote_pool
 
 
     #--[6] updates repositories
-    craine_update_remote_pushed
+    craine_update_remote_push
 }
 
 
-function craine_update_preset_patchs() {
+function craine_update_preset_patc() {
 
 
     #--[1] populate preset data
-    craine_update_datums_pooled
+    craine_update_datums_pool
 
 
     #--[2] validate preset keys
-    craine_update_remote_secret
+    craine_update_remote_keys
 
 
     #--[3] validate preset toke
-    craine_update_remote_tokens
+    craine_update_remote_toke
 
 
     #--[4] update patch numbers
-    craine_update_versio_patchs
+    craine_update_versio_patc
 
 
     #--[5] defined commit texts
-    craine_update_remote_commit
+    craine_update_remote_pool
 
 
     #--[6] updates repositories
-    craine_update_remote_pushed
+    craine_update_remote_push
 }
 
 
@@ -379,15 +536,15 @@ function craine_update_preset() {
 
     if [[ $option_mode == "minor" ]]; then
 
-        craine_update_preset_minors
+        craine_update_versio_mino
 
     elif [[ $option_mode == "major" ]]; then
 
-        craine_update_preset_majors
+        craine_update_preset_majo
 
     else
 
-        craine_update_preset_patchs
+        craine_update_preset_patc
     fi
 }
 
