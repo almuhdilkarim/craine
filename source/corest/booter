@@ -12,7 +12,8 @@ function craine_systems_struct() {
     system_assets="$craine_libs/assets"
     system_corest="$craine_libs/corest"
     system_config="$craine_libs/config"
-    system_procie="$craine_libs/procie"
+    system_action="$craine_libs/proact"
+    system_notefa="$craine_libs/notefa"
 }
 
 
@@ -39,7 +40,6 @@ function craine_systems_corest() {
     source "$system_corest/colors"
     source "$system_corest/config"
     source "$system_corest/deploy"
-    source "$system_corest/notefa"
     source "$system_corest/parsed"
     source "$system_corest/remote"
     source "$system_corest/secure"
@@ -47,21 +47,40 @@ function craine_systems_corest() {
 }
 
 
-function craine_systems_procie() {
-    source "$system_procie/builds"
-    source "$system_procie/create"
-    source "$system_procie/refane"
-    source "$system_procie/verser"
+#-- craine core system actions
+function craine_systems_notefa() {
+    
+    source "$system_notefa/1000"
+    source "$system_notefa/2000"
+    source "$system_notefa/3000"
+    source "$system_notefa/4000"
+    source "$system_notefa/5000"
+    source "$system_notefa/6000"
+    source "$system_notefa/7000"
+    source "$system_notefa/8000"
+    source "$system_notefa/9000"
+    source "$system_notefa/make" 
 }
+
+
+
+function craine_systems_action() {
+    source "$system_action/builds"
+    source "$system_action/create"
+    source "$system_action/refane"
+    source "$system_action/verser"
+}
+
 
 
 #-- craine core system initial
 function craine_systems() {
     craine_systems_struct
     craine_systems_config
+    craine_systems_notefa
     craine_systems_assets
     craine_systems_corest
-    craine_systems_procie
+    craine_systems_action
 }
 
 

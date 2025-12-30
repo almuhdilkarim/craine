@@ -1,11 +1,10 @@
 #!/bin/env bash
-# logs and notification
+# notification and logs generator
 
 set -e
 
 
-## LOGGER DATA
-
+## NOTIF 
 
 
 function craine_notif_error() {
@@ -49,4 +48,28 @@ function craine_notif_abort() {
 }
 
 
+## LOGER 
 
+function craine_loger_error() {
+
+}
+
+
+function craine_loger_stage() {
+    
+}
+
+
+function craine_loger_warns() {
+    
+}
+
+
+function craine_loger_abort() {
+    
+}
+
+
+function craine_nolog() {
+    
+}
