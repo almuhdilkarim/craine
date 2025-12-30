@@ -49,12 +49,11 @@ function craine_systems_librar() {
 
 #-- craine core system actions
 function craine_systems_corest() {
-
     source "$system_corest/builds"
     source "$system_corest/create"
-    source "$system_corest/pushit"
     source "$system_corest/refine"
-    source "$system_corest/graphi"
+    source "$system_corest/verser"
+    source "$system_corest/polare"
 }
 
 

@@ -111,7 +111,7 @@ function craine_preset_logger_create() {
 function craine_preset_parser_remake() {
 
 
-     #--[1] root file
+    #--[1] root file
     local envi_file="$path_rand/crain"
 
 

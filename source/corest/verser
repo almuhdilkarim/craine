@@ -83,7 +83,7 @@ function craine_update_datums_pooled () {
     ## tokens variable
     toke_path="$repo_toke/repo"                                             # tokneizers path
     toke_data=$( cat $toke_path )                                                # tokneizers data
-    
+    repo_keys="https://${repo_user}:${toke_data}@${repo_host}/${repo_user}/${repo_name}"
 
 
     ## notife variable
@@ -143,39 +143,56 @@ function craine_update_remote_tokens () {
 
 function craine_update_remote_hosted () {
 
+
     #--[1] validate ssh connection
 
     test -z $sshd_stat &&  git ls-remote --exit-code $repo_sshd > /dev/null 2>&1
     
     if [[ $? -eq 0 ]]; then
-        sshd_stat=true && return 0
+        sshd_stat=true && return
     fi
 
+
     #--[2] validate uri connection
+
+    cd $path_spin && git remote set-url origin "$repo_keys"
+
+    test -z $http_keys && cd $path_spin &&  git ls-remote --exit-code $repo_http > /dev/null 2>&1
+
+
+    if [[ $? -eq 0 ]]; then
+        http_stat=true && return
+    fi
+
+
+    #--[3] rebase gitremote url
+    cd cd $path_spin && git remote set-url origin "$base_repo"
+
+
+    #--[3] no validated repo aborted process 
+    exit 1
 }
 
 
 function craine_update_remote_commit () {
-    echo "push to host"
+
+    cd $path_spin && git add . &&
+    cd $path_spin && git commit -m "update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
 }
 
 
 function craine_update_remote_pushed () {
 
-    if [[ $sshd_stat == true  ]]; then
-        echo "update using sshd"
-
-        return 0
+    if [[ $http_stat == true  ]]; then
+        cd $path_spin && git remote set-url origin "$repo_keys"
     fi
 
+    cd $path_spin && git push &&
 
     if [[ $http_stat == true  ]]; then
-        echo "update using http"
-
-        return 0
+        cd $path_spin && git remote set-url origin "$base_repo"
     fi
 }
-
 
 
 
@@ -184,17 +201,34 @@ function craine_update_remote_pushed () {
 #######################################
 
 
-function craine_update_versio_major() {
+function craine_update_versio_majors() {
     echo $ver_major
 }
 
 
-function craine_update_versio_minor() {
+function craine_update_versio_minors() {
     echo $ver_minor
 }
 
 
-function craine_update_versio_patch() {
+function craine_update_versio_patchs() {
+
+    if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
+        return
+    fi
+
+    #--[1] root file
+    local envi_file="$path_spin/crain"
+
+
+    ### base variable
+    ver_patch=$((ver_patch + 1 ))
+    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
+
+
+    
+
+
     echo $ver_patch
 }
 
@@ -247,7 +281,7 @@ function craine_update_preset_patchs() {
     craine_update_remote_commit
 
 
-    #--[1] update patch number
+    #--[1] updates repositories
     craine_update_remote_pushed
 }
 
@@ -299,7 +333,6 @@ function craine_update_protos() {
 function craine_update() {
 
     test -z $action_data && craine_create_notlog 4 1
-
 
 
     if [[ $action_data == "preset" ]]; then
