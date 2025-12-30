@@ -88,46 +88,45 @@ function craine_create_enviro_preper() {
 
 
     ## base variable
-    base_name=$( craine_string_toname ${option_name} )
-    base_slug=$( craine_string_toslug ${option_name} )
-    base_lead=$( craine_string_tolead ${option_name} )
-    base_vars=$( craine_string_tovars ${option_name} )
+    base_name=$( craine_module_toname ${option_name} )
+    base_slug=$( craine_module_toslug ${option_name} )
+    base_lead=$( craine_module_tolead ${option_name} )
+    base_vars=$( craine_module_tovars ${option_name} )
     
 
 
     ## spin variablbase_namee
-    spin_name=$( craine_string_toname ${option_spin} )
-    spin_slug=$( craine_string_toslug ${option_spin} )
-    spin_lead=$( craine_string_tolead ${option_spin} )
-    spin_vars=$( craine_string_tovars ${option_spin} )
+    spin_name=$( craine_module_toname ${option_spin} )
+    spin_slug=$( craine_module_toslug ${option_spin} )
+    spin_lead=$( craine_module_tolead ${option_spin} )
+    spin_vars=$( craine_module_tovars ${option_spin} )
     
 
 
     ## author variable
-    auth_name=$( craine_string_toname "$option_auth" )    
-    auth_lead=$( craine_string_toslug "$option_auth" )    
-    auth_slug=$( craine_string_tolead "$option_auth" )    
-    auth_vars=$( craine_string_tovars "$option_auth" ) 
+    auth_name=$( craine_module_toname "$option_auth" )    
+    auth_lead=$( craine_module_toslug "$option_auth" )    
+    auth_slug=$( craine_module_tolead "$option_auth" )    
+    auth_vars=$( craine_module_tovars "$option_auth" ) 
 
 
 
     ## locals variable
-    vars_rand=$( craine_string_random )
+    vars_rand=$( craine_module_random )
     path_base="$worker_folder/$action_data"
     path_main="$path_base/$base_slug"                                       # distros folders
     path_rand="$path_main/$vars_rand"                                       # temporary paths
     path_spin="$path_main/$spin_slug"                                       # variant folders
 
 
-
     ## remote variable
     repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # repository apts
-    repo_host=$( craine_reposi_tohost $option_repo )                        # repository host
-    repo_user=$( craine_reposi_touser $option_repo )                        # repository user
-    repo_name=$( craine_reposi_torepo $option_repo )                        # repository name
-    repo_http=$( craine_reposi_tohttp $option_repo )                        # repository link
-    repo_sshd=$( craine_reposi_tosshd $option_repo )                        # repository name
-    repo_push=$( craine_reposi_topush $option_repo )                        # repository push
+    repo_host=$( craine_remote_tohost $option_repo )                        # repository host
+    repo_user=$( craine_remote_touser $option_repo )                        # repository user
+    repo_name=$( craine_remote_torepo $option_repo )                        # repository name
+    repo_http=$( craine_remote_tohttp $option_repo )                        # repository link
+    repo_sshd=$( craine_remote_tosshd $option_repo )                        # repository name
+    repo_push=$( craine_remote_topush $option_repo )                        # repository push
     repo_keys="$worker_secret/master"                                       # repository sshd
 
 
@@ -153,9 +152,9 @@ function craine_create_enviro_preper() {
 
     rpat_base="$worker_repdir/$action_data"                                 # module directory
     rpat_main="$worker_repdir/$base_slug"                                   # distro directory
-    rpat_spin="$worker_repdir/$vars_spin"                                   # varian directory
+    rpat_spin="$worker_repdir/$base_slug/$spin_slug"                        # varian directory
     rrep_keys="$worker_repsec/master"                                       # secret directory
-    rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$vars_spin"    # tokens directory
+    rrep_toke="$worker_repdir/tokens/$action_data/$base_slug/$spin_slug"    # tokens directory
 }
 
 
@@ -427,7 +426,7 @@ function craine_create_preset_prepar () {
     test -d $path_rand && craine_create_notlog 1 1202
 
 
-    #--[2] checks preset master directory
+    #--[2] checks preset master directory]
     test -d $path_core && craine_create_notlog 1 1203
 
 
@@ -470,6 +469,7 @@ function craine_create_preset_prepar () {
         craine_create_notlog 3 1207
     fi
 
+
     unset path_core
 }
 
@@ -477,13 +477,15 @@ function craine_create_preset_prepar () {
 #--| write userinput to temporer direcotry envi
 function craine_create_preset_writer () {
 
-    craine_preset_parser_prenvi &&
+    craine_preset_parser_remake &&
 
     if [[ $? -eq 0 ]]; then
         craine_create_notlog 1 1208
     else
         craine_create_notlog 3 1204
     fi
+
+    exit 0
 }
 
 
@@ -560,7 +562,7 @@ function craine_create_preset_report () {
 
     
     if [[ $ban_prevs == "Y" ]]||[[ $ban_prevs == "y" ]];then
-        craine_module_editor $path_spin/envi &
+        craine_module_editor $path_spin/crain &
     fi
 }
 

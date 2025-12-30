@@ -4,65 +4,125 @@
 set -e
 
 
+## parsing distro name base on base name and spin name
+function craine_preset_parser_rename() {
+
+    local file=$1
+    local name=$base_name
+    
+
+    if [[  $spin_name != "default" ]];then
+        local name="$base_name $spin_name"
+    fi
+    
+
+    craine_string_replace "OSNAME" "$name" "$file"
+
+    unset name
+    unset file
+}
+
+
+function craine_preset_parser_reslug() {
+
+    local file=$1
+    local name=$base_slug
+    
+
+    if [[ $option_spin != "default" ]];then
+        local name="$base_slug-$spin_slug"
+    fi
+
+    craine_string_replace "OSSLUG" "$name" "$file"
+
+    unset name
+    unset file
+}
+
+
+function craine_preset_parser_relead() {
+
+    local file=$1
+    local name=$base_lead
+    
+
+    if [[  $option_spin != "default" ]];then
+        local name="$base_lead $spin_lead"
+    fi
+
+    craine_string_replace "OSLEAD" "$name" "$file"
+
+    unset name
+    unset file
+}
+
+
+function craine_preset_parser_revars() {
+
+    local file=$1
+    local name=$base_vars
+    
+
+    if [[  $option_spin != "default" ]];then
+        local name="$base_vars $spin_vars"
+    fi
+
+    craine_string_replace "OSVARS" "$name" "$file"
+
+    unset name
+    unset file
+}
+
+
+function craine_preset_parser_rebase() {
+
+    local file=$1
+    craine_preset_parser_rename $file
+    craine_preset_parser_reslug $file
+    craine_preset_parser_relead $file
+    craine_preset_parser_revars $file 
+    unset file
+}
+
 
 ## add user input to envi for create preset action 
-function craine_preset_parser_prenvi() {
+function craine_preset_parser_remake() {
 
 
+     #--[1] root file
     local envi_file="$path_rand/crain"
 
-
     ### base variable
-    craine_config_rewrite "base_name" "$base_name" $envi_file
-    craine_config_rewrite "base_slug" "$base_slug" $envi_file
-    craine_config_rewrite "base_lead" "$base_lead" $envi_file
-    craine_config_rewrite "base_vars" "$base_vars" $envi_file
-
-
-    ## spin variable
-    craine_config_rewrite "spin_name" "$spin_name" $envi_file
-    craine_config_rewrite "spin_slug" "$spin_slug" $envi_file
-    craine_config_rewrite "spin_lead" "$spin_lead" $envi_file
-    craine_config_rewrite "spin_vars" "$spin_vars" $envi_file
-
-
-    ## author variable
-    craine_config_rewrite "auth_name" "$auth_name" $envi_file
-    craine_config_rewrite "auth_lead" "$auth_lead" $envi_file
-    craine_config_rewrite "auth_slug" "$auth_slug" $envi_file
-    craine_config_rewrite "auth_vars" "$auth_vars" $envi_file
+    craine_varkey_rewrite "base_name" "$base_name" $envi_file
+    craine_varkey_rewrite "spin_name" "$spin_name" $envi_file
+    craine_varkey_rewrite "auth_name" "$auth_name" $envi_file
 
 
     ## path variable
-    craine_config_rewrite "path_main" "$rpat_main" $envi_file
-    craine_config_rewrite "path_spin" "$rpat_spin" $envi_file
+    craine_varkey_rewrite "path_main" "$rpat_main" $envi_file
+    craine_varkey_rewrite "path_spin" "$rpat_spin" $envi_file
 
 
     ## repo variable
-    test -n $repo_host && craine_config_rewrite "repo_host" "$repo_host" "$envi_file"
-    test -n $repo_user && craine_config_rewrite "repo_user" "$repo_user" "$envi_file"
-    test -n $repo_name && craine_config_rewrite "repo_name" "$repo_name" "$envi_file"
-    test -n $repo_http && craine_config_rewrite "repo_http" "$repo_http" "$envi_file"
-    test -n $repo_sshd && craine_config_rewrite "repo_sshd" "$repo_sshd" "$envi_file"
-    test -n $rrep_toke && craine_config_rewrite "repo_toke" "$rrep_toke" "$envi_file"
-    test -n $rrep_keys && craine_config_rewrite "repo_keys" "$rrep_keys" "$envi_file"
+    test -n $repo_http && craine_varkey_rewrite "repo_http" "$repo_http" "$envi_file"
+    test -n $repo_sshd && craine_varkey_rewrite "repo_sshd" "$repo_sshd" "$envi_file"
+
+
+
+    #--[2] root file
+    local read_file="$path_rand/README.md"
+    craine_preset_parser_rebase $read_file &&
+
+
+
+    #--[3] conf file
+    local rels_file="$path_rand/conf/usr/lib/os-release" 
+    craine_preset_parser_rebase $rels_file
+
 
 
     ## pure variable
     unset envi_file
-}
-
-
-## write user input to master default system preset 
-function craine_preset_parser_predoc() {
-
-    #--[1] root file
-    local read_file="$path_rand/README.md"
-
-    
-
-    #--[2] conf file
-    local rels_file="$path_rand/conf/usr/lib/os-release"
-
-
+    unset read_file
+    unset rels_file
 }

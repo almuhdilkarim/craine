@@ -40,9 +40,10 @@ function craine_systems_librar() {
     source "$system_helper/config"
     source "$system_helper/deploy"
     source "$system_helper/notefa"
+    source "$system_helper/parsed"
     source "$system_helper/remote"
     source "$system_helper/secure"
-    source "$system_helper/seders"
+    
 }
 
 

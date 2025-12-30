@@ -24,7 +24,6 @@ function craine_config_rewrite () {
 }
 
 
-
 ## CONFIG GETDATA
 function craine_config_keyvar() {
 
