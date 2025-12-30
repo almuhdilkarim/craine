@@ -331,13 +331,28 @@ function craine_update_remote_toke () {
 ##--[3] validate tokens
 function craine_update_remote_pool () {
 
+
     #--[1] validate uri connection
-    cd $path_spin && git add . &&
+    cd $path_spin && git add . > /dev/null 2>&1 &&
+
 
 
     #--[2] validate uri connection
-    cd $path_spin && git commit -m "update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
+    echo -e  "\t${green}   [ Press enter for autocommit message ]    ${reset}" | sed 's/^[[:space:]]*//' && 
+    echo -ne "\t${green}   |--> Insert commit message : ${reset}" | sed 's/^[[:space:]]*//' &&  read commit
+
+
+    #--[3] automatic commit message
+    if [[ -z $commit ]];then
+        commit="update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
+    fi
+
+
+
+    #--[4] commit message updating
+    cd $path_spin && git commit -m "$commit" > /dev/null 2>&1
 }
+
 
 
 ##--[4] validate tokens
@@ -347,7 +362,7 @@ function craine_update_remote_push () {
     if [[ $shhd_stat == true  ]]; then
 
         #--[1.1] pushed using sshd connection
-        cd $path_spin && git push &&
+        cd $path_spin && git push > /dev/null 2>&1 &&
 
         #--[1.2] pushed using sshd connection
         return
@@ -361,7 +376,7 @@ function craine_update_remote_push () {
         cd $path_spin && git remote set-url origin "$toke_uris"
 
         #--[2.2] pushed using sshd connection
-        cd $path_spin && git push &&
+        cd $path_spin && git push > /dev/null 2>&1 &&
 
         #--[2.3] pushed using sshd connection
         cd $path_spin && git remote set-url origin "$site_repo"
