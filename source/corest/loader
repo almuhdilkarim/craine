@@ -1,74 +1,256 @@
 #!/bin/env bash
-# craine main processing
+# autoload function
 
 set -e
 
 
-##--[1] action options
-while getopts "c:l:d:b:e:p:u:g:w:m:n:s:r:k:a:" option; do
-    case $option in
-        c) action_mode="create" && action_data="${OPTARG}"
-        ;;
-        l) action_mode="lister" && action_data="${OPTARG}"
-        ;;
-        d) action_mode="delete" && action_data="${OPTARG}"
-        ;;
-        b) action_mode="builds" && action_data="${OPTARG}"
-        ;;
-        e) action_mode="editer" && action_data="${OPTARG}"
-        ;;
-        p) action_mode="update" && action_data="${OPTARG}"
-        ;;
-        u) action_mode="refine" && action_data="${OPTARG}"
-        ;;
-        g) action_mode="taking" && action_data="${OPTARG}"
-        ;;
-        w) action_mode="window" && action_data="${OPTARG}"
-        ;;
-        m) option_mode="${OPTARG}"
-        ;;
-        n) option_name="${OPTARG}"
-        ;;
-        s) option_spin="${OPTARG}"
-        ;;
-        r) option_repo="${OPTARG}"
-        ;;
-        k) option_keys="${OPTARG}"
-        ;;
-        a) option_auth="${OPTARG}"
-        ;;
-    esac
-done
+
+## SYSTEM
+
+#-- craine core system structur
+function craine_systems_struct() {
+    system_assets="$craine_libs/assets"
+    system_corest="$craine_libs/corest"
+    system_config="$craine_libs/config"
+    system_procie="$craine_libs/procie"
+}
 
 
-##--[2] variable check
-if [[ -z $action_mode ]];then
-    echo "missing mode parameter" && exit 1
-fi
+#-- craine core system configs
+function craine_systems_config() {
+    source "$system_config/system"
+    source "$system_config/labrom"
+}
 
 
-##--[3] library loads
-source "$craine_libs/corest/booter"
+#-- craine core system assets
+function craine_systems_assets() {
+
+    craine_banner="$system_assets/banner.txt"
+    craine_brands="$system_assets/brands.png"
+}
 
 
-##--[4] window modules
-if [[ $action_mode == "window" ]];then
-    craine_window
-fi
+
+#-- craine core system actions
+function craine_systems_corest() {
+    
+    source "$system_corest/assets"
+    source "$system_corest/colors"
+    source "$system_corest/config"
+    source "$system_corest/deploy"
+    source "$system_corest/notefa"
+    source "$system_corest/parsed"
+    source "$system_corest/remote"
+    source "$system_corest/secure"
+    source "$system_corest/polare" 
+}
 
 
-##--[5] create modules
-if [[ $action_mode == "create" ]];then
-    test -n $option_name && craine_create
-fi
+function craine_systems_procie() {
+    source "$system_procie/builds"
+    source "$system_procie/create"
+    source "$system_procie/refane"
+    source "$system_procie/verser"
+}
+
+#-- craine core system initial
+function craine_systems() {
+    craine_systems_struct
+    craine_systems_config
+    craine_systems_assets
+    craine_systems_corest
+    craine_systems_procie
+}
 
 
-##--[6] update modules
-if [[ $action_mode == "update" ]];then
-    test -n $option_name && craine_update
-fi
 
 
-##--[6] remove garbage
-unset option_name
-unset craine_init
+## MODULE
+
+##-- load craine preset module and libary
+function craine_modular_struct() {
+
+    module_preset="$craine_libs/preset"
+    module_proset="$craine_libs/proset"
+    module_protos="$craine_libs/protos"
+}
+
+
+function craine_modular_preset() {
+
+    # load library
+    source "$module_preset/preset"
+    source "$module_preset/parser"
+} 
+
+
+function craine_modular_proset() {
+    source "$module_proset/proset"
+}
+
+
+function craine_modular_protos() {
+    source "$module_protos/protos"
+}
+
+
+function craine_modular() {
+    craine_modular_struct
+    craine_modular_preset
+    craine_modular_proset
+    craine_modular_protos
+}
+
+
+
+
+## VENDOR
+
+function craine_vendor_struct() {
+
+    vendor_source="$craine_libs/vendor"
+    vendor_editor="$vendor_source/editor"
+}
+
+
+function craine_vendor_prepar() {
+    mkdir -p $vendor_source
+}
+
+
+function craine_vendor_editor() {
+
+    local remote="https://github.com/lite-xl/lite-xl/releases/download/v2.1.8/lite-xl-v2.1.8-addons-linux-x86_64-portable.tar.gz"
+
+    if [[ ! -f "$vendor_editor/lite-xl" ]];then
+        curl -L -o /tmp/editor.tar.gz $remote &&  
+        tar -xf /tmp/editor.tar.gz -C $craine_vendor &&
+        mv -f $craine_vendor/lite-xl $vendor_editor
+    fi
+
+    vendor_editor="$vendor_editor/lite-xl"
+    unset $remote
+}
+ 
+
+function craine_vendors() {
+    craine_vendor_struct
+    craine_vendor_prepar
+    craine_vendor_editor
+}
+
+
+
+
+## WORKER 
+function craine_workers_struct() {
+
+    worker_folder="$HOME/.local/craine"
+    worker_secret="$HOME/.ssh/crainkey"
+    worker_preset="$worker_folder/preset"
+    worker_protos="$worker_folder/protos"
+    worker_proset="$worker_folder/proset"
+    worker_prolab="$worker_folder/prolab"
+    worker_preloc="$worker_folder/preloc"
+    worker_config="$worker_folder/config"
+    worker_logger="$worker_folder/logger"
+    worker_tokens="$worker_folder/tokens"
+}
+
+
+function craine_workers_prepar() {
+    
+    mkdir -p $worker_folder
+    mkdir -p $worker_secret
+    mkdir -p $worker_preset
+    mkdir -p $worker_proset
+    mkdir -p $worker_prolab
+    mkdir -p $worker_preloc
+    mkdir -p $worker_config
+    mkdir -p $worker_tokens
+    mkdir -p $worker_logger
+}
+
+
+function craine_workers_preset() {
+
+    local locals_source="$worker_preset/default"
+
+    if [[ ! -d $locals_source ]];then
+        craine_remote_clones "$remote_preset" "$locals_source"
+    fi
+
+    unset locals_source
+}
+
+
+function craine_workers_proset() {
+
+    local locals_source="$worker_proset/default"
+
+    if [[ ! -d $locals_source ]];then
+        craine_remote_clones "$remote_proset" "$locals_source"
+    fi
+
+    unset locals_source
+}
+
+
+function craine_workers_protos() {
+
+    local locals_source="$worker_protos/default"
+
+    if [[ ! -d $locals_source ]];then
+        craine_remote_clones "$remote_protos" "$locals_source"
+    fi
+
+    unset locals_source
+}
+
+
+function craine_workers_secret() {
+
+
+    #--[1] create folder
+    mkdir -p $worker_secret
+    chmod -R 700 $worker_secret
+
+
+    #--[2] create secret
+    if [[ ! -f "$worker_secret/master"  ]];then
+        ssh-keygen -q -t ed25519 -f $worker_secret/master -N ""
+        chmod 600 $worker_secret/master
+    fi
+}
+
+
+function craine_workers_tokens() {
+    mkdir -p $worker_tokens/{preset,proset,protos} 
+    chmod -R 700 $worker_tokens
+}
+
+
+function craine_workers_config() {
+    cp -n $system_config/worker $worker_config
+}
+
+
+function craine_workers() {
+    craine_workers_struct
+    craine_workers_prepar
+    craine_workers_preset
+    craine_workers_proset
+    craine_workers_protos
+    craine_workers_secret
+    craine_workers_tokens
+    craine_workers_config
+}
+
+
+
+# LIBRARY LOAD
+craine_systems
+craine_vendors
+craine_modular
+craine_workers

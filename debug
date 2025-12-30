@@ -4,5 +4,5 @@ set -e
 
 if [[ -d "$(pwd)/source" ]];then
     craine_libs="$(pwd)/source"
-    source "$craine_libs/corest/loader"
+    source "$craine_libs/starter"
 fi

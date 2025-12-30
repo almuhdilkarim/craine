@@ -1,0 +1,74 @@
+#!/bin/env bash
+# craine main processing
+
+set -e
+
+
+##--[1] action options
+while getopts "c:l:d:b:e:p:u:g:w:m:n:s:r:k:a:" option; do
+    case $option in
+        c) action_mode="create" && action_data="${OPTARG}"
+        ;;
+        l) action_mode="lister" && action_data="${OPTARG}"
+        ;;
+        d) action_mode="delete" && action_data="${OPTARG}"
+        ;;
+        b) action_mode="builds" && action_data="${OPTARG}"
+        ;;
+        e) action_mode="editer" && action_data="${OPTARG}"
+        ;;
+        p) action_mode="update" && action_data="${OPTARG}"
+        ;;
+        u) action_mode="refine" && action_data="${OPTARG}"
+        ;;
+        g) action_mode="taking" && action_data="${OPTARG}"
+        ;;
+        w) action_mode="window" && action_data="${OPTARG}"
+        ;;
+        m) option_mode="${OPTARG}"
+        ;;
+        n) option_name="${OPTARG}"
+        ;;
+        s) option_spin="${OPTARG}"
+        ;;
+        r) option_repo="${OPTARG}"
+        ;;
+        k) option_keys="${OPTARG}"
+        ;;
+        a) option_auth="${OPTARG}"
+        ;;
+    esac
+done
+
+
+##--[2] variable check
+if [[ -z $action_mode ]];then
+    echo "missing mode parameter" && exit 1
+fi
+
+
+##--[3] library loads
+source "$craine_libs/corest/loader"
+
+
+##--[4] window modules
+if [[ $action_mode == "window" ]];then
+    craine_window
+fi
+
+
+##--[5] create modules
+if [[ $action_mode == "create" ]];then
+    test -n $option_name && craine_create
+fi
+
+
+##--[6] update modules
+if [[ $action_mode == "update" ]];then
+    test -n $option_name && craine_update
+fi
+
+
+##--[6] remove garbage
+unset option_name
+unset craine_init

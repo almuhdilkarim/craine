@@ -4,28 +4,6 @@ set -e
 
 
 
-#######################################
-##--- 1 | HELPER
-#######################################
-
-
-# create ssh keys for module devel
-function craine_create_helper_keysh() {
-    echo "debug"
-}
-
-
-# prepare create report processing 
-function craine_create_helper_report() {
-    echo "debug"
-}
-
-
-# install default to target modules 
-function craine_create_helper_clone() {
-    echo "debug"
-}
-
 
 
 
@@ -50,13 +28,13 @@ function craine_create_remote_late() {
 
 
 # create remote alpha stage branches
-function craine_create_helper_altest() {
+function craine_create_helper_alpa() {
     echo "debug"
 }
 
 
 # create remote beta stages branches
-function craine_create_helper_betest() {
+function craine_create_helper_beta() {
     echo "debug"
 }
 
@@ -571,6 +549,7 @@ function craine_create_preset_info () {
 
 #--| preset corest
 function craine_create_preset() {
+    
 
     #--[1] declare userinput data and setup for build 
     craine_create_datums_pool

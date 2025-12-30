@@ -3,99 +3,7 @@
 
 
 #######################################
-##--- DATUMS
-#######################################
-
-# 1 | command line base data organizer
-
-function craine_update_datums_pool () {
-   
-
-    ## logic variable
-    option_spin=$( [[ -z $option_spin ]] && echo "default" || echo "$option_spin" )
-
-
-    ## loads sources
-    local base_conf="$worker_folder/$action_data/$option_name/$option_spin/crain"
-    
-
-    if [[ ! -f $base_conf ]];then
-
-        echo "error : file not found" && exit 0
-    else
-
-        source $base_conf
-    fi
-
-
-    ## base variable
-    base_name=$( craine_module_toname ${base_name} )
-    base_slug=$( craine_module_toslug ${base_name} )
-    base_lead=$( craine_module_tolead ${base_name} )
-    base_vars=$( craine_module_tovars ${base_name} )
-    
-
-
-    ## spin variablbase_namee
-    spin_name=$( craine_module_toname ${spin_name} )
-    spin_slug=$( craine_module_toslug ${spin_name} )
-    spin_lead=$( craine_module_tolead ${spin_name} )
-    spin_vars=$( craine_module_tovars ${spin_name} )
-    
-
-
-    ## author variable
-    auth_name=$( craine_module_toname "$auth_name" )    
-    auth_lead=$( craine_module_toslug "$auth_name" )    
-    auth_slug=$( craine_module_tolead "$auth_name" )    
-    auth_vars=$( craine_module_tovars "$auth_name" ) 
-
-
-
-    ## locals variable
-    vars_rand=$( craine_module_filetim )
-    path_base="$worker_folder/$action_data"
-    path_main="$path_base/$base_slug"                                       # distros folders
-    path_rand="$path_main/$vars_rand"                                       # temporary paths
-    path_spin="$path_main/$spin_slug"                                       # variant folders
-    
-
-
-    ## remote variable
-    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # repository apts
-    repo_host=$( craine_remote_tohost $site_repo )                          # repository host
-    repo_user=$( craine_remote_touser $site_repo )                          # repository user
-    repo_name=$( craine_remote_torepo $site_repo )                          # repository name
-    repo_http=$( craine_remote_tohttp $site_repo )                          # repository link
-    repo_sshd=$( craine_remote_tosshd $site_repo )                          # repository name
-    repo_push=$( craine_remote_topush $site_repo )                          # repository push
-    repo_keys="$worker_secret/master"                                       # repository sshd
-
-
-
-    ## loging variable                                       
-    logs_file="$worker_logger/$action_mode-$action_data-$vars_rand"         # logging filedat
-    logs_pack="$path_spin/track/$vars_rand"
-    logs_make="$path_spin/track/_init"
-
-
-
-    ## tokens variable
-    toke_path="$repo_toke/repo"                                                             # tokneizers path
-    toke_data=$( cat $toke_path )                                                           # tokneizers data
-    toke_uris="https://${repo_user}:${toke_data}@${repo_host}/${repo_user}/${repo_name}"
-
-
-    ## notife variable
-    stage_num=1
-    alert_num=1
-    erorr_num=1
-
-}
-
-
-#######################################
-##--- NOTLOG
+##---| 0 NOTLOG
 #######################################
 
 
@@ -245,6 +153,100 @@ function craine_update_notlog() {
     fi
 }
 
+#######################################
+##---| 1  DATUMS
+#######################################
+
+# 1 | command line base data organizer
+
+function craine_update_datums_pool () {
+   
+
+    ## logic variable
+    option_spin=$( [[ -z $option_spin ]] && echo "default" || echo "$option_spin" )
+
+
+    ## loads sources
+    local base_conf="$worker_folder/$action_data/$option_name/$option_spin/crain"
+    
+
+    if [[ ! -f $base_conf ]];then
+
+        echo "error : file not found" && exit 0
+    else
+
+        source $base_conf
+    fi
+
+
+    ## base variable
+    base_name=$( craine_module_toname ${base_name} )
+    base_slug=$( craine_module_toslug ${base_name} )
+    base_lead=$( craine_module_tolead ${base_name} )
+    base_vars=$( craine_module_tovars ${base_name} )
+    
+
+
+    ## spin variablbase_namee
+    spin_name=$( craine_module_toname ${spin_name} )
+    spin_slug=$( craine_module_toslug ${spin_name} )
+    spin_lead=$( craine_module_tolead ${spin_name} )
+    spin_vars=$( craine_module_tovars ${spin_name} )
+    
+
+
+    ## author variable
+    auth_name=$( craine_module_toname "$auth_name" )    
+    auth_lead=$( craine_module_toslug "$auth_name" )    
+    auth_slug=$( craine_module_tolead "$auth_name" )    
+    auth_vars=$( craine_module_tovars "$auth_name" ) 
+
+
+
+    ## locals variable
+    vars_rand=$( craine_module_filetim )
+    path_base="$worker_folder/$action_data"
+    path_main="$path_base/$base_slug"                                       # distros folders
+    path_rand="$path_main/$vars_rand"                                       # temporary paths
+    path_spin="$path_main/$spin_slug"                                       # variant folders
+    
+
+
+    ## remote variable
+    repo_toke="$worker_folder/tokens/$action_data/$base_slug/$spin_slug"    # repository apts
+    repo_host=$( craine_remote_tohost $site_repo )                          # repository host
+    repo_user=$( craine_remote_touser $site_repo )                          # repository user
+    repo_name=$( craine_remote_torepo $site_repo )                          # repository name
+    repo_http=$( craine_remote_tohttp $site_repo )                          # repository link
+    repo_sshd=$( craine_remote_tosshd $site_repo )                          # repository name
+    repo_push=$( craine_remote_topush $site_repo )                          # repository push
+    repo_keys="$worker_secret/master"                                       # repository sshd
+
+
+
+    ## loging variable                                       
+    logs_file="$worker_logger/$action_mode-$action_data-$vars_rand"         # logging filedat
+    logs_pack="$path_spin/track/$vars_rand"
+    logs_make="$path_spin/track/_init"
+
+
+
+    ## tokens variable
+    toke_path="$repo_toke/repo"                                                             # tokneizers path
+    toke_data=$( cat $toke_path )                                                           # tokneizers data
+    toke_uris="https://${repo_user}:${toke_data}@${repo_host}/${repo_user}/${repo_name}"
+
+
+    ## notife variable
+    stage_num=1
+    alert_num=1
+    erorr_num=1
+
+}
+
+
+
+
 
 #######################################
 ##--- PROGRES
@@ -263,23 +265,42 @@ function craine_update_remote_keys () {
 
     #--[2] initialzer ssh-agents 
     eval "$(ssh-agent -s)" > /dev/null 2>&1 &&
+    
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
 
 
     #--[3] add secret to ssh agent 
     ssh-add $worker_secret/master > /dev/null 2>&1
 
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
+
 
     #--[4] connection test to github
     yes | ssh -T git@github.com >  /dev/null 2>&1
 
-    
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
+
+
     #--[5] validate ssh connection
     cd $path_spin && git ls-remote --exit-code $repo_sshd > /dev/null 2>&1
     
-
-    #--[1] validate ssh connection
     if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101 && 
         sshd_stat=true 
+    else
+        craine_update_notlog 3 1101
     fi
 }
 
@@ -303,9 +324,16 @@ function craine_update_remote_toke () {
     #--[3] validate uri connection
     cd $path_spin && git remote set-url origin "$toke_uris"
 
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
+    
 
     #--[4] validate uri connection
     test -z $http_keys && cd $path_spin &&  git ls-remote --exit-code $repo_http > /dev/null 2>&1
+
 
 
     #--[5] validate uri connection
@@ -314,8 +342,12 @@ function craine_update_remote_toke () {
         #--[5-1] validate uri connection
         cd $path_spin && git remote set-url origin "$site_repo"
 
+        craine_update_notlog 3 1101
+
         #--[5-2] validate uri connection
         echo "no remote resources available" && exit 1
+    else
+        craine_update_notlog 1 1101
     fi
 
 
@@ -325,6 +357,12 @@ function craine_update_remote_toke () {
 
     #--[7] validate uri connection
     cd $path_spin && git remote set-url origin "$site_repo"
+
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
 }
 
 
@@ -335,6 +373,11 @@ function craine_update_remote_pool () {
     #--[1] validate uri connection
     cd $path_spin && git add . > /dev/null 2>&1 &&
 
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
 
 
     #--[2] validate uri connection
@@ -348,9 +391,14 @@ function craine_update_remote_pool () {
     fi
 
 
-
     #--[4] commit message updating
     cd $path_spin && git commit -m "$commit" > /dev/null 2>&1
+
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
 }
 
 
@@ -364,6 +412,12 @@ function craine_update_remote_push () {
         #--[1.1] pushed using sshd connection
         cd $path_spin && git push > /dev/null 2>&1 &&
 
+        if [[ $? -eq 0 ]]; then
+            craine_update_notlog 1 1101
+        else
+            craine_update_notlog 3 1101
+        fi
+
         #--[1.2] pushed using sshd connection
         return
     fi
@@ -375,11 +429,31 @@ function craine_update_remote_push () {
         #--[2.1] pushed using sshd connection
         cd $path_spin && git remote set-url origin "$toke_uris"
 
+        if [[ $? -eq 0 ]]; then
+            craine_update_notlog 1 1101
+        else
+            craine_update_notlog 3 1101
+        fi
+
+
         #--[2.2] pushed using sshd connection
         cd $path_spin && git push > /dev/null 2>&1 &&
 
+        if [[ $? -eq 0 ]]; then
+            craine_update_notlog 1 1101
+        else
+            craine_update_notlog 3 1101
+        fi
+
+
         #--[2.3] pushed using sshd connection
         cd $path_spin && git remote set-url origin "$site_repo"
+
+        if [[ $? -eq 0 ]]; then
+            craine_update_notlog 1 1101
+        else
+            craine_update_notlog 3 1101
+        fi
     fi   
 }
 
@@ -410,6 +484,12 @@ function craine_update_versio_majo () {
 
     #--[1] root file
     sed -i "s@^\(ver_major=\).*@\1${ver_major}@" "$envi_file"
+
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
 }
 
 
@@ -433,6 +513,12 @@ function craine_update_versio_mino () {
 
     #--[1] root file
     sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$envi_file"
+
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
 }
 
 
@@ -456,6 +542,12 @@ function craine_update_versio_patc () {
 
     #--[1] root file
     sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
+
+    if [[ $? -eq 0 ]]; then
+        craine_update_notlog 1 1101
+    else
+        craine_update_notlog 3 1101
+    fi
 }
 
 
@@ -595,7 +687,7 @@ function craine_update_protos() {
 function craine_update() {
 
 
-    test -z $action_data && craine_create_notlog 4 1
+    test -z $action_data && craine_update_notlog 4 1
 
 
     if [[ $action_data == "preset" ]]; then
