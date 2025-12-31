@@ -150,7 +150,6 @@ function craine_banner_render_head () {
     echo -e "\t${white}         \/       \/         \/            \/        \/       ${reset}" | sed 's/^[[:space:]]*//' &&
     echo -e "\t${cyan} LINUX DISTRO STUDIO MAKER            ${gray}by null@yuros.org ${reset}" | sed 's/^[[:space:]]*//' &&
     echo -e "\t${white}________________________________________________________      ${reset}" | sed 's/^[[:space:]]*//'
-    
 }
 
 
