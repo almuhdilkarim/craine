@@ -1,1 +1,61 @@
 #!/bin/env bash
+
+##--[50] CREATE
+
+##--[I50] STAGE
+I50001="checking and prepare deployment target"
+I50002="checking install sources availablility"
+I50003="checking targets sources availablility"
+I50004="creating targets sources workdirectory"
+I50005="install modules to working directories"
+I50006="create access tokens vault directories"
+I50007="add personal access token to vaultfile"
+I50008="writing user input data to tmp presets"
+I50009="clone remote sources to working folder"
+I50010="install preset to remote source folder"
+I50011="purifiying source at temporary presets"
+
+
+##--[W50] WARNS
+W50001="checking and prepare deployment target"
+W50002="checking install sources availablility"
+W50003="checking targets sources availablility"
+W50004="creating targets sources workdirectory"
+W50005="install modules to working directories"
+W50006="create access tokens vault directories"
+W50007="add personal access token to vaultfile"
+W50008="writing user input data to tmp presets"
+W50009="clone remote sources to working folder"
+W50010="install preset to remote source folder"
+W50011="purifiying source at temporary presets"
+
+
+##--[E50] ERROR
+E50001="checking and prepare deployment target"
+E50002="checking install sources availablility"
+E50003="checking targets sources availablility"
+E50004="creating targets sources workdirectory"
+E50005="install modules to working directories"
+E50006="create access tokens vault directories"
+E50007="add personal access token to vaultfile"
+E50008="writing user input data to tmp presets"
+E50009="clone remote sources to working folder"
+E50010="install preset to remote source folder"
+E50011="purifiying source at temporary presets"
+
+
+##--[A50] ABORT
+A50001="checking and prepare deployment target"
+A50002="checking install sources availablility"
+A50003="checking targets sources availablility"
+A50004="creating targets sources workdirectory"
+A50005="install modules to working directories"
+A50006="create access tokens vault directories"
+A50007="add personal access token to vaultfile"
+A50008="writing user input data to tmp presets"
+A50009="clone remote sources to working folder"
+A50010="install preset to remote source folder"
+A50011="purifiying source at temporary presets"
+
+
+##--[58] VERSER/UPDATE

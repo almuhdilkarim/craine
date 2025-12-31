@@ -2,162 +2,13 @@
 ## craine update
 
 
-#######################################
-##---| 0 NOTLOG
-#######################################
 
-
-# (1) level info notif
-function craine_update_notife_info() {
-
-
-    ##--[1] declare varible for error code and text message
-    local text=""
-    local code="$1" 
-
-
-    ##--[2] selection text message based on error code
-    
-    ##---(110) helper 
-    test $code == 1101 && text="update default $action_data successfull" 
-    
-
-    ##---(120) preset
-    test $code == 1201 && text="checking and prepare deployment target"
-    test $code == 1202 && text="checking install sources availablility"
-    test $code == 1203 && text="checking targets sources availablility"
-    test $code == 1204 && text="creating targets sources workdirectory"
-    test $code == 1205 && text="install modules to working directories"
-    test $code == 1206 && text="create access tokens vault directories"
-    test $code == 1207 && text="add personal access token to vaultfile"
-    test $code == 1208 && text="writing user input data to tmp presets"
-    test $code == 1209 && text="clone remote sources to working folder"
-    test $code == 1210 && text="install preset to remote source folder"
-    test $code == 1211 && text="purifiying source at temporary presets"
-
-
-    ##---(130) proset
-    test $code == 1301 && text="update default $action_data successfull"
-
-
-    ##---(140) protos
-    test $code == 1301 && text="update default $action_data successfull"
-
-
-
-    ##--[3] render message
-    test -n "$text" && craine_notif_stage "$text"
-    
-
-    ##--[4] clean variable
-    unset code && unset text
-}
-
-
-# (1) level info loging 
-function craine_update_logger_info() {
-    echo debug > /dev/null
-}
-
-
-# (2) level warn notif 
-function craine_update_notife_warn() {
-    echo debug
-}
-
-
-# (2) level info loging
-function craine_update_logger_warn() {
-    echo debug
-}
-
-
-# (3) level error notif
-function craine_update_notife_errs() {
-    echo debug
-}
-
-
-# (3) level error loging
-function craine_update_logger_errs() {
-    echo debug
-}
-
-
-# (4) level fatal notif
-function craine_update_notife_fail() {
-    ##--[1] declare varible for error code and text message
-    local text=""
-    local code="$1" 
-
-
-    ##--[2] selection text message based on error code
-    
-    ##---(410) helper 
-    test $code == 4101 && text="update default $action_data successfull" 
-    
-
-    ##---(420) preset
-    test $code == 4201 && text="conflicting name, $base_name $spin_name preset is existing"
-
-
-    ##---(430) proset
-    test $code == 4301 && text="update default $action_data successfull"
-
-
-    ##---(440) protos
-    test $code == 4301 && text="update default $action_data successfull"
-
-
-
-    ##--[3] render message
-    test -n "$text" && craine_notif_abort "$text" "$code"
-    
-    exit 0
-
-    ##--[4] clean variable
-    unset code && unset text
-}
-
-
-# (4) level fatal loging
-function craine_update_logger_fail() {
-    echo debug
-}
-
-
-# notife corest 
-function craine_update_notlog() {
-
-    local type="$1"
-    local code="$2"
-
-    if [[ $type == 1 ]];then
-        craine_update_notife_info "$code"
-        craine_update_logger_info "$code"
-    fi
-
-    if [[ $type == 2 ]];then
-        craine_update_notife_warn "$code"
-        craine_update_logger_warn "$code"
-    fi
-
-    if [[ $type == 3 ]];then
-        craine_update_notife_errs "$code"
-        craine_update_logger_errs "$code"
-    fi
-
-    if [[ $type == 4 ]];then
-        craine_update_notife_fail "$code"
-        craine_update_logger_fail "$code"
-    fi
-}
 
 #######################################
 ##---| 1  DATUMS
 #######################################
 
-# 1 | command line base data organizer
+# 1 | source module metadata
 
 function craine_update_datums_pool () {
    
@@ -166,17 +17,22 @@ function craine_update_datums_pool () {
     option_spin=$( [[ -z $option_spin ]] && echo "default" || echo "$option_spin" )
 
 
-    ## loads sources
+    ## loads configs
     local base_conf="$worker_folder/$action_data/$option_name/$option_spin/crain"
     
 
     if [[ ! -f $base_conf ]];then
-
-        echo "error : file not found" && exit 0
+        craine_nolog "A58001"
     else
-
         source $base_conf
     fi
+
+    ## loads datum
+    base_name=$base_name
+    spin_name=$spin_name
+    auth_name=$auth_name
+    rand_name=$( craine_string_torand )
+    time_name=$( craine_string_totime )
 
 
     ## base variable
@@ -187,7 +43,7 @@ function craine_update_datums_pool () {
     
 
 
-    ## spin variablbase_namee
+    ## spin variabel
     spin_name=$( craine_module_toname ${spin_name} )
     spin_slug=$( craine_module_toslug ${spin_name} )
     spin_lead=$( craine_module_tolead ${spin_name} )
@@ -242,18 +98,25 @@ function craine_update_datums_pool () {
     alert_num=1
     erorr_num=1
 
+    craine_nolog "I58001"
+}
+
+function craine_update_datum_proc () {
+    echo debug
 }
 
 
-
+function craine_update_datum_pure () {
+    echo debug
+}
 
 
 #######################################
-##--- PROGRES
+##--- LIBRARY
 #######################################
 
 
-##--[1] validate secret
+##--[1] validate sssh secret
 function craine_update_remote_keys () {
 
 
@@ -266,31 +129,19 @@ function craine_update_remote_keys () {
     #--[2] initialzer ssh-agents 
     eval "$(ssh-agent -s)" > /dev/null 2>&1 &&
     
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
+    craine_prelo $? I52001 E52001
 
 
     #--[3] add secret to ssh agent 
     ssh-add $worker_secret/master > /dev/null 2>&1
 
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
+    craine_prelo $? I52001 E52001
 
 
     #--[4] connection test to github
     yes | ssh -T git@github.com >  /dev/null 2>&1
 
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
+    craine_prelo $? I52001 E52001
 
 
     #--[5] validate ssh connection
@@ -305,7 +156,7 @@ function craine_update_remote_keys () {
 }
 
 
-##--[2] validate tokens
+##--[2] validate access tokens
 function craine_update_remote_toke () {
 
 
@@ -324,11 +175,7 @@ function craine_update_remote_toke () {
     #--[3] validate uri connection
     cd $path_spin && git remote set-url origin "$toke_uris"
 
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
+    craine_prelo $? I52001 E52001
     
 
     #--[4] validate uri connection
@@ -358,114 +205,12 @@ function craine_update_remote_toke () {
     #--[7] validate uri connection
     cd $path_spin && git remote set-url origin "$site_repo"
 
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
+    craine_prelo $? I52001 E52001
 }
 
 
-##--[3] validate tokens
-function craine_update_remote_pool () {
-
-
-    #--[1] validate uri connection
-    cd $path_spin && git add . > /dev/null 2>&1 &&
-
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
-
-
-    #--[2] validate uri connection
-    echo -e  "\t${green}   [ Press enter for autocommit message ]    ${reset}" | sed 's/^[[:space:]]*//' && 
-    echo -ne "\t${green}   |--> Insert commit message : ${reset}" | sed 's/^[[:space:]]*//' &&  read commit
-
-
-    #--[3] automatic commit message
-    if [[ -z $commit ]];then
-        commit="update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
-    fi
-
-
-    #--[4] commit message updating
-    cd $path_spin && git commit -m "$commit" > /dev/null 2>&1
-
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
-}
-
-
-
-##--[4] validate tokens
-function craine_update_remote_push () {
-
-    #--[1] pushed using sshd connection
-    if [[ $shhd_stat == true  ]]; then
-
-        #--[1.1] pushed using sshd connection
-        cd $path_spin && git push > /dev/null 2>&1 &&
-
-        if [[ $? -eq 0 ]]; then
-            craine_update_notlog 1 1101
-        else
-            craine_update_notlog 3 1101
-        fi
-
-        #--[1.2] pushed using sshd connection
-        return
-    fi
-
-
-    #--[2] pushed using http connection
-    if [[ $http_stat == true  ]]; then
-
-        #--[2.1] pushed using sshd connection
-        cd $path_spin && git remote set-url origin "$toke_uris"
-
-        if [[ $? -eq 0 ]]; then
-            craine_update_notlog 1 1101
-        else
-            craine_update_notlog 3 1101
-        fi
-
-
-        #--[2.2] pushed using sshd connection
-        cd $path_spin && git push > /dev/null 2>&1 &&
-
-        if [[ $? -eq 0 ]]; then
-            craine_update_notlog 1 1101
-        else
-            craine_update_notlog 3 1101
-        fi
-
-
-        #--[2.3] pushed using sshd connection
-        cd $path_spin && git remote set-url origin "$site_repo"
-
-        if [[ $? -eq 0 ]]; then
-            craine_update_notlog 1 1101
-        else
-            craine_update_notlog 3 1101
-        fi
-    fi   
-}
-
-
-
-#######################################
-##--- VERSION
-#######################################
-
-
-##--(4) validate tokens
-function craine_update_versio_majo () {
+##--(3) update version | major
+function craine_update_remote_majo () {
 
 
     #--[1] root file
@@ -484,17 +229,13 @@ function craine_update_versio_majo () {
 
     #--[1] root file
     sed -i "s@^\(ver_major=\).*@\1${ver_major}@" "$envi_file"
+    craine_prelo $? I52001 E52001
 
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
 }
 
 
-##--(4) validate tokens
-function craine_update_versio_mino () {
+##--(3) update version | minor
+function craine_update_remote_mino () {
 
     
     #--[1] root file
@@ -514,16 +255,12 @@ function craine_update_versio_mino () {
     #--[1] root file
     sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$envi_file"
 
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
-    fi
+    craine_prelo $? I52001 E52001
 }
 
 
-##--(4) validate tokens
-function craine_update_versio_patc () {
+##--(3) update version | pathc
+function craine_update_remote_patc () {
 
 
     #--[1] root file
@@ -542,23 +279,82 @@ function craine_update_versio_patc () {
 
     #--[1] root file
     sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
+    
+    craine_prelo $? I52001 E52001
+}
 
-    if [[ $? -eq 0 ]]; then
-        craine_update_notlog 1 1101
-    else
-        craine_update_notlog 3 1101
+
+##--[4] populate and commit
+function craine_update_remote_pool () {
+
+
+    #--[1] validate uri connection
+    cd $path_spin && git add . > /dev/null 2>&1 &&
+
+    craine_prelo $? I52001 E52001
+
+
+    #--[2] validate uri connection
+    echo -e  "\t${green}   [ Press enter for autocommit message ]    ${reset}" | sed 's/^[[:space:]]*//' && 
+    echo -ne "\t${green}   |--> Insert commit message : ${reset}" | sed 's/^[[:space:]]*//' &&  read commit
+
+
+    #--[3] automatic commit message
+    if [[ -z $commit ]];then
+        commit="update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
     fi
+
+
+    #--[4] commit message updating
+    cd $path_spin && git commit -m "$commit" > /dev/null 2>&1
+
+    craine_prelo $? I52001 E52001
 }
 
 
+##--[5] push to remote host
+function craine_update_remote_push () {
+
+    #--[1] pushed using sshd connection
+    if [[ $shhd_stat == true  ]]; then
+
+        #--[1.1] pushed using sshd connection
+        cd $path_spin && git push > /dev/null 2>&1 &&
+        craine_prelo $? I52001 E52001
+
+
+        #--[1.2] pushed using sshd connection
+        return
+    fi
+
+
+    #--[2] pushed using http connection
+    if [[ $http_stat == true  ]]; then
+
+        #--[2.1] pushed using sshd connection
+        cd $path_spin && git remote set-url origin "$toke_uris"
+        craine_prelo $? I52001 E52001
+
+
+        #--[2.2] pushed using sshd connection
+        cd $path_spin && git push > /dev/null 2>&1 &&
+        craine_prelo $? I52001 E52001
+
+
+        #--[2.3] pushed using sshd connection
+        cd $path_spin && git remote set-url origin "$site_repo"
+        craine_prelo $? I52001 E52001
+    fi   
+}
 
 
 #######################################
-##--- PRESET
+##--- PROGRESS
 #######################################
 
 
-function craine_update_preset_majo () {
+##--[5] update as major version
+function craine_update_verses_majo () {
 
     #--[1] populate preset data
     craine_update_datums_pool
@@ -573,7 +369,7 @@ function craine_update_preset_majo () {
 
 
     #--[4] update patch numbers
-    craine_update_versio_majo
+    craine_update_remote_majo
 
 
     #--[5] defined commit texts
@@ -585,7 +381,8 @@ function craine_update_preset_majo () {
 }
 
 
-function craine_update_preset_mino () {
+##--[5] update as minor version
+function craine_update_verses_mino () {
 
     #--[1] populate preset data
     craine_update_datums_pool
@@ -600,7 +397,7 @@ function craine_update_preset_mino () {
 
 
     #--[4] update patch numbers
-    craine_update_versio_mino
+    craine_update_remote_mino
 
 
     #--[5] defined commit texts
@@ -612,7 +409,8 @@ function craine_update_preset_mino () {
 }
 
 
-function craine_update_preset_patc () {
+##--[5] update for patching bug
+function craine_update_verses_bufi () {
 
 
     #--[1] populate preset data
@@ -628,7 +426,7 @@ function craine_update_preset_patc () {
 
 
     #--[4] update patch numbers
-    craine_update_versio_patc
+    craine_update_remote_patc
 
 
     #--[5] defined commit texts
@@ -640,19 +438,25 @@ function craine_update_preset_patc () {
 }
 
 
+
+#######################################
+##--- PRESET
+#######################################
+
+
 function craine_update_preset () {
 
     if [[ $option_mode == "minor" ]]; then
 
-        craine_update_versio_mino
+        craine_update_verses_mino
 
     elif [[ $option_mode == "major" ]]; then
 
-        craine_update_preset_majo
+        craine_update_verses_majo
 
     else
 
-        craine_update_preset_patc
+        craine_update_verses_bufi
     fi
 }
 

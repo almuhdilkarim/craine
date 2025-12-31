@@ -1,0 +1,61 @@
+#!/bin/env bash
+
+##--[57] RELEASE
+
+##--[I57] STAGE
+I57001="checking and prepare deployment target"
+I57002="checking install sources availablility"
+I57003="checking targets sources availablility"
+I57004="creating targets sources workdirectory"
+I57005="install modules to working directories"
+I57006="create access tokens vault directories"
+I57007="add personal access token to vaultfile"
+I57008="writing user input data to tmp presets"
+I57009="clone remote sources to working folder"
+I57010="install preset to remote source folder"
+I57011="purifiying source at temporary presets"
+
+
+##--[W57] WARNS
+W57001="checking and prepare deployment target"
+W57002="checking install sources availablility"
+W57003="checking targets sources availablility"
+W57004="creating targets sources workdirectory"
+W57005="install modules to working directories"
+W57006="create access tokens vault directories"
+W57007="add personal access token to vaultfile"
+W57008="writing user input data to tmp presets"
+W57009="clone remote sources to working folder"
+W57010="install preset to remote source folder"
+W57011="purifiying source at temporary presets"
+
+
+##--[E57] ERROR
+E57001="checking and prepare deployment target"
+E57002="checking install sources availablility"
+E57003="checking targets sources availablility"
+E57004="creating targets sources workdirectory"
+E57005="install modules to working directories"
+E57006="create access tokens vault directories"
+E57007="add personal access token to vaultfile"
+E57008="writing user input data to tmp presets"
+E57009="clone remote sources to working folder"
+E57010="install preset to remote source folder"
+E57011="purifiying source at temporary presets"
+
+
+##--[A57] ABORT
+A57001="checking and prepare deployment target"
+A57002="checking install sources availablility"
+A57003="checking targets sources availablility"
+A57004="creating targets sources workdirectory"
+A57005="install modules to working directories"
+A57006="create access tokens vault directories"
+A57007="add personal access token to vaultfile"
+A57008="writing user input data to tmp presets"
+A57009="clone remote sources to working folder"
+A57010="install preset to remote source folder"
+A57011="purifiying source at temporary presets"
+
+
+##--[58] VERSER/UPDATE

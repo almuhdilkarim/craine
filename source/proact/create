@@ -90,7 +90,7 @@ function craine_create_datums_pool() {
 
 
     ## locals variable
-    vars_rand=$( craine_module_filetim )
+    vars_rand=$( craine_string_totime )
     path_base="$worker_folder/$action_data"
     path_main="$path_base/$base_slug"                                       # distros folders
     path_rand="$path_main/$vars_rand"                                       # temporary paths
@@ -585,6 +585,8 @@ function craine_create_preset() {
     
     #--[10] purge build variable from current procces 
     craine_create_datums_pure
+
+
 }
 
 

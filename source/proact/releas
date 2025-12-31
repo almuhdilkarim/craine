@@ -1,10 +1,9 @@
 #!/bin/env bash
+# RELEASE
 
 set -e
 
 
-
-## 
 function craine_enviro() {
     if [[ -e "$1/posmak" ]]; then
         echo "" >> $raptor_makers  &&  cat "$1/posmak" >> $raptor_makers

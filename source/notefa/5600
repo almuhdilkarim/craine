@@ -1,0 +1,61 @@
+#!/bin/env bash
+
+##--[56] UPGRADE
+
+##--[I56] STAGE
+I56001="checking and prepare deployment target"
+I56002="checking install sources availablility"
+I56003="checking targets sources availablility"
+I56004="creating targets sources workdirectory"
+I56005="install modules to working directories"
+I56006="create access tokens vault directories"
+I56007="add personal access token to vaultfile"
+I56008="writing user input data to tmp presets"
+I56009="clone remote sources to working folder"
+I56010="install preset to remote source folder"
+I56011="purifiying source at temporary presets"
+
+
+##--[W56] WARNS
+W56001="checking and prepare deployment target"
+W56002="checking install sources availablility"
+W56003="checking targets sources availablility"
+W56004="creating targets sources workdirectory"
+W56005="install modules to working directories"
+W56006="create access tokens vault directories"
+W56007="add personal access token to vaultfile"
+W56008="writing user input data to tmp presets"
+W56009="clone remote sources to working folder"
+W56010="install preset to remote source folder"
+W56011="purifiying source at temporary presets"
+
+
+##--[E56] ERROR
+E56001="checking and prepare deployment target"
+E56002="checking install sources availablility"
+E56003="checking targets sources availablility"
+E56004="creating targets sources workdirectory"
+E56005="install modules to working directories"
+E56006="create access tokens vault directories"
+E56007="add personal access token to vaultfile"
+E56008="writing user input data to tmp presets"
+E56009="clone remote sources to working folder"
+E56010="install preset to remote source folder"
+E56011="purifiying source at temporary presets"
+
+
+##--[A56] ABORT
+A56001="checking and prepare deployment target"
+A56002="checking install sources availablility"
+A56003="checking targets sources availablility"
+A56004="creating targets sources workdirectory"
+A56005="install modules to working directories"
+A56006="create access tokens vault directories"
+A56007="add personal access token to vaultfile"
+A56008="writing user input data to tmp presets"
+A56009="clone remote sources to working folder"
+A56010="install preset to remote source folder"
+A56011="purifiying source at temporary presets"
+
+
+##--[58] VERSER/UPDATE

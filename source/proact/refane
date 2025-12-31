@@ -1,10 +1,12 @@
 #!/bin/env bash
+## UPGRADE OPERATION
+
 
 
 set -e
 
 
-## UPGRADE OPERATION
+
 
 #-- upgrade local module using gitrepo
 function craine_pushit_gitbase() {

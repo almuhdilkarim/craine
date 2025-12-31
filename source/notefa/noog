@@ -1,18 +1,43 @@
 #!/bin/env bash
 # notification and logs generator
+# list
+#
+#--[1] assets
+#--[2] config
+#--[3] corest
+#--[4] preset
+#   |--[41] parser
+#   |--[41] preset
+#--[5] proact
+#   |--[51] builds
+#   |--[52] create
+#   |--[53] delete
+#   |--[54] refane
+#   |--[55] releas
+#   |--[56] verser
+#--[6] prolab
+#--[7] proset
+#--[8] protoc
+#--[9] protos 
+
 
 set -e
 
 
 ## NOTIF 
 
+function craine_nolog_infor() {
+    local temp=$1
+    local text=${!temp}
 
-function craine_notif_error() {
-    test -n "$1" && echo -e "\t${blue} [CHK] ─> $1 passed ${reset}"
+    test -n "$1" && echo -e "\t${green}        |                   ${reset}" | sed 's/^[[:space:]]*//'
+    test -n "$1" && echo -e "\t${green} stage ($stage_num) ─> $text${reset}" | sed 's/^[[:space:]]*//'
+    ((stage_num++)) 
 }
 
 
 function craine_notif_stage() {
+        
 
     test -n "$1" && echo -e "\t${green}        |                ${reset}" | sed 's/^[[:space:]]*//'
     test -n "$1" && echo -e "\t${green} stage ($stage_num) ─> $1${reset}" | sed 's/^[[:space:]]*//'
@@ -24,6 +49,10 @@ function craine_notif_stage() {
 
 function craine_notif_warns() {
     test -n "$1" && echo -e "\t${red} [WRN] ─> $1${reset}"
+}
+
+function craine_notif_error() {
+    test -n "$1" && echo -e "\t${blue} [CHK] ─> $1 passed ${reset}"
 }
 
 
@@ -49,27 +78,94 @@ function craine_notif_abort() {
 
 
 ## LOGER 
-
-function craine_loger_error() {
-
-}
-
-
 function craine_loger_stage() {
     
+    local code="$1"
+    local text=${code}
+
+    echo debug > /dev/null
 }
 
 
 function craine_loger_warns() {
-    
+    echo debug > /dev/null
+}
+
+function craine_loger_error() {
+    echo debug > /dev/null
+}
+
+function craine_loger_abort() {
+    echo debug > /dev/null
 }
 
 
-function craine_loger_abort() {
+function craine_nolog_stage() {
+
+    local code="$1"
+    craine_nolog_infor "$code"
+    craine_loger_stage "$code"
+}
+
+function craine_nolog_warns() {
     
+    local code="$1"
+    craine_notif_warns "$code"
+    craine_loger_warns "$code"
+}
+
+function craine_nolog_error() {
+    
+    local code="$1"
+    craine_notif_error "$code"
+    craine_loger_error "$code"
+}
+
+
+function craine_nolog_abort() {
+
+    local code="$1"
+    craine_notif_abort "$code"
+    craine_loger_abort "$code"
 }
 
 
 function craine_nolog() {
+
+    local code="$1"
+    local type="${code:0:1}"
     
+
+
+    if [[ $type == I ]];then
+        craine_nolog_stage $code
+    fi
+
+    if [[ $type == W ]];then
+        craine_nolog_warns $code
+    fi
+
+    if [[ $type == E ]];then
+        craine_nolog_error $code
+    fi
+
+    if [[ $type == A ]];then
+        craine_nolog_abort $code
+    fi
+}
+
+
+
+function craine_prelo() {
+
+    local stat=$1
+    local done=$2
+    local fail=$2
+
+
+    if [[ $stat -eq 0 ]]; then
+        craine_nolog $done
+    else
+        craine_nolog $fail
+    fi
 }

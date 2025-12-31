@@ -50,21 +50,10 @@ function craine_module_tolead() {
 }
 
 
-function craine_module_filetim() {
-    echo $(date "+%Y.%m.%d.%H.%M.%S")
-}
-
-function craine_module_random() {
-    local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
-    echo $random_number
-    unset random_number
-}
-
-
 ## REPOSITORY PARSER
 
 
-function craine_remote_torepo() {
+function craine_remote_torepo () {
 
     local parser=${1}
 
@@ -79,7 +68,7 @@ function craine_remote_torepo() {
 }
 
 
-function craine_remote_touser() {
+function craine_remote_touser () {
 
     local parser=${1}
 
@@ -94,7 +83,7 @@ function craine_remote_touser() {
 }
 
 
-function craine_remote_tohost() {
+function craine_remote_tohost () {
 
     local parser=${1}
 
@@ -109,7 +98,7 @@ function craine_remote_tohost() {
 }
 
 
-function craine_remote_topush() {
+function craine_remote_topush () {
 
     local parser=${1} 
     local naming=$( craine_remote_torepo $parser )
@@ -125,7 +114,7 @@ function craine_remote_topush() {
 }
 
 
-function craine_remote_tohttp() {
+function craine_remote_tohttp () {
     
     local parser=${1}
 
@@ -139,7 +128,7 @@ function craine_remote_tohttp() {
 }
 
 
-function craine_remote_tosshd() {
+function craine_remote_tosshd () {
 
     local parser=${1}
 
@@ -154,16 +143,24 @@ function craine_remote_tosshd() {
 
 
 
-## DATUM EDITOR
-
-function craine_module_editor() {
-    exec $vendor_editor $1 &&
-    return 0
-}
 
 
 
 ## REPLACE STRING
+
+function craine_string_totime () {
+    echo $(date "+%Y.%m.%d.%H.%M.%S")
+}
+
+function craine_string_torand () {
+    local random_number=$(( ( RANDOM % 900000 ) + 100000 ))
+    echo $random_number
+    unset random_number
+}
+
+
+
+## REPLACE FILEBASE
 
 #-- replace all string on file
 function craine_string_replace () {
@@ -178,6 +175,7 @@ function craine_string_replace () {
     unset replac
     unset filers
 }
+
 
 #-- replace variable value base on key
 function craine_varkey_rewrite () {
@@ -201,28 +199,6 @@ function craine_varkey_rewrite () {
 
 
 ## STRING REPLACING
-function craine_retext_string() {
-    echo "replace string on file"
-}
-
-
-function craine_retext_lining() {
-    echo "replace line on file"
-}
-
-
-## STRING MANIPULATION
-function craine_stringt_capit() {
-    echo "string to capitalize"
-}
-
-function craine_stringt_upper() {
-    echo "string to upper"
-}
-
-function craine_stringt_lower() {
-    echo "string to lower"
-}
 
 function craine_stringt_uncor() {
 
@@ -230,6 +206,7 @@ function craine_stringt_uncor() {
     local strep="${strep//-/_}" # replace all hypens with underscore
     echo ${strep,,}
 }
+
 
 function craine_stringt_strip() {
 
@@ -240,9 +217,11 @@ function craine_stringt_strip() {
 
 }
 
+
 function craine_string_allcap() {
     echo "$1" | sed -E 's/(^|\s+)([a-z])/\1\U\2/g'
 }
+
 
 function craine_string_pather() {
 
@@ -256,13 +235,6 @@ function craine_string_pather() {
     
 }
 
-function craine_string_unique() {
-    echo "string to uniq"
-}
-
-function craine_string_varian() {
-    echo "string to vars"
-}
 
 function craine_string_geturi() {
     echo "$1" | cut -d/ -f3

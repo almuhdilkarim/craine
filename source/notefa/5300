@@ -1,0 +1,58 @@
+#!/bin/env bash
+
+##--[53] CREATE
+
+##--[I53] STAGE
+I53001="checking and prepare deployment target"
+I53002="checking install sources availablility"
+I53003="checking targets sources availablility"
+I53004="creating targets sources workdirectory"
+I53005="install modules to working directories"
+I53006="create access tokens vault directories"
+I53007="add personal access token to vaultfile"
+I53008="writing user input data to tmp presets"
+I53009="clone remote sources to working folder"
+I53010="install preset to remote source folder"
+I53011="purifiying source at temporary presets"
+
+
+##--[W53] WARNS
+W53001="checking and prepare deployment target"
+W53002="checking install sources availablility"
+W53003="checking targets sources availablility"
+W53004="creating targets sources workdirectory"
+W53005="install modules to working directories"
+W53006="create access tokens vault directories"
+W53007="add personal access token to vaultfile"
+W53008="writing user input data to tmp presets"
+W53009="clone remote sources to working folder"
+W53010="install preset to remote source folder"
+W53011="purifiying source at temporary presets"
+
+
+##--[E53] ERROR
+E53001="checking and prepare deployment target"
+E53002="checking install sources availablility"
+E53003="checking targets sources availablility"
+E53004="creating targets sources workdirectory"
+E53005="install modules to working directories"
+E53006="create access tokens vault directories"
+E53007="add personal access token to vaultfile"
+E53008="writing user input data to tmp presets"
+E53009="clone remote sources to working folder"
+E53010="install preset to remote source folder"
+E53011="purifiying source at temporary presets"
+
+
+##--[A53] ABORT
+A53001="checking and prepare deployment target"
+A53002="checking install sources availablility"
+A53003="checking targets sources availablility"
+A53004="creating targets sources workdirectory"
+A53005="install modules to working directories"
+A53006="create access tokens vault directories"
+A53007="add personal access token to vaultfile"
+A53008="writing user input data to tmp presets"
+A53009="clone remote sources to working folder"
+A53010="install preset to remote source folder"
+A53011="purifiying source at temporary presets"
