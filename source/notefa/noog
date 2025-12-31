@@ -133,11 +133,32 @@ function craine_loger_abort() {
 }
 
 
+#######################################
+##---| 3  BANNER
+#######################################
+
+function craine_banner_render_head () {
+
+    clear &&
+
+    echo -e "\t${white}                                                              ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} ___________________    _____  .___ _______  ___________      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} \_   ___ \______   \  /  _  \ |   |\      \ \_   _____/      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} /    \  \/|       _/ /  /_\  \|   |/   |   \ |    __)_       ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} \     \___|    |   \/    |    \   /    |    \|        \      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white}  \______  /____|_  /\____|__  /___\____|__  /_______  /      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white}         \/       \/         \/            \/        \/       ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${cyan} LINUX DISTRO STUDIO MAKER            ${gray}by null@yuros.org ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white}________________________________________________________      ${reset}" | sed 's/^[[:space:]]*//'
+    
+}
+
 
 
 #######################################
-##---| 3  dialog
+##---| 4  DIALOG
 #######################################
+
 
 function craine_dialog_option_text () {
 
@@ -149,8 +170,9 @@ function craine_dialog_option_text () {
 
 
 #######################################
-##---| 3  REPORT
+##---| 5  REPORT
 #######################################
+
 
 function craine_report_status_info () {
 
@@ -172,7 +194,7 @@ function craine_report_status_info () {
 
 
 #######################################
-##---| 3  INITIAL
+##---| 6  INITIAL
 #######################################
 
 

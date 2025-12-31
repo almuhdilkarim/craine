@@ -112,6 +112,8 @@ function craine_update_datum_pure () {
 ##--- LIBRARY
 #######################################
 
+
+
 ##--[1] validate sssh secret
 function craine_update_remote_dial () {
 
@@ -414,6 +416,7 @@ function craine_update_verses_mino () {
 ##--[5] update for patching bug
 function craine_update_verses_bufi () {
 
+    craine_banner_render_head
 
     #--[1] making commit message
     craine_update_remote_dial
