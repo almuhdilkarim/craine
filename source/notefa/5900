@@ -1,0 +1,62 @@
+#!/bin/env bash
+
+##--[59] VERSER/UPDATE
+
+##--[I59] STAGE
+I59001="populating and declare module metainfo"
+I59002="modifiying and declare module metainfo"
+I59003="initialize sshagent for ssh connection"
+I59004="register ssh keys to system ssh agents"
+I59005="testing remote connection to repo host"
+I59006="remote repository availabile and ready"
+I59007="skip https eval and use ssh connection"
+I59008="create custom http link for local repo"
+I59009="using https connections instead of ssh"
+I59010="updates for major release apps version"
+I59011="updates for minor release apps version"
+I59012="update vers for patching or bug fixing"
+I59013="populate all modified data for release"
+I59014="commit all modified data and track all"
+I59015="push local repository to remote target"
+I59016="clean process data and temporary files"
+
+##--[W59] WARNS
+W59001="ssh keys not validate or not register"
+W59002="failed initializing systems ssh agent"
+W59003="failed build connection to repo hosts"
+W59004="failed to established ssh connections"
+W59005="failed update versioning for released"
+W59006="failed populate locals data directory"
+W59007=""
+W59008=""
+W59009=""
+W59010=""
+W59011=""
+
+
+##--[E59] ERROR
+E59001="commit failed, no commited data founds"
+E59002="failed push local directory to remotes"
+E59003=""
+E59004=""
+E59005=""
+E59006=""
+E59007=""
+E59008=""
+E59009=""
+E59010=""
+E59011=""
+
+
+##--[A59] ABORT
+A59001="remote metadata config files not found"
+A59002="personal access token files not exists"
+A59003="failed to get access remote repository"
+A59004="abort process no connections available"
+A59005=""
+A59006=""
+A59007=""
+A59008=""
+A59009=""
+A59010=""
+A59011=""

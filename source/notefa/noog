@@ -1,20 +1,26 @@
 #!/bin/env bash
 # notification and logs generator
-# list
+# module classification
 #
 #--[1] assets
 #--[2] config
+#   |--[21] colors
 #--[3] corest
+#   |--[31] assets
+#   |--[32] booter
 #--[4] preset
 #   |--[41] parser
 #   |--[41] preset
 #--[5] proact
 #   |--[51] builds
-#   |--[52] create
-#   |--[53] delete
-#   |--[54] refane
-#   |--[55] releas
-#   |--[56] verser
+#   |--[52] celine
+#   |--[53] create
+#   |--[54] delete
+#   |--[55] getter
+#   |--[56] modifi
+#   |--[57] refane
+#   |--[58] releas
+#   |--[59] verser
 #--[6] prolab
 #--[7] proset
 #--[8] protoc
@@ -24,40 +30,55 @@
 set -e
 
 
-## NOTIF 
+#######################################
+##---| 1  NOTIF
+#######################################
 
-function craine_nolog_infor() {
+function craine_notif_stage() {
+
     local temp=$1
     local text=${!temp}
 
-    test -n "$1" && echo -e "\t${green}        |                   ${reset}" | sed 's/^[[:space:]]*//'
-    test -n "$1" && echo -e "\t${green} stage ($stage_num) ─> $text${reset}" | sed 's/^[[:space:]]*//'
+    test -n "$1" && echo -e "\t${white}        |                                            ${reset}" | sed 's/^[[:space:]]*//'
+    test -n "$1" && echo -e "\t${lightPurple} stage ${white}($stage_num)───> ${cyan}$text   ${reset}" | sed 's/^[[:space:]]*//'
     ((stage_num++)) 
 }
 
 
-function craine_notif_stage() {
-        
-
-    test -n "$1" && echo -e "\t${green}        |                ${reset}" | sed 's/^[[:space:]]*//'
-    test -n "$1" && echo -e "\t${green} stage ($stage_num) ─> $1${reset}" | sed 's/^[[:space:]]*//'
-    test -n "$1" && echo -e "\t${green}        |                ${reset}" | sed 's/^[[:space:]]*//'
-    ((stage_num++))
-
-}
-
-
 function craine_notif_warns() {
-    test -n "$1" && echo -e "\t${red} [WRN] ─> $1${reset}"
+    
+    local temp=$1
+    local text=${!temp}
+
+    test -n "$1" && echo -e "\t${white}        |                                            ${reset}" | sed 's/^[[:space:]]*//'
+    test -n "$1" && echo -e "\t${yellow} warns ${white}($stage_num)───> ${lightYellow}$text ${reset}" | sed 's/^[[:space:]]*//'
+    ((alert_num++)) 
+    ((stage_num++))
 }
+
 
 function craine_notif_error() {
-    test -n "$1" && echo -e "\t${blue} [CHK] ─> $1 passed ${reset}"
+    
+    local temp=$1
+    local text=${!temp}
+
+    test -n "$1" && echo -e "\t${white}        |                                            ${reset}" | sed 's/^[[:space:]]*//'
+    test -n "$1" && echo -e "\t${red} error ${white}($stage_num)───> ${Redled}$text         ${reset}" | sed 's/^[[:space:]]*//'
+    ((alert_num++))
+    ((stage_num++))
 }
 
 
 function craine_notif_abort() {
 
+    local temp=$1
+    local text=${!temp}
+
+    #--[1] clean all data environtment
+    craine_update_datum_pure
+
+
+    #--[2] abort all process
     echo -e "\t${red}                                                                  "${reset} | sed 's/^[[:space:]]*//'
     echo -e "\t${red}┌────────────────────────────────────────────────────────────────┐"${reset} | sed 's/^[[:space:]]*//'
     echo -e "\t${red}|                                                                |"${reset} | sed 's/^[[:space:]]*//'
@@ -68,16 +89,19 @@ function craine_notif_abort() {
     echo -e "\t${red}|                                                                |"${reset} | sed 's/^[[:space:]]*//' 
     echo -e "\t${red}└────────────────────────────────────────────────────────────────┘"${reset} | sed 's/^[[:space:]]*//'
     echo -e "\t${red}                                                                  "${reset} | sed 's/^[[:space:]]*//'    
-    echo -e "\t${red} [$2] ERROR                                                       "${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red} [$temp] ERROR                                                    "${reset} | sed 's/^[[:space:]]*//'
     echo -e "\t${red}   |                                                              "${reset} | sed 's/^[[:space:]]*//'
-    echo -e "\t${red}   |─> $1                                                         "${reset} | sed 's/^[[:space:]]*//'
+    echo -e "\t${red}   |─> $text                                                      "${reset} | sed 's/^[[:space:]]*//'
     echo -e "\t${red}                                                                  "${reset} | sed 's/^[[:space:]]*//'
     
     exit 1 
 }
 
 
-## LOGER 
+#######################################
+##---| 2  LOGER
+#######################################
+
 function craine_loger_stage() {
     
     local code="$1"
@@ -91,43 +115,21 @@ function craine_loger_warns() {
     echo debug > /dev/null
 }
 
+
 function craine_loger_error() {
     echo debug > /dev/null
 }
+
 
 function craine_loger_abort() {
     echo debug > /dev/null
 }
 
 
-function craine_nolog_stage() {
 
-    local code="$1"
-    craine_nolog_infor "$code"
-    craine_loger_stage "$code"
-}
-
-function craine_nolog_warns() {
-    
-    local code="$1"
-    craine_notif_warns "$code"
-    craine_loger_warns "$code"
-}
-
-function craine_nolog_error() {
-    
-    local code="$1"
-    craine_notif_error "$code"
-    craine_loger_error "$code"
-}
-
-
-function craine_nolog_abort() {
-
-    local code="$1"
-    craine_notif_abort "$code"
-    craine_loger_abort "$code"
-}
+#######################################
+##---| 3  INITIAL
+#######################################
 
 
 function craine_nolog() {
@@ -136,24 +138,26 @@ function craine_nolog() {
     local type="${code:0:1}"
     
 
-
     if [[ $type == I ]];then
-        craine_nolog_stage $code
+        craine_notif_stage $code
+        craine_loger_stage $code
     fi
 
     if [[ $type == W ]];then
-        craine_nolog_warns $code
+        craine_notif_warns $code
+        craine_loger_warns $code
     fi
 
     if [[ $type == E ]];then
-        craine_nolog_error $code
+        craine_notif_error $code
+        craine_loger_error $code
     fi
 
     if [[ $type == A ]];then
-        craine_nolog_abort $code
+        craine_notif_abort $code
+        craine_loger_abort $code
     fi
 }
-
 
 
 function craine_prelo() {

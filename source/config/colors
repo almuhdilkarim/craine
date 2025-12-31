@@ -1,0 +1,29 @@
+#!/bin/env bash
+# Colors variable
+
+
+set -e
+
+
+blue="\e[1;34m"
+cyan="\e[1;36m"
+gray="\e[1;90m"
+black="\e[1;30m"
+red="\e[033;31m"
+green="\e[1;32m"
+yellow="\e[1;33m"
+purple="\e[1;35m"
+Redled="\e[1;91m"
+lightBlue="\e[1;94m"
+lightGray="\e[1;37m"
+lightGreen="\e[1;92m"
+lightYellow="\e[1;93m"
+lightPurple="\e[1;95m"
+lightCyan="\e[1;96m"
+white="\e[1;97m"
+bold="\e[1m"
+faint="\e[2m"
+italic="\e[3m"
+underlined="\e[4m"
+blinking="\e[5m"
+reset="\e[0m"

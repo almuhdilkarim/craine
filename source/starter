@@ -5,7 +5,7 @@ set -e
 
 
 ##--[1] action options
-while getopts "c:l:d:b:e:p:u:g:w:m:n:s:r:k:a:" option; do
+while getopts "c:l:d:b:e:p:u:t::w:m:n:s:r:k:a:" option; do
     case $option in
         c) action_mode="create" && action_data="${OPTARG}"
         ;;
@@ -21,7 +21,9 @@ while getopts "c:l:d:b:e:p:u:g:w:m:n:s:r:k:a:" option; do
         ;;
         u) action_mode="refine" && action_data="${OPTARG}"
         ;;
-        g) action_mode="taking" && action_data="${OPTARG}"
+        t) action_mode="taking" && action_data="${OPTARG}"
+        ;;
+        r) action_mode="releas" && action_data="${OPTARG}"
         ;;
         w) action_mode="window" && action_data="${OPTARG}"
         ;;
@@ -31,7 +33,7 @@ while getopts "c:l:d:b:e:p:u:g:w:m:n:s:r:k:a:" option; do
         ;;
         s) option_spin="${OPTARG}"
         ;;
-        r) option_repo="${OPTARG}"
+        g) option_repo="${OPTARG}"
         ;;
         k) option_keys="${OPTARG}"
         ;;

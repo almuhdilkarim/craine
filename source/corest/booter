@@ -15,7 +15,7 @@ function craine_systems_struct() {
     system_config="$craine_libs/config"
     system_action="$craine_libs/proact"
     system_notefa="$craine_libs/notefa"
-    
+
 }
 
 
@@ -23,6 +23,7 @@ function craine_systems_struct() {
 function craine_systems_config() {
     source "$system_config/system"
     source "$system_config/labrom"
+    source "$system_config/colors"
 }
 
 
@@ -31,6 +32,8 @@ function craine_systems_assets() {
 
     craine_banner="$system_assets/banner.txt"
     craine_brands="$system_assets/brands.png"
+
+    
 }
 
 
@@ -39,7 +42,6 @@ function craine_systems_assets() {
 function craine_systems_corest() {
     
     source "$system_corest/assets"
-    source "$system_corest/colors"
     source "$system_corest/config"
     source "$system_corest/parsed"
     source "$system_corest/remote"
@@ -64,6 +66,7 @@ function craine_systems_notefa() {
     source "$system_notefa/5600"
     source "$system_notefa/5700"
     source "$system_notefa/5800"
+    source "$system_notefa/5900"
     source "$system_notefa/6000"
     source "$system_notefa/7000"
     source "$system_notefa/8000"
@@ -74,7 +77,6 @@ function craine_systems_notefa() {
 
 
 function craine_systems_action() {
-
     source "$system_action/builds"
     source "$system_action/celine"
     source "$system_action/create"
@@ -84,7 +86,6 @@ function craine_systems_action() {
     source "$system_action/refane"
     source "$system_action/releas"
     source "$system_action/verser"
-
 }
 
 
