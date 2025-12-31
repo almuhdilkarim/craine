@@ -45,8 +45,8 @@ function craine_update_datums_pool () {
 
     ## noog variable
     stage_num=1
-    alert_num=1
-    erorr_num=1
+    alert_num=0
+    erorr_num=0
 
     craine_nolog "I59001"
 }
@@ -102,6 +102,7 @@ function craine_update_datum_pure () {
     unset stage_num
     unset alert_num
     unset erorr_num
+    unset comit_msg
 }
 
 
@@ -111,6 +112,11 @@ function craine_update_datum_pure () {
 ##--- LIBRARY
 #######################################
 
+##--[1] validate sssh secret
+function craine_update_remote_dial () {
+
+    craine_dialog_option_text "Insert Commit Message : [ PRESS ENTER for Autocommit ]" comit_msg
+}
 
 ##--[1] validate sssh secret
 function craine_update_remote_keys () {
@@ -277,19 +283,14 @@ function craine_update_remote_pool () {
     craine_prelo $? I59013 W59006
 
 
-    #--[2] validate uri connection
-    echo -e  "\t${white}        |                                                            ${reset}" | sed 's/^[[:space:]]*//' && 
-    echo -ne "\t${white}        |--> Insert Commit Message : [ PRESS ENTER for Autocommit ]  ${reset}" | sed 's/^[[:space:]]*//' &&  read commit
-
-
     #--[3] automatic commit message
-    if [[ -z $commit ]];then
-        commit="update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
+    if [[ -z $comit_msg ]];then
+        comit_msg="update version $ver_major.$ver_minor.$ver_patch at $(date '+%A %W %Y %X')"
     fi
 
 
     #--[4] commit message updating
-    cd $path_spin && git commit -m "$commit" > /dev/null 2>&1
+    cd $path_spin && git commit -m "$comit_msg" > /dev/null 2>&1
 
     craine_prelo $? I59014 E59001
 }
@@ -414,36 +415,46 @@ function craine_update_verses_mino () {
 function craine_update_verses_bufi () {
 
 
-    #--[1] populate preset data
+    #--[1] making commit message
+    craine_update_remote_dial
+
+
+    #--[2] populate preset data
     craine_update_datums_pool
 
     
-    #--[2] adjusted preset data
+    #--[3] adjusted preset data
     craine_update_datum_proc
 
 
-    #--[3] validate preset keys
+    #--[4] validate preset keys
     craine_update_remote_keys
 
 
-    #--[4] validate preset toke
+    #--[5] validate preset toke
     craine_update_remote_toke
 
 
-    #--[5] update patch numbers
+    #--[6] update patch numbers
     craine_update_remote_patc
 
 
-    #--[6] defined commit texts
+    #--[7] defined commit texts
     craine_update_remote_pool
 
 
-    #--[7] updates repositories
+    #--[8] updates repositories
     craine_update_remote_push
 
 
-    #--[8] purify data variable
+    #--[9] show process status
+    craine_report_status_info
+
+
+    #--[10] purify data variable
     craine_update_datum_pure
+
+    
 }
 
 

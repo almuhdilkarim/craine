@@ -136,6 +136,42 @@ function craine_loger_abort() {
 
 
 #######################################
+##---| 3  dialog
+#######################################
+
+function craine_dialog_option_text () {
+
+    echo -e  "\t${white}        |                   ${reset}" | sed 's/^[[:space:]]*//' && 
+    echo -ne "\t${yellow} input ${white}(+)───> $1  ${reset}" | sed 's/^[[:space:]]*//' &&  read $2
+}
+
+
+
+
+#######################################
+##---| 3  REPORT
+#######################################
+
+function craine_report_status_info () {
+
+    echo -e "\t${white}        |                                                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${cyan} RESULT OVERVIEW                                                                      ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} process : ${white}$stage_num                                                  ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} warning : ${white}$alert_num                                                  ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} errors  : ${white}$erorr_num                                                  ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${cyan} LOGS REPORT                                                                          ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} logpath : ${gray}$logs_core                                                   ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}                                                                                     ${reset}" | sed 's/^[[:space:]]*//'
+}
+
+
+
+
+#######################################
 ##---| 3  INITIAL
 #######################################
 
