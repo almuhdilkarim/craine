@@ -282,6 +282,10 @@ function craine_update_remote_patc () {
 function craine_update_remote_pool () {
 
 
+    #--[0] update log to remote
+    craine_loger_clone
+
+
     #--[1] validate uri connection
     cd $path_spin && git add . > /dev/null 2>&1 &&
 

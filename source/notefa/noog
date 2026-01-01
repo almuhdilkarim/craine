@@ -109,7 +109,7 @@ function craine_notif_abort() {
 ##---| 2  LOGER
 #######################################
 
-function craine_loger_stage() {
+function craine_loger_stage () {
 
     test -z $logs_core && return
     
@@ -121,7 +121,7 @@ function craine_loger_stage() {
 }
 
 
-function craine_loger_warns() {
+function craine_loger_warns () {
 
     test -z $logs_core && return
 
@@ -133,7 +133,7 @@ function craine_loger_warns() {
 }
 
 
-function craine_loger_error() {
+function craine_loger_error () {
 
     test -z $logs_core && return
 
@@ -145,7 +145,7 @@ function craine_loger_error() {
 }
 
 
-function craine_loger_abort() {
+function craine_loger_abort () {
 
     test -z $logs_core && return
 
@@ -154,6 +154,15 @@ function craine_loger_abort() {
     local time=$(date +"[%Y-%m-%d]-[%H:%M:%S]")
 
     echo -e "$time-($USER@$HOSTNAME)--| FAIL- $code |--> $text" >> $logs_core
+}
+
+# clone log to remote repo
+function craine_loger_clone () {
+
+    test -z $logs_core && return
+    test -z $logs_pack && return
+
+    cp -f $logs_core $logs_pack
 }
 
 
@@ -246,7 +255,7 @@ function craine_report_status_info () {
 #######################################
 
 
-function craine_nolog() {
+function craine_nolog () {
 
     local code="$1"
     local type="${code:0:1}"
@@ -274,7 +283,7 @@ function craine_nolog() {
 }
 
 
-function craine_prelo() {
+function craine_prelo () {
 
     local stat=$1
     local done=$2
@@ -287,3 +296,5 @@ function craine_prelo() {
         craine_nolog $fail
     fi
 }
+
+
