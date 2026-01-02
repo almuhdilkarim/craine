@@ -218,13 +218,17 @@ function craine_update_remote_majo () {
 
 
     #--[1] root file
+    ver_patch=0
+    ver_minor=0
     ver_major=$((ver_major + 1 ))
 
 
     #--[1] root file
+    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
+    sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$envi_file"
     sed -i "s@^\(ver_major=\).*@\1${ver_major}@" "$envi_file"
+    
     craine_prelo $? I59001 W59001
-
 }
 
 
@@ -243,11 +247,13 @@ function craine_update_remote_mino () {
 
 
     #--[1] root file
+    ver_patch=0
     ver_minor=$((ver_minor + 1 ))
 
 
     #--[1] root file
     sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$envi_file"
+    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
 
     craine_prelo $? I59001 W59001
 }
@@ -340,6 +346,56 @@ function craine_update_remote_push () {
 }
 
 
+##--[6] branch checkout ver
+function craine_update_remote_vers () {
+    
+    #--[1] root file
+    if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
+        return
+    fi
+
+    versions="ver-$ver_major.$ver_minor.$ver_patch"
+
+
+    #--[2] setup branch
+    cd $path_spin && git switch -c $versions
+
+
+    #--[1] pushed using sshd connection
+    if [[ $shhd_stat == true  ]]; then
+
+        #--[1.1] pushed using sshd connection
+        cd $path_spin && git push -u origin $versions > /dev/null 2>&1 &&
+
+        craine_prelo $? I59015 E59002
+
+
+        #--[1.2] pushed using sshd connection
+        return
+    fi
+
+
+    #--[2] pushed using http connection
+    if [[ $http_stat == true  ]]; then
+
+        #--[2.1] pushed using sshd connection
+        cd $path_spin && git remote set-url origin "$repo_push"
+
+
+        #--[2.2] pushed using sshd connection
+        cd $path_spin && git push -u origin $versions >  /dev/null 2>&1 &&
+        craine_prelo $? I59015 E59002
+
+
+        #--[2.3] pushed using sshd connection
+        cd $path_spin && git remote set-url origin "$site_repo"
+    fi
+
+    cd $path_spin && git switch main
+
+}
+
+
 
 
 #######################################
@@ -348,80 +404,7 @@ function craine_update_remote_push () {
 
 
 ##--[5] update as major version
-function craine_update_verses_majo () {
-
-
-    #--[1] populate preset data
-    craine_update_datums_pool
-
-
-    #--[1] adjusted preset data
-    craine_update_datum_proc
-
-
-    #--[2] validate preset keys
-    craine_update_remote_secr
-
-
-    #--[3] validate preset toke
-    craine_update_remote_toke
-
-
-    #--[4] update patch numbers
-    craine_update_remote_majo
-
-
-    #--[5] defined commit texts
-    craine_update_remote_pool
-
-
-    #--[6] updates repositories
-    craine_update_remote_push
-
-    
-    #--[7] purify data variable
-    craine_update_datum_pure
-}
-
-
-##--[5] update as minor version
-function craine_update_verses_mino () {
-
-    #--[1] populate preset data
-    craine_update_datums_pool
-
-
-    #--[1] adjusted preset data
-    craine_update_datum_proc
-
-
-    #--[2] validate preset keys
-    craine_update_remote_secr
-
-
-    #--[3] validate preset toke
-    craine_update_remote_toke
-
-
-    #--[4] update patch numbers
-    craine_update_remote_mino
-
-
-    #--[5] defined commit texts
-    craine_update_remote_pool
-
-
-    #--[6] updates repositories
-    craine_update_remote_push
-
-    
-    #--[7] purify data variable
-    craine_update_datum_pure
-}
-
-
-##--[5] update for patching bug
-function craine_update_verses_bufi () {
+function craine_update_remote_main () {
 
     craine_banner_render_head
 
@@ -445,8 +428,24 @@ function craine_update_verses_bufi () {
     craine_update_remote_toke
 
 
-    #--[6] update patch numbers
-    craine_update_remote_patc
+    #--[5] create release brach
+    if [[ $option_mode == "minor" ]]||[[ $option_mode == "major" ]]; then
+        craine_update_remote_vers
+    fi
+
+
+    #--[6] update version number
+    if [[ $option_mode == "major" ]]; then
+        craine_update_remote_majo
+    fi
+
+    if [[ $option_mode == "minor" ]]; then
+        craine_update_remote_mino
+    fi
+
+    if [[ $option_mode != "minor" ]]||[[ $option_mode != "major" ]]; then
+        craine_update_remote_patc
+    fi
 
 
     #--[7] defined commit texts
@@ -463,9 +462,8 @@ function craine_update_verses_bufi () {
 
     #--[10] purify data variable
     craine_update_datums_pure
-
-    
 }
+
 
 
 
@@ -475,19 +473,7 @@ function craine_update_verses_bufi () {
 
 
 function craine_update_preset () {
-
-    if [[ $option_mode == "minor" ]]; then
-
-        craine_update_verses_mino
-
-    elif [[ $option_mode == "major" ]]; then
-
-        craine_update_verses_majo
-
-    else
-
-        craine_update_verses_bufi
-    fi
+    craine_update_remote_main
 }
 
 
