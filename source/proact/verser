@@ -175,7 +175,6 @@ function craine_update_remote_vers () {
     ## source beta version metadata
     if [[ $branc_msg == 2 ]];then
         repo_vers=$beta_vers
-        
     fi
 
 
