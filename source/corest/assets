@@ -8,6 +8,7 @@ function craine_baner_rapto() {
     cat "${srcpath}/banner" && echo ""
 }
 
+
 ## PRIMER BANNER
 function craine_baner_prime() {
     clear
