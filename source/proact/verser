@@ -404,7 +404,7 @@ function craine_update_remote_vers () {
 
 
 ##--[5] update as major version
-function craine_update_remote_main () {
+function craine_update_remote () {
 
     craine_banner_render_head
 
@@ -473,7 +473,7 @@ function craine_update_remote_main () {
 
 
 function craine_update_preset () {
-    craine_update_remote_main
+    craine_update_remote
 }
 
 
@@ -484,7 +484,7 @@ function craine_update_preset () {
 
 
 function craine_update_proset() {
-    echo debug
+    craine_update_remote
 }
 
 
@@ -494,7 +494,7 @@ function craine_update_proset() {
 
 
 function craine_update_protos() {
-    echo debug
+    craine_update_remote
 }
 
 
