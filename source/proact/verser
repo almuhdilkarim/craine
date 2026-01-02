@@ -503,6 +503,7 @@ function craine_update_remote_sshd () {
 
 
     #--[1.1] pushed using sshd connection
+    cd $path_spin && git pull origin $repo_bran > /dev/null 2>&1 &&
     cd $path_spin && git push origin $repo_bran > /dev/null 2>&1 &&
 
     craine_prelo $? I59015 E59002
@@ -529,6 +530,7 @@ function craine_update_remote_http () {
 
 
     #--[2.2] pushed using sshd connection
+    cd $path_spin && git pull origin $repo_bran > /dev/null 2>&1 &&
     cd $path_spin && git push origin $repo_bran > /dev/null 2>&1 &&
     craine_prelo $? I59015 E59002
 
