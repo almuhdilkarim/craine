@@ -9,7 +9,7 @@
 #######################################
 
 
-# 1 | source module metadata
+#--| source module metadata
 function craine_update_datums_pool () {
    
 
@@ -48,10 +48,9 @@ function craine_update_datums_pool () {
     alert_num=0
     erorr_num=0
 
-    craine_nolog "I59001"
 }
 
-
+#--| parsing for declare vars
 function craine_update_datums_proc () {
 
 
@@ -74,20 +73,22 @@ function craine_update_datums_proc () {
     repo_http=$( craine_remote_tohttp $site_repo )                                          # repository http link              
     repo_sshd=$( craine_remote_tosshd $site_repo )                                          # repository sshd link
     repo_push=$( craine_remote_topush $site_repo )                                          # repository push link
+    repo_bran=main
   
+
+    ## versioning
+    alpa_vers=$path_spin/.git/alpa-version
+    beta_vers=$path_spin/.git/beta-version
+    devs_vers=$path_spin/.git/devs-version
+    main_vers=$path_spin/.git/main-version
+
 
     ## logs variable                                       
     logs_core="$worker_logger/$action_mode-$action_data-$time_name"         # logging filedat
-    logs_pack="$path_spin/track/$time_name"
-
-     #--[3] populate logger data
-    craine_banner_render_logs
-
-
-    craine_nolog "I59002"
+    logs_pack="$path_spin/.git/track/$time_name"
 }
 
-
+#--| delete unused metavars
 function craine_update_datums_pure () {
 
     unset base_conf
@@ -112,18 +113,111 @@ function craine_update_datums_pure () {
 
 
 #######################################
-##--- LIBRARY
+##---| 2 LIBRARY
 #######################################
 
 
+##--| prepare update extra data file 
+function craine_update_remote_prep () {
 
-##--[1] validate sssh secret
-function craine_update_remote_dial () {
+    if [[ ! -f $alpa_vers ]];then
+        echo "ver_major=0" >  $alpa_vers 
+        echo "ver_minor=0" >> $alpa_vers
+        echo "ver_patch=0" >> $alpa_vers
+    fi
 
-    craine_dialog_option_text "Insert Commit Message : [ PRESS ENTER for Autocommit ]" comit_msg
+    if [[ ! -f $beta_vers ]];then
+        echo "ver_major=0" >  $beta_vers 
+        echo "ver_minor=0" >> $beta_vers
+        echo "ver_patch=0" >> $beta_vers
+    fi
+
+    if [[ ! -f $devs_vers ]];then
+        echo "ver_major=0" >  $devs_vers 
+        echo "ver_minor=0" >> $devs_vers
+        echo "ver_patch=0" >> $devs_vers
+    fi
+
+    if [[ ! -f $main_vers ]];then
+        echo "ver_major=0" >  $main_vers 
+        echo "ver_minor=0" >> $main_vers
+        echo "ver_patch=0" >> $main_vers
+    fi
+
+
+    #--[3] create logger folder
+    mkdir -p $path_spin/.git/track/
+
+    #--[3] populate logger data
+    craine_banner_render_logs
 }
 
-##--[1] validate sssh secret
+
+##--| slect branch version file
+function craine_update_remote_vers () {
+
+
+    ## source alpha version metadata
+    if [[ $branc_msg == 3 ]];then
+        repo_vers=$alpa_vers
+    fi
+
+
+    ## source beta version metadata
+    if [[ $branc_msg == 2 ]];then
+        repo_vers=$beta_vers
+        
+    fi
+
+
+    ## source devel version metadata
+    if [[ $branc_msg == "4" ]];then
+        repo_vers=$devs_vers
+    fi
+
+
+    ## source main version metadata
+    if [[ $branc_msg != "2" ]]&&[[ $branc_msg != "3" ]]&&[[ $branc_msg != "4" ]];then
+        repo_vers=$main_vers
+    fi
+
+
+    ## validate source not empty
+    if [[ -z $repo_vers  ]]; then
+        echo "versioning error" &&  exit 
+    fi
+
+
+    ## get source
+    source $repo_vers
+}
+
+
+##--| render user option dialog
+function craine_update_remote_dial () {
+
+    #--[1] branch options dialog
+    local text="Choose current active branch for this action"
+    local list=( main beta alpha devel )
+    craine_dialog_option_list "$text" branc_msg
+    
+    
+    #--[2] commit message dialog
+    local text="Insert Commit Message : [ PRESS ENTER for Autocommit ]"
+    craine_dialog_option_text "$text" comit_msg
+}
+
+
+##--| validate file changes
+function craine_update_remote_null () {
+
+    if git diff-index --quiet HEAD --; then
+        echo "reposiotry is update" && exit 0
+    fi
+}
+
+
+##--| validate sssh secret
 function craine_update_remote_keys () {
 
 
@@ -163,7 +257,7 @@ function craine_update_remote_keys () {
 }
 
 
-##--[2] validate access tokens
+##--| validate access tokens
 function craine_update_remote_toke () {
 
 
@@ -203,18 +297,18 @@ function craine_update_remote_toke () {
 }
 
 
-##--(3) update version | major
+##--| update version | major
 function craine_update_remote_majo () {
 
+
+    if [[ $option_mode != "major" ]]; then
+        return
+    fi
 
     #--[1] root file
     if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
         return
     fi
-
-
-    #--[1] root file
-    local envi_file="$path_spin/crain"
 
 
     #--[1] root file
@@ -224,26 +318,26 @@ function craine_update_remote_majo () {
 
 
     #--[1] root file
-    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
-    sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$envi_file"
-    sed -i "s@^\(ver_major=\).*@\1${ver_major}@" "$envi_file"
+    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$repo_vers"
+    sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$repo_vers"
+    sed -i "s@^\(ver_major=\).*@\1${ver_major}@" "$repo_vers"
     
     craine_prelo $? I59001 W59001
 }
 
 
-##--(3) update version | minor
+##--| update version | minor
 function craine_update_remote_mino () {
 
     
+    if [[ $option_mode != "minor" ]]; then
+        return
+    fi
+
     #--[1] root file
     if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
         return
     fi
-
-
-    #--[1] root file
-    local envi_file="$path_spin/crain"
 
 
     #--[1] root file
@@ -252,21 +346,27 @@ function craine_update_remote_mino () {
 
 
     #--[1] root file
-    sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$envi_file"
-    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
+    sed -i "s@^\(ver_minor=\).*@\1${ver_minor}@" "$repo_vers"
+    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$repo_vers"
 
     craine_prelo $? I59001 W59001
 }
 
 
-##--(3) update version | pathc
-function craine_update_remote_patc () {
+##--| update version | patch
+function craine_update_remote_bufi () {
+
+
+    if [[ $option_mode == "minor" ]]||[[ $option_mode == "major" ]]; then
+        return
+    fi
 
 
     #--[1] root file
     if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
         ecraine_nolog A59004
     fi
+
 
 
     #--[1] root file
@@ -278,13 +378,94 @@ function craine_update_remote_patc () {
 
 
     #--[1] root file
-    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$envi_file"
+    sed -i "s@^\(ver_patch=\).*@\1${ver_patch}@" "$repo_vers"
     
     craine_prelo $? I59012 W59005
 }
 
 
-##--[4] populate and commit
+##--| checkout branch | alpha 
+function craine_update_remote_alpa () {
+
+    if [[ $branc_msg != 3 ]];then
+        return
+    fi
+
+    local bran_stat=$(git rev-parse --verify --quiet "alpha" )
+
+    if [[ -n $stat ]]; then
+        cd $path_spin && git switch alpha > /dev/null 2>&1
+    else
+        cd $path_spin && git switch -c alpha > /dev/null 2>&1
+    fi
+
+    repo_bran=alpha
+    unset bran_stat
+}
+
+
+##--| checkout branch | beta
+function craine_update_remote_beta () {
+
+    if [[ $branc_msg != "2" ]];then
+        return
+    fi
+
+    local bran_stat=$(git rev-parse --verify --quiet "beta" )
+
+    if [[ -n $stat ]]; then
+        cd $path_spin && git switch beta > /dev/null 2>&1
+    else
+        cd $path_spin && git switch -c beta > /dev/null 2>&1
+    fi
+
+    repo_bran=beta
+    unset bran_stat
+}
+
+
+##--| checkout branch | devel
+function craine_update_remote_devs () {
+
+    if [[ $branc_msg != "4" ]];then
+        return
+    fi
+
+    local bran_stat=$(git rev-parse --verify --quiet "devel" )
+
+    if [[ -n $stat ]]; then
+        cd $path_spin && git switch devel > /dev/null 2>&1
+    else
+        cd $path_spin && git switch -c devel > /dev/null 2>&1
+    fi
+
+    repo_bran=devel
+    unset bran_stat
+}
+
+
+##--| checkout branch | main
+function craine_update_remote_main () {
+
+    if [[ $branc_msg == "2" ]]||[[ $branc_msg == "3" ]]||[[ $branc_msg == "4" ]];then
+        return
+    fi
+
+    local bran_stat=$(git rev-parse --verify --quiet "main" )
+
+    if [[ -n $stat ]]; then
+        cd $path_spin && git switch -q main > /dev/null 2>&1
+    else
+        cd $path_spin && git switch -c -q main > /dev/null 2>&1
+     
+    fi
+    
+    repo_bran=main
+    unset bran_stat
+}
+
+
+##--| populate and local commit
 function craine_update_remote_pool () {
 
 
@@ -311,61 +492,84 @@ function craine_update_remote_pool () {
 }
 
 
-##--[5] push to remote host
-function craine_update_remote_push () {
+##--| push to remote host | sshd
+function craine_update_remote_sshd () {
+
 
     #--[1] pushed using sshd connection
-    if [[ $shhd_stat == true  ]]; then
-
-        #--[1.1] pushed using sshd connection
-        cd $path_spin && git push > /dev/null 2>&1 &&
-
-        craine_prelo $? I59015 E59002
-
-
-        #--[1.2] pushed using sshd connection
+    if [[ $shhd_stat != true  ]]; then
         return
     fi
 
 
-    #--[2] pushed using http connection
-    if [[ $http_stat == true  ]]; then
+    #--[1.1] pushed using sshd connection
+    cd $path_spin && git push origin $repo_bran > /dev/null 2>&1 &&
 
-        #--[2.1] pushed using sshd connection
-        cd $path_spin && git remote set-url origin "$repo_push"
-
-
-        #--[2.2] pushed using sshd connection
-        cd $path_spin && git push > /dev/null 2>&1 &&
-        craine_prelo $? I59015 E59002
-
-
-        #--[2.3] pushed using sshd connection
-        cd $path_spin && git remote set-url origin "$site_repo"
-    fi   
+    craine_prelo $? I59015 E59002
+   
 }
 
 
-##--[6] branch checkout ver
-function craine_update_remote_vers () {
+##--| push to remote host | http
+function craine_update_remote_http () {
+
+
+    #--[1] pushed using sshd connection
+    if [[ $shhd_stat == true  ]]; then
+        return
+    fi
     
+    if [[ $http_stat != true  ]]; then
+        return
+    fi
+
+
+    #--[2.1] pushed using sshd connection
+    cd $path_spin && git remote set-url origin "$repo_push"
+
+
+    #--[2.2] pushed using sshd connection
+    cd $path_spin && git push origin $repo_bran > /dev/null 2>&1 &&
+    craine_prelo $? I59015 E59002
+
+
+    #--[2.3] pushed using sshd connection
+    cd $path_spin && git remote set-url origin "$site_repo"  
+}
+
+
+##--| update to version tag repo
+function craine_update_remote_tags () {
+    
+
+    if [[ $branc_msg == "2" ]]||[[ $branc_msg == "3" ]]||[[ $branc_msg == "4" ]];then
+        return
+    fi
+
+    if [[ $option_mode != "minor" ]]&&[[ $option_mode != "major" ]]; then
+        return
+    fi
+
+
     #--[1] root file
     if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
         return
     fi
 
-    versions="ver-$ver_major.$ver_minor.$ver_patch"
+
+    versions="$ver_major.$ver_minor.$ver_patch"
 
 
     #--[2] setup branch
-    cd $path_spin && git switch -c $versions
+    cd $path_spin && git tag -a "v$versions" -m "Release version $versions"
 
 
     #--[1] pushed using sshd connection
     if [[ $shhd_stat == true  ]]; then
 
         #--[1.1] pushed using sshd connection
-        cd $path_spin && git push -u origin $versions > /dev/null 2>&1 &&
+        cd $path_spin && git pull origin "main" &&
+        cd $path_spin && git push -u origin v$versions > /dev/null 2>&1 &&
 
         craine_prelo $? I59015 E59002
 
@@ -383,80 +587,169 @@ function craine_update_remote_vers () {
 
 
         #--[2.2] pushed using sshd connection
-        cd $path_spin && git push -u origin $versions >  /dev/null 2>&1 &&
+        cd $path_spin && git pull origin "main" &&
+        cd $path_spin && git push -u origin v$versions >  /dev/null 2>&1 &&
         craine_prelo $? I59015 E59002
 
 
         #--[2.3] pushed using sshd connection
         cd $path_spin && git remote set-url origin "$site_repo"
     fi
+}
 
-    cd $path_spin && git switch main
 
+##--| update to latest tags repo
+function craine_update_remote_late () {
+    
+
+    if [[ $branc_msg == "2" ]]||[[ $branc_msg == "3" ]]||[[ $branc_msg == "4" ]];then
+        return
+    fi
+
+    if [[ $option_mode != "minor" ]]&&[[ $option_mode != "major" ]]; then
+        return
+    fi
+
+
+    #--[1] root file
+    if [[ -z $sshd_stat  ]]&&[[ -z $http_stat ]];then
+        return
+    fi
+
+
+    #--[2] setup branch
+    cd $path_spin && git tag -a "latest" -m "Latest Release version"
+
+
+    #--[1] pushed using sshd connection
+    if [[ $shhd_stat == true  ]]; then
+
+        #--[1.1] pushed using sshd connection
+        cd $path_spin && git pull origin "main" &&
+        cd $path_spin && git push -u origin "latest" > /dev/null 2>&1 &&
+
+        craine_prelo $? I59015 E59002
+
+
+        #--[1.2] pushed using sshd connection
+        return
+    fi
+
+
+    #--[2] pushed using http connection
+    if [[ $http_stat == true  ]]; then
+
+        #--[2.1] pushed using sshd connection
+        cd $path_spin && git remote set-url origin "$repo_push"
+
+
+        #--[2.2] pushed using sshd connection
+        cd $path_spin && git push -u origin "latest" >  /dev/null 2>&1 &&
+        craine_prelo $? I59015 E59002
+
+
+        #--[2.3] pushed using sshd connection
+        cd $path_spin && git remote set-url origin "$site_repo"
+    fi
 }
 
 
 
 
 #######################################
-##--- PROGRESS
+##---| 3 PROGRESS
 #######################################
 
 
-##--[5] update as major version
+##--| update main logic
 function craine_update_remote () {
 
-    craine_banner_render_head
 
-    #--[1] making commit message
-    craine_update_remote_dial
-
-
-    #--[2] populate preset data
+    #--[1] populate config file
     craine_update_datums_pool
 
 
-    #--[3] adjusted preset data
+    #--[2] adjusted config data
     craine_update_datums_proc
 
+    
+    #--[3] render welcome banner
+    craine_banner_render_head
 
-    #--[4] validate preset keys
+
+    #--[4] render option dialog
+    craine_update_remote_dial
+
+
+    #--[5] prepare version file
+    craine_update_remote_prep
+
+
+    #--[6] prepare branch data
+    craine_update_remote_vers
+
+
+    #--[7] validate preset keys
     craine_update_remote_keys
 
 
-    #--[5] validate preset toke
+    #--[8] validate preset toke
     craine_update_remote_toke
 
 
-    #--[5] create release brach
-    if [[ $option_mode == "minor" ]]||[[ $option_mode == "major" ]]; then
-        craine_update_remote_vers
-    fi
+    #--(9) checkout branch | alpha
+    craine_update_remote_alpa
 
 
-    #--[6] update version number
-    if [[ $option_mode == "major" ]]; then
-        craine_update_remote_majo
-    fi
-
-    if [[ $option_mode == "minor" ]]; then
-        craine_update_remote_mino
-    fi
-
-    if [[ $option_mode != "minor" ]]||[[ $option_mode != "major" ]]; then
-        craine_update_remote_patc
-    fi
+    #--(9) checkout branch | beta
+    craine_update_remote_beta
 
 
-    #--[7] defined commit texts
+    #--(9) checkout branch | devel
+    craine_update_remote_devs
+
+
+    #--(9) checkout branch | main
+    craine_update_remote_main
+
+
+    #--[10] check file changing 
+    #craine_update_remote_null
+
+
+    #--[11] defined commit texts
     craine_update_remote_pool
 
 
-    #--[8] updates repositories
-    craine_update_remote_push
+    #--[12] create release brach
+    craine_update_remote_tags
 
 
-    #--[9] show process status
+    #--(13) update version | major
+    craine_update_remote_majo
+
+
+    #--(13) update version | minor
+    craine_update_remote_mino
+
+
+    #--(13) update version | pach
+    craine_update_remote_bufi
+
+
+    #--(14) push repository | sshd
+    craine_update_remote_sshd
+
+
+    #--(14) push repository | http
+    craine_update_remote_http
+
+
+    #--[15] update latest tags
+    craine_update_remote_late
+
+
+    #--[16] report process stat
     craine_report_status_info
 
 

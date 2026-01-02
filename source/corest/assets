@@ -19,3 +19,105 @@ function craine_baner_prime() {
     echo -e "\t${green} -------------------------------------------------------------------${reset}" | sed 's/^[[:space:]]*//'
 
 }
+
+
+#######################################
+##---| 3  BANNER
+#######################################
+
+
+## register banner for head
+function craine_banner_render_head () {
+
+    clear &&
+    echo -e "\t${white}                                                              ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} ___________________    _____  .___ _______  ___________      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} \_   ___ \______   \  /  _  \ |   |\      \ \_   _____/      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} /    \  \/|       _/ /  /_\  \|   |/   |   \ |    __)_       ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white} \     \___|    |   \/    |    \   /    |    \|        \      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white}  \______  /____|_  /\____|__  /___\____|__  /_______  /      ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white}         \/       \/         \/            \/        \/       ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${cyan} LINUX DISTRO STUDIO MAKER            ${gray}by null@yuros.org ${reset}" | sed 's/^[[:space:]]*//' &&
+    echo -e "\t${white}________________________________________________________      ${reset}" | sed 's/^[[:space:]]*//'
+}
+
+
+
+## register banner for logs
+function craine_banner_render_logs() {
+ 
+
+    local action=$( craine_module_tolead $action_mode )
+    local scopes=$( craine_module_tolead $action_data )
+
+    echo  "                                                       " >> $logs_core
+    echo  "#######################################################" >> $logs_core
+    echo  " CRAINE $action  $scopes LOGS                          " >> $logs_core
+    echo  "#######################################################" >> $logs_core
+    echo  " distro   : $base_name                                 " >> $logs_core
+    echo  " variant  : $spin_name                                 " >> $logs_core
+    echo  " builder  : $USER                                      " >> $logs_core
+    echo  " actions  : $action_mode                               " >> $logs_core
+    echo  " modules  : $action_data                               " >> $logs_core
+    echo  " starting : $( date )                                  " >> $logs_core
+    echo  " hostname : $HOSTNAME                                  " >> $logs_core
+    echo  "#######################################################" >> $logs_core
+    echo  "                                                       " >> $logs_core
+}
+
+
+
+#######################################
+##---| 4  DIALOG
+#######################################
+
+
+function craine_dialog_option_text () {
+
+    echo -e  "\t${white}        |                       ${reset}" | sed 's/^[[:space:]]*//' && 
+    echo -ne "\t${yellow} input ${white}(+)───> $text   ${reset}" | sed 's/^[[:space:]]*//' &&  read $2
+    unset text
+}
+
+
+function craine_dialog_option_list () {
+
+    local sums=1
+    local info="Select item by type option number above : "
+
+    echo -e "\t${white}        |                            ${reset}" | sed 's/^[[:space:]]*//' && 
+    echo -e "\t${yellow} input ${white}(+)───> ${text}      ${reset}" | sed 's/^[[:space:]]*//' &&  
+
+    for val in "${list[@]}"; do
+        echo -e "\t${white}        |        "[$sums]-$val"  ${reset}" | sed 's/^[[:space:]]*//' && ((sums++))
+    done
+
+    echo -ne "\t${white}        |      ${info} ${reset}" | sed 's/^[[:space:]]*//' && read $2
+
+    unset list
+    unset text
+}
+
+
+
+#######################################
+##---| 5  REPORT
+#######################################
+
+
+function craine_report_status_info () {
+
+    echo -e "\t${white}        |                                                                            ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${cyan} RESULT OVERVIEW                                                                      ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} process : ${white}$stage_num                                                  ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} warning : ${white}$alert_num                                                  ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} errors  : ${white}$erorr_num                                                  ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${cyan} LOGS REPORT                                                                          ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}─────────────────────────────────────────────────────────────────────────────────────${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${lightPurple} logpath : ${gray}$logs_core                                                   ${reset}" | sed 's/^[[:space:]]*//'
+    echo -e "\t${white}                                                                                     ${reset}" | sed 's/^[[:space:]]*//'
+}
+
