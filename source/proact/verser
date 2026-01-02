@@ -50,6 +50,7 @@ function craine_update_datums_pool () {
 
 }
 
+
 #--| parsing for declare vars
 function craine_update_datums_proc () {
 
@@ -87,6 +88,7 @@ function craine_update_datums_proc () {
     logs_core="$worker_logger/$action_mode-$action_data-$time_name"         # logging filedat
     logs_pack="$path_spin/.git/track/$time_name"
 }
+
 
 #--| delete unused metavars
 function craine_update_datums_pure () {
