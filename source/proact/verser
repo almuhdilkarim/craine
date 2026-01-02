@@ -107,6 +107,13 @@ function craine_update_datums_pure () {
     unset alert_num
     unset erorr_num
     unset comit_msg
+    unset branc_msg
+    unset alpa_vers
+    unset beta_vers
+    unset devs_vers
+    unset main_vers
+    unset repo_vers  
+    unset repo_bran
 }
 
 
